@@ -45,7 +45,7 @@ gulp.task( 'js', function()
         options.paths.sources + 'tools/resizer.class.js',
         options.paths.sources + 'tools/ticker.class.js',
     ] )
-    .pipe( concat( 'burno-' + options.version + '.js' ) )
+    .pipe( concat( 'pan-' + options.version + '.js' ) )
     .pipe( gulp.dest( options.paths.destination ) )
     .pipe( uglify() )
     .pipe( rename( { extname : '.min.js' } ) )
