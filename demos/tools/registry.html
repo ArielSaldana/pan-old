@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Demo - Registry</title>
+    <link rel="stylesheet" href="../src/css/style.css">
+</head>
+<body>
+
+    <!-- POLYFILLS -->
+    <script src="../../src/polyfills/classlist.js"></script>
+    <script src="../../src/polyfills/foreach.js"></script>
+    <script src="../../src/polyfills/getcomputedstyle.js"></script>
+    <script src="../../src/polyfills/htmlelement.js"></script>
+    <script src="../../src/polyfills/indexof.js"></script>
+    <script src="../../src/polyfills/object-keys.js"></script>
+    <script src="../../src/polyfills/object-create.js"></script>
+    <script src="../../src/polyfills/requestanimationframe.js"></script>
+
+    <!-- CORE -->
+    <script src="../../src/core/pan.class.js"></script>
+    <script src="../../src/core/abstract.class.js"></script>
+    <script src="../../src/core/event_emitter.class.js"></script>
+
+    <!-- TOOLS -->
+    <script src="../../src/tools/browser.class.js"></script>
+    <script src="../../src/tools/colors.class.js"></script>
+    <script src="../../src/tools/css.class.js"></script>
+    <script src="../../src/tools/ga_tags.class.js"></script>
+    <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/mouse.class.js"></script>
+    <script src="../../src/tools/offline.class.js"></script>
+    <script src="../../src/tools/registry.class.js"></script>
+    <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/ticker.class.js"></script>
+
+    <script>
+
+        var registry = new Pan.Tools.Registry();
+
+        registry.set( 'key-1', 'foo' );
+
+        // Key exist
+        console.log( registry.get( 'key-1' ) );
+
+        // Key doesn't exist
+        console.log( registry.get( 'key-2' ) );
+
+        // Key doesn't exist but set value if so
+        console.log( registry.get( 'key-3', function()
+        {
+            return 'bar';
+        } ) );
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Demo - Keyboard</title>
+    <link rel="stylesheet" href="../src/css/style.css">
+</head>
+<body>
+
+    <div class="element"><strong>keyboard</strong></div>
+
+    <!-- POLYFILLS -->
+    <script src="../../src/polyfills/classlist.js"></script>
+    <script src="../../src/polyfills/foreach.js"></script>
+    <script src="../../src/polyfills/getcomputedstyle.js"></script>
+    <script src="../../src/polyfills/htmlelement.js"></script>
+    <script src="../../src/polyfills/indexof.js"></script>
+    <script src="../../src/polyfills/object-keys.js"></script>
+    <script src="../../src/polyfills/object-create.js"></script>
+    <script src="../../src/polyfills/requestanimationframe.js"></script>
+
+    <!-- CORE -->
+    <script src="../../src/core/pan.class.js"></script>
+    <script src="../../src/core/abstract.class.js"></script>
+    <script src="../../src/core/event_emitter.class.js"></script>
+
+    <!-- TOOLS -->
+    <script src="../../src/tools/browser.class.js"></script>
+    <script src="../../src/tools/colors.class.js"></script>
+    <script src="../../src/tools/css.class.js"></script>
+    <script src="../../src/tools/ga_tags.class.js"></script>
+    <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/mouse.class.js"></script>
+    <script src="../../src/tools/offline.class.js"></script>
+    <script src="../../src/tools/registry.class.js"></script>
+    <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/ticker.class.js"></script>
+
+    <script>
+
+        var keyboard = new Pan.Tools.Keyboard();
+
+        keyboard.on( 'down up', function( character, keycode )
+        {
+            console.log( 'is space down ', keyboard.is_down( 'space' ) );
+
+            var text = [];
+
+            text.push( '<strong>' );
+            text.push( 'keyboard' );
+            text.push( '</strong>' );
+
+            text.push( '<table>' );
+
+            text.push( '<tr>' );
+            text.push( '<td class="label">' );
+            text.push( 'downs names' );
+            text.push( '</td>' );
+            text.push( '<td class="value">' );
+            text.push( keyboard.downs );
+            text.push( '</td>' );
+            text.push( '</tr>' );
+
+            text.push( '</table>' );
+
+            // Add to DOM
+            document.querySelector( '.element' ).innerHTML = text.join('');
+
+            return false;
+        } );
+
+    </script>
+</body>
+</html>

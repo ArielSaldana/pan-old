@@ -1,0 +1,35 @@
+/**
+ * @class  Resizer
+ * @author Bruno SIMON / http://bruno-simon.com
+ */
+(function()
+{
+    'use strict';
+
+    Pan.Components.App = Pan.Core.Abstract.extend(
+    {
+        options:
+        {
+
+        },
+
+        /**
+         * Initialise and merge options
+         * @constructor
+         * @param {object} options Properties to merge with defaults
+         */
+        init : function( options )
+        {
+            this._super( options );
+
+            this.ticker   = new Pan.Tools.Ticker();
+            this.browser  = new Pan.Tools.Browser();
+            this.css      = new Pan.Tools.Css();
+            this.keyboard = new Pan.Tools.Keyboard();
+            this.mouse    = new Pan.Tools.Mouse();
+            this.ga_tags  = new Pan.Tools.GA_Tags();
+
+            console.log( 'All good' );
+        }
+    } );
+} )();

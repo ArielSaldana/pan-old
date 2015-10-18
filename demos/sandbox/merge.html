@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Sandbox - Custom components</title>
+</head>
+<body>
+
+    <!-- POLYFILLS -->
+    <script src="../../src/polyfills/classlist.js"></script>
+    <script src="../../src/polyfills/foreach.js"></script>
+    <script src="../../src/polyfills/getcomputedstyle.js"></script>
+    <script src="../../src/polyfills/htmlelement.js"></script>
+    <script src="../../src/polyfills/indexof.js"></script>
+    <script src="../../src/polyfills/object-keys.js"></script>
+    <script src="../../src/polyfills/object-create.js"></script>
+    <script src="../../src/polyfills/requestanimationframe.js"></script>
+
+    <!-- CORE -->
+    <script src="../../src/core/pan.class.js"></script>
+    <script src="../../src/core/abstract.class.js"></script>
+    <script src="../../src/core/event_emitter.class.js"></script>
+
+    <!-- TOOLS -->
+    <script src="../../src/tools/browser.class.js"></script>
+    <script src="../../src/tools/colors.class.js"></script>
+    <script src="../../src/tools/css.class.js"></script>
+    <script src="../../src/tools/ga_tags.class.js"></script>
+    <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/mouse.class.js"></script>
+    <script src="../../src/tools/offline.class.js"></script>
+    <script src="../../src/tools/registry.class.js"></script>
+    <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/ticker.class.js"></script>
+
+    <!-- YOUR SCRIPT -->
+    <script>
+
+        /**
+         * Options
+         */
+
+        // Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
+        // {
+        //     // Options with random deep properties
+        //     options :
+        //     {
+        //         test :
+        //         {
+        //             foo   : 'bar',
+        //             lorem : 'ipsum'
+        //         }
+        //     },
+
+        //     // Add options argument
+        //     init : function( options )
+        //     {
+        //         // Pass options to _super
+        //         this._super( options );
+
+        //         console.log( 'Options', this.options );
+        //     }
+        // } );
+
+        // // Instantiate by passing different options
+        // var custom_class = new Pan.Components.Custom_Class( {
+        //     test :
+        //     {
+        //         lorem : 'dolores'
+        //     }
+        // } );
+
+
+        /**
+         * Extend
+         */
+
+        Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
+        {
+            // Options with random deep properties
+            options :
+            {
+                test :
+                {
+                    foo   : 'bar',
+                    lorem : 'ipsum'
+                }
+            },
+
+            // Add options argument
+            init : function( options )
+            {
+                // Pass options to _super
+                this._super( options );
+
+                console.log( 'Options', this.options );
+            }
+        } );
+
+        Pan.Components.Custom_Class_2 = Pan.Components.Custom_Class.extend(
+        {
+            options :
+            {
+                test :
+                {
+                    lorem : 'dolores'
+                },
+                test2 : 'uh'
+            },
+
+            // Add options argument
+            init : function()
+            {
+                console.log( 'Options', this.options );
+            }
+        } );
+
+        var text = new Pan.Components.Custom_Class();
+        var text = new Pan.Components.Custom_Class_2();
+
+    </script>
+
+</body>
+</html>

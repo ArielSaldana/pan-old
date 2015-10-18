@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Demo - Mouse</title>
+    <link rel="stylesheet" href="../src/css/style.css">
+</head>
+<body>
+
+    <div class="element move"></div>
+    <div class="element down"></div>
+    <div class="element wheel"><strong>wheel</strong></div>
+
+    <!-- POLYFILLS -->
+    <script src="../../src/polyfills/classlist.js"></script>
+    <script src="../../src/polyfills/foreach.js"></script>
+    <script src="../../src/polyfills/getcomputedstyle.js"></script>
+    <script src="../../src/polyfills/htmlelement.js"></script>
+    <script src="../../src/polyfills/indexof.js"></script>
+    <script src="../../src/polyfills/object-keys.js"></script>
+    <script src="../../src/polyfills/object-create.js"></script>
+    <script src="../../src/polyfills/requestanimationframe.js"></script>
+
+    <!-- CORE -->
+    <script src="../../src/core/pan.class.js"></script>
+    <script src="../../src/core/abstract.class.js"></script>
+    <script src="../../src/core/event_emitter.class.js"></script>
+
+    <!-- TOOLS -->
+    <script src="../../src/tools/browser.class.js"></script>
+    <script src="../../src/tools/colors.class.js"></script>
+    <script src="../../src/tools/css.class.js"></script>
+    <script src="../../src/tools/ga_tags.class.js"></script>
+    <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/mouse.class.js"></script>
+    <script src="../../src/tools/offline.class.js"></script>
+    <script src="../../src/tools/registry.class.js"></script>
+    <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/ticker.class.js"></script>
+
+    <script>
+
+        var mouse = new Pan.Tools.Mouse();
+
+        mouse.on( 'move', function( position, target )
+        {
+            console.log( 'move', position );
+
+            var text = [];
+
+            text.push( '<strong>' );
+            text.push( 'move' );
+            text.push( '</strong>' );
+
+            text.push( '<table>' );
+
+            text.push( '<tr>' );
+            text.push( '<td class="label">' );
+            text.push( 'x' );
+            text.push( '</td>' );
+            text.push( '<td class="value">' );
+            text.push( position.x );
+            text.push( '</td>' );
+            text.push( '</tr>' );
+
+            text.push( '<tr>' );
+            text.push( '<td class="label">' );
+            text.push( 'y' );
+            text.push( '</td>' );
+            text.push( '<td class="value">' );
+            text.push( position.y );
+            text.push( '</td>' );
+            text.push( '</tr>' );
+
+            text.push( '<tr>' );
+            text.push( '<td class="label">' );
+            text.push( 'ratio x' );
+            text.push( '</td>' );
+            text.push( '<td class="value">' );
+            text.push( position.ratio.x );
+            text.push( '</td>' );
+            text.push( '</tr>' );
+
+            text.push( '<tr>' );
+            text.push( '<td class="label">' );
+            text.push( 'ratio y' );
+            text.push( '</td>' );
+            text.push( '<td class="value">' );
+            text.push( position.ratio.y );
+            text.push( '</td>' );
+            text.push( '</tr>' );
+
+            text.push( '</table>' );
+
+            // Add to DOM
+            document.querySelector( '.element.move' ).innerHTML = text.join('');
+        } );
+
+        mouse.on( 'down up', function( position, target )
+        {
+            console.log( 'down up', this.down );
+
+            var text = [];
+
+            text.push( '<strong>' );
+            text.push( 'down / up' );
+            text.push( '</strong>' );
+
+            text.push( '<table>' );
+
+            text.push( '<tr>' );
+            text.push( '<td class="label">' );
+            text.push( 'down' );
+            text.push( '</td>' );
+            text.push( '<td class="value">' );
+            text.push( this.down ? 'true' : 'false' );
+            text.push( '</td>' );
+            text.push( '</tr>' );
+
+            text.push( '</table>' );
+
+            // Add to DOM
+            document.querySelector( '.element.down' ).innerHTML = text.join('');
+        } );
+        mouse.trigger( 'down' );
+
+        mouse.on( 'wheel', function( wheel )
+        {
+            var text = [];
+
+            console.log( 'wheel', wheel );
+
+            text.push( '<strong>' );
+            text.push( 'wheel' );
+            text.push( '</strong>' );
+
+            text.push( '<table>' );
+
+            text.push( '<tr>' );
+            text.push( '<td class="label">' );
+            text.push( 'delta' );
+            text.push( '</td>' );
+            text.push( '<td class="value">' );
+            text.push( wheel.delta );
+            text.push( '</td>' );
+            text.push( '</tr>' );
+
+            text.push( '</table>' );
+
+            // Add to DOM
+            document.querySelector( '.element.wheel' ).innerHTML = text.join('');
+        } );
+
+    </script>
+</body>
+</html>

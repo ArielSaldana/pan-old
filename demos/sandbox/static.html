@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Sandbox - Custom components</title>
+    <style>
+        section.wrapper {position:relative;width:800px;margin:0 auto;background:#eee;}
+        section.wrapper .content {padding:50px;}
+        section.wrapper aside {position:absolute;top:0;right:820px;width:0;overflow:hidden;}
+        section.wrapper aside.active {width:200px;}
+    </style>
+</head>
+<body>
+
+    <!-- POLYFILLS -->
+    <script src="../../src/polyfills/classlist.js"></script>
+    <script src="../../src/polyfills/foreach.js"></script>
+    <script src="../../src/polyfills/getcomputedstyle.js"></script>
+    <script src="../../src/polyfills/htmlelement.js"></script>
+    <script src="../../src/polyfills/indexof.js"></script>
+    <script src="../../src/polyfills/object-keys.js"></script>
+    <script src="../../src/polyfills/object-create.js"></script>
+    <script src="../../src/polyfills/requestanimationframe.js"></script>
+
+    <!-- CORE -->
+    <script src="../../src/core/pan.class.js"></script>
+    <script src="../../src/core/abstract.class.js"></script>
+    <script src="../../src/core/event_emitter.class.js"></script>
+
+    <!-- TOOLS -->
+    <script src="../../src/tools/browser.class.js"></script>
+    <script src="../../src/tools/colors.class.js"></script>
+    <script src="../../src/tools/css.class.js"></script>
+    <script src="../../src/tools/ga_tags.class.js"></script>
+    <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/mouse.class.js"></script>
+    <script src="../../src/tools/offline.class.js"></script>
+    <script src="../../src/tools/registry.class.js"></script>
+    <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/ticker.class.js"></script>
+
+    <!-- Your classes -->
+    <script>
+
+        // Currently, static functionnality is only used for tools
+        // It's just a matter of organization, do whatever you want.
+        Pan.Tools.Custom_Class = Pan.Core.Event_Emitter.extend(
+        {
+            // Chose a name never used
+            static : 'custom_tool',
+
+            init : function()
+            {
+                // Don't forget the _super
+                this._super();
+
+                console.log( 'Init' );
+            }
+        } );
+
+        // 'custom_class' and 'custom_class_again' will share the same instance
+        // 'init' will be called only the first time
+        var custom_class       = new Pan.Tools.Custom_Class(),
+            custom_class_again = new Pan.Tools.Custom_Class();
+
+    </script>
+
+</body>
+</html>
