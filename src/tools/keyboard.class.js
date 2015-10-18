@@ -1,6 +1,6 @@
 /**
  * @class    Keyboard
- * @author   Bruno SIMON / http://bruno-simon.com
+ * @author   Ariel Saldana / http://ahhriel.com
  * @fires    down
  * @fires    up
  * @requires Pan.Tools.Browser

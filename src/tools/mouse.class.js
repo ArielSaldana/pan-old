@@ -1,6 +1,6 @@
 /**
  * @class    Mouse
- * @author   Bruno SIMON / http://bruno-simon.com
+ * @author   Ariel Saldana / http://ahhriel.com
  * @fires    down
  * @fires    up
  * @fires    move

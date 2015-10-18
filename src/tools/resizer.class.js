@@ -1,6 +1,6 @@
 /**
  * @class    Resizer
- * @author   Bruno SIMON / http://bruno-simon.com
+ * @author   Ariel Saldana / http://ahhriel.com
  * @requires Pan.Tools.Browser
  */
 ( function()
