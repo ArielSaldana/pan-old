@@ -56,7 +56,7 @@ You can use it as a simple library by instantiating the tools or you can use it 
 * Start using them
 
 ```javascript
-var browser = new B.Tools.Browser();
+var browser = new Pan.Tools.Browser();
 
 browser.on( 'resize', function( viewport )
 {
@@ -67,7 +67,7 @@ browser.on( 'resize', function( viewport )
 
 #### As a framework (the powerful way)
 
-Create your own tools and components based on Pan.js classes. You can put your components inside `B.Components` object or you can create your own namespace like `Foo.Bar.My_Class`.<br/>
+Create your own tools and components based on Pan.js classes. You can put your components inside `Pan.Components` object or you can create your own namespace like `Foo.Bar.My_Class`.<br/>
 Inheritance is based on the [John Resig code](http://ejohn.org/blog/simple-javascript-inheritance/) with some improvements like deep property merging.<br />
 Pan.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode). Do as you whish and feel free to share your custom tools and components.
 
@@ -81,18 +81,18 @@ Pan.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/We
 
 ```javascript
 // Create a class wrapping the all application
-B.Components.My_App = B.Core.Abstract.extend(
+Pan.Components.My_App = Pan.Core.Abstract.extend(
 {
     init : function()
     {
         // Instantiate a sidebar and header
-        this.sidebar = new B.Components.My_Sidebar( { color : 'blue' } );
-        this.header  = new B.Components.My_Header();
+        this.sidebar = new Pan.Components.My_Sidebar( { color : 'blue' } );
+        this.header  = new Pan.Components.My_Header();
     }
 } );
 
 // Create a class for the sidebar
-B.Components.My_Sidebar = B.Core.Abstract.extend(
+Pan.Components.My_Sidebar = Pan.Core.Abstract.extend(
 {
     // Default options
     options :
@@ -111,7 +111,7 @@ B.Components.My_Sidebar = B.Core.Abstract.extend(
 } );
 
 // Create a class for the header
-B.Components.My_Header = B.Core.Abstract.extend(
+Pan.Components.My_Header = Pan.Core.Abstract.extend(
 {
     init : function()
     {
@@ -124,7 +124,7 @@ B.Components.My_Header = B.Core.Abstract.extend(
 * Launch :tada:
 ```javascript
 // Let's rock
-var my_app = new B.Components.My_App();
+var my_app = new Pan.Components.My_App();
 ```
 * Have a beer :beer:
 
@@ -134,7 +134,7 @@ Core classes are base classes you want to extend if your building custom compone
 
 ## Abstract Class
 
-`B.Core.Abstract` is the default class.
+`Pan.Core.Abstract` is the default class.
 
 * `extend` method
 * `init` method (called when instantiated)
@@ -145,7 +145,7 @@ Core classes are base classes you want to extend if your building custom compone
 ###### Default
 ```javascript
 // Inherit from Abstract
-B.Components.Custom_Class = B.Core.Abstract.extend(
+Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
 {
     init : function()
     {
@@ -153,12 +153,12 @@ B.Components.Custom_Class = B.Core.Abstract.extend(
     }
 } );
 
-var custom_class = new B.Components.Custom_Class();
+var custom_class = new Pan.Components.Custom_Class();
 ```
 
 ###### Options with deep merging
 ```javascript
-B.Components.Custom_Class = B.Core.Abstract.extend(
+Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
 {
     // Options with random deep properties
     options :
@@ -181,7 +181,7 @@ B.Components.Custom_Class = B.Core.Abstract.extend(
 } );
 
 // Instantiate by passing different options
-var custom_class = new B.Components.Custom_Class( {
+var custom_class = new Pan.Components.Custom_Class( {
     test :
     {
         lorem : 'dolores'
@@ -194,7 +194,7 @@ var custom_class = new B.Components.Custom_Class( {
 ```javascript
 // Currently, static functionnality is only used for tools
 // It's just a matter of organization, do whatever you want.
-B.Tools.Custom_Class = B.Core.Event_Emitter.extend(
+Pan.Tools.Custom_Class = Pan.Core.Event_Emitter.extend(
 {
     // Chose a name never used
     static : 'custom_tool',
@@ -210,14 +210,14 @@ B.Tools.Custom_Class = B.Core.Event_Emitter.extend(
 
 // 'custom_class' and 'custom_class_again' will share the same instance
 // 'init' will be called only the first time
-var custom_class       = new B.Tools.Custom_Class(),
-    custom_class_again = new B.Tools.Custom_Class();
+var custom_class       = new Pan.Tools.Custom_Class(),
+    custom_class_again = new Pan.Tools.Custom_Class();
 ```
 
 
 ## Event Emitter Class
 
-`B.Core.Event_Emitter` extends `B.Core.Abstract` with extra event methods.
+`Pan.Core.Event_Emitter` extends `Pan.Core.Abstract` with extra event methods.
 
 * `on`, `off` and `trigger` methods
 * Multiple events listening
@@ -228,7 +228,7 @@ var custom_class       = new B.Tools.Custom_Class(),
 ###### Default example
 ```javascript
 // Create a custom component that extends Event_Emitter
-B.Components.Custom_Component = B.Core.Event_Emitter.extend(
+Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
 {
     init : function()
     {
@@ -246,7 +246,7 @@ B.Components.Custom_Component = B.Core.Event_Emitter.extend(
     }
 } );
 
-var custom_component = new B.Components.Custom_Component();
+var custom_component = new Pan.Components.Custom_Component();
 
 // Listen to 'event-text'
 custom_component.on( 'event-test', function( value )
@@ -259,7 +259,7 @@ custom_component.on( 'event-test', function( value )
 ###### Namespace example
 ```javascript
 // Create a custom component that extends Event_Emitter
-B.Components.Custom_Component = B.Core.Event_Emitter.extend(
+Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
 {
     init : function()
     {
@@ -281,7 +281,7 @@ B.Components.Custom_Component = B.Core.Event_Emitter.extend(
 } );
 
 // Try to instantiate twice but get a common object each time
-var custom_component = new B.Components.Custom_Component();
+var custom_component = new Pan.Components.Custom_Component();
 
 // Listen two events
 custom_component.on( 'event-1 event-2', function( value )
@@ -766,7 +766,7 @@ none
 **bc** : Pan Class
 
 ```javascript
-B.Components.Class = B.Core.Abstract.extend(
+Pan.Components.Class = Pan.Core.Abstract.extend(
 {
     static  : 'class',
     options : {},
@@ -787,7 +787,7 @@ B.Components.Class = B.Core.Abstract.extend(
 {
     'use strict';
 
-    B.Components.Class = B.Core.Abstract.extend(
+    Pan.Components.Class = Pan.Core.Abstract.extend(
     {
         static  : 'class',
         options : {},
