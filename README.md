@@ -49,7 +49,7 @@ You can use it as a simple library by instantiating the tools or you can use it 
 * Include the build in your HTML
 
 ```html
-<script src="../../build/burno-0.1.min.js"></script>
+<script src="../../build/pan-0.1.min.js"></script>
 ```
 
 * Instantiate the tools you need
@@ -74,7 +74,7 @@ Pan.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/We
 * Include the build in your HTML
 
 ```html
-<script src="../../build/burno-0.1.min.js"></script>
+<script src="../../build/pan-0.1.min.js"></script>
 ```
 
 * Create your own tools and components based on Pan.js **Abstract** or **Event Emitter** classes (you may want to put each class in a different file)
