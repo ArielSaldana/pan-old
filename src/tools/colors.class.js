@@ -18,7 +18,7 @@
                 classes :
                 {
                     to_convert : 'gradient-text',
-                    converted  : 'gradient-text-converted',
+                    converted  : 'gradient-text-converted'
                 }
             }
         },
