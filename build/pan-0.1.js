@@ -468,201 +468,6 @@ if (typeof Object.create != 'function') {
             clearTimeout(id);
         };
 }());
-// Simple structure
-var Pan =
-{
-    Core       : {},
-    Tools      : {},
-    Components : {}
-};
-
-/**
- * Simple JavaScript Inheritance
- * By John Resig http://ejohn.org/blog/simple-javascript-inheritance/
- * MIT Licensed.
- * Inspired by base2 and Prototype
- */
-( function()
-{
-    'use strict';
-
-    Pan.copy = function( object )
-    {
-        var c = null;
-
-        // Simple object (exclude jQuery object, HTML Element, THREE js, ...)
-        if(
-            typeof object === 'undefined' ||
-            object.constructor === Object
-        )
-        {
-            c = {};
-
-            for( var key in object )
-                c[ key ] = Pan.copy( object[ key ] );
-
-            return c;
-        }
-
-        // Array
-        else if( object instanceof Array )
-        {
-            c = [];
-
-            for( var i = 0, l = object.length; i < l; i++ )
-                c[ i ] = Pan.copy( object[ i ] );
-
-            return c;
-        }
-
-        // Other
-        else
-        {
-            return object;
-        }
-    };
-
-    Pan.merge = function( original, extended )
-    {
-        for( var key in extended )
-        {
-            var ext = extended[ key ];
-
-            if( ext.constructor === Object )
-            {
-                if( !original[ key ] )
-                    original[ key ] = {};
-
-                // ext = Object.create( ext );
-
-                original[ key ] = Pan.merge( original[ key ], ext );
-            }
-            else
-            {
-                original[ key ] = ext;
-            }
-        }
-
-        return original;
-    };
-
-    var initializing = false,
-        fnTest       = /xyz/.test( function()
-        {
-            xyz;
-        } ) ? /\b_super\b/ : /.*/;
-
-    Pan.Class = function(){};
-
-    var inject = function( prop )
-    {
-        var proto  = this.prototype,
-            _super = {};
-
-        for( var name in prop )
-        {
-            if( typeof prop[ name ] === 'function' && typeof proto[ name ] === 'function' && fnTest.test( prop[ name ] ) )
-            {
-                _super[ name ] = proto[ name ];
-                proto[ name ]  = ( function( name, fn )
-                {
-                    return function()
-                    {
-                        var tmp     = this._super;
-                        this._super = _super[ name ];
-                        var ret     = fn.apply( this, arguments );
-                        this._super = tmp;
-                        return ret;
-                    };
-                } )( name, prop[ name ] );
-            }
-
-            else
-            {
-                proto[ name ] = prop[ name ];
-            }
-        }
-    };
-
-    Pan.Class.extend = function( prop )
-    {
-        var _super    = this.prototype;
-        initializing  = true;
-        var prototype = new this();
-        initializing  = false;
-
-        for( var name in prop )
-        {
-            if( typeof prop[ name ] === 'function' && typeof _super[ name ] === 'function' && fnTest.test( prop[ name ] ) )
-            {
-                prototype[ name ] = ( function( name, fn )
-                {
-                    return function()
-                    {
-                        var tmp     = this._super;
-                        this._super = _super[ name ];
-                        var ret     = fn.apply( this, arguments );
-                        this._super = tmp;
-
-                        return ret;
-                    };
-                } )( name, prop[ name ] );
-            }
-            else
-            {
-                if( name === 'options' )
-                {
-                    if( typeof prototype[ name ] === 'undefined' )
-                        prototype[ name ] = {};
-
-                    var prototype_copy = Pan.copy( prototype[ name ] ),
-                        prop_copy      = Pan.copy( prop[ name ] );
-
-                    prototype[ name ] = Pan.merge( prototype_copy, prop_copy );
-                }
-                else
-                {
-                    prototype[ name ] = prop[ name ];
-                }
-            }
-        }
-
-        function Class()
-        {
-            if( !initializing )
-            {
-                if( this.static_instantiate )
-                {
-                    var obj = this.static_instantiate.apply( this, arguments );
-                    if( obj )
-                        return obj;
-                }
-
-                for( var p in this )
-                {
-                    if( typeof this[ p ] === 'object' )
-                    {
-                        this[ p ] = Pan.copy( this[ p ] );
-                    }
-                }
-
-                if( this.init )
-                {
-                    this.init.apply( this, arguments );
-                }
-            }
-            return this;
-        }
-
-        Class.prototype             = prototype;
-        Class.prototype.constructor = Class;
-        Class.extend                = Pan.Class.extend;
-        Class.inject                = inject;
-
-        return Class;
-    };
-} )();
-
 /**
  * @class  Resizer
  * @author Ariel Saldana / http://ahhriel.com
@@ -673,6 +478,7 @@ var Pan =
 
     Pan.Core.Abstract = Pan.Class.extend(
     {
+        register : false,
         static : false,
 
         /**
@@ -680,19 +486,28 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             if( typeof options === 'undefined' )
                 options = {};
 
             Pan.merge( this.options, options );
 
+            this.$ = {}
+
             // Create statics container
             if( typeof Pan.Statics !== 'object' )
                 Pan.Statics = {};
 
+            // Register
+            if( this.register && typeof this.register === 'string' )
+            {
+                var registry = new Pan.Tools.Registry();
+                registry.set( this.register, this );
+            }
+
             // Static
-            if( this.static )
+            if( this.static && typeof this.static === 'string')
             {
                 // Add instance to statics
                 Pan.Statics[ this.static ] = this;
@@ -739,7 +554,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -890,8 +705,8 @@ var Pan =
             }
 
             var that         = this,
-                final_result = undefined,
-                result       = undefined;
+                final_result,
+                result;
 
             // Default args
             if( !( args instanceof Array ) )
@@ -1026,7 +841,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -1776,8 +1591,8 @@ var Pan =
                 target  : document.body,
                 classes :
                 {
-                    to_convert : 'gradient-text',
-                    converted  : 'gradient-text-converted',
+                    to_convert : 'pan-gradient-text',
+                    converted  : 'pan-gradient-text-converted'
                 }
             }
         },
@@ -1931,7 +1746,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -2231,7 +2046,7 @@ var Pan =
 
 /**
  * @class    Css
- * @author   Ariel Saldana / http://ahhriel.com
+ * @author   Ariel Saldana / http://arielsaldana.com
  */
 ( function()
 {
@@ -2246,13 +2061,27 @@ var Pan =
         },
 
         /**
+         * Initialise and merge options
+         * @constructor
+         * @param {object} options Properties to merge with defaults
+         */
+        construct : function( options )
+        {
+            this._super( options );
+
+            this.browser = new Pan.Tools.Browser();
+            this.strings = new Pan.Tools.Strings();
+        },
+
+        /**
          * Apply css on target and add every prefixes
-         * @param  {HTMLElement} target HTML element that need to be applied
-         * @param  {string} property Property name
-         * @param  {string} value    Value
+         * @param  {HTMLElement} target   HTML element that need to be applied
+         * @param  {object}      style    CSS style
+         * @param  {array}       prefixes Array of prefixes (default from options)
+         * @param  {boolean}     clean    Should clean the style
          * @return {HTMLElement}     Modified element
          */
-        apply : function( target, style, prefixes )
+        apply : function( target, style, prefixes, clean )
         {
             // jQuery handling
             if( typeof jQuery !== 'undefined' && target instanceof jQuery)
@@ -2269,9 +2098,13 @@ var Pan =
             if( prefixes === true )
                 prefixes = this.options.prefixes;
 
+            // Clean
+            if( typeof clean === 'undefined' || clean )
+                style = this.clean_style( style );
+
+            // Add prefix
             if( prefixes instanceof Array )
             {
-                // Add prefix
                 var new_style = {};
                 for( var property in style )
                 {
@@ -2299,12 +2132,68 @@ var Pan =
                 if( element instanceof HTMLElement )
                 {
                     for( var _property in style )
+                    {
                         element.style[ _property ] = style[ _property ];
+                    }
                 }
-
             }
 
             return target;
+        },
+
+        /**
+         * Clean style
+         * @param  {object} value Style to clean
+         * @return {object}       Cleaned style
+         */
+        clean_style : function( style )
+        {
+            var new_style = {};
+
+            // Each property
+            for( var property in style )
+            {
+                var value = style[ property ];
+
+                // Clean property and value
+                new_style[ this.clean_property( property ) ] = this.clean_value( value );
+            }
+
+            return new_style;
+        },
+
+        /**
+         * Clean property by removing prefixes and converting to camelCase
+         * @param {string} value Property to clean
+         */
+        clean_property : function( value )
+        {
+            // Remove prefixes
+            value = value.replace( /(webkit|moz|o|ms)?/i, '' );
+            value = this.strings.convert_case( value, 'camel' );
+
+            return value;
+        },
+
+        /**
+         * Clean value
+         * @param {string} value Property to fix
+         */
+        clean_value : function( value )
+        {
+            // IE 9
+            if( this.browser.detect.browser.ie === 9 )
+            {
+                // Remove translateZ
+                if( /translateZ/.test( value ) )
+                    value = value.replace( /translateZ\([^)]*\)/g, '' );
+
+                // Replace translate3d by translateX and translateY
+                if( /   /.test( value ) )
+                    value = value.replace( /translate3d\(([^,]*),([^,]*),([^)])*\)/g, 'translateX($1) translateY($2)' );
+            }
+
+            return value;
         }
     } );
 } )();
@@ -2344,7 +2233,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -2378,7 +2267,7 @@ var Pan =
                     datas     = {};
 
                 // True link interpretation
-                if( [ '0', 'false', 'nop', 'no' ].indexOf( true_link ) !== -1 )
+                if( !true_link || [ '0', 'false', 'nop', 'no' ].indexOf( true_link.toLowerCase() ) !== -1 )
                     true_link = false;
                 else
                     true_link = true;
@@ -2601,7 +2490,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -2717,6 +2606,109 @@ var Pan =
 } )();
 
 /**
+ * @class    Strings
+ * @author   Ariel Saldana / http://ahhriel.com
+ */
+( function()
+{
+    'use strict';
+
+    Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
+    {
+        static  : 'konami_code',
+        options :
+        {
+            reset_duration : 1000,
+            sequence :
+            [
+                'up',
+                'up',
+                'down',
+                'down',
+                'left',
+                'right',
+                'left',
+                'right',
+                'b',
+                'a',
+            ]
+        },
+
+        /**
+         * Initialise and merge options
+         * @constructor
+         * @param {object} options Properties to merge with defaults
+         */
+        construct : function( options )
+        {
+            this._super( options );
+
+            this.index    = 0;
+            this.timeout  = null;
+            this.keyboard = new Pan.Tools.Keyboard();
+
+            this.listen_to_events();
+        },
+
+        /**
+         * Listen to events
+         * @return {object} Context
+         */
+        listen_to_events : function()
+        {
+            var that = this;
+
+            // Listen keyboard down
+            this.keyboard.on( 'down', function( keycode, character )
+            {
+                // Reset timeout
+                if( that.timeout )
+                    window.clearTimeout( that.timeout );
+
+                // Test char
+                if( character === that.options.sequence[ that.index ] )
+                {
+                    // Progress
+                    that.index++;
+
+                    // Timeout
+                    that.timeout = window.setTimeout( function()
+                    {
+                        // Trigger
+                        that.trigger( 'timeout', [ that.index ] );
+
+                        // Reset
+                        that.index = 0;
+                    }, that.options.reset_duration );
+                }
+                else
+                {
+                    // Trigger
+                    if( that.index )
+                        that.trigger( 'wrong', [ that.index ] );
+
+                    // Reset
+                    that.index = 0;
+                }
+
+                // Complete
+                if( that.index >= that.options.sequence.length )
+                {
+                    // Trigger
+                    that.trigger( 'used' );
+
+                    // Reset
+                    that.index = 0;
+
+                    // Reset timeout
+                    window.clearTimeout( that.timeout );
+                }
+            } );
+        }
+    } );
+} )();
+
+/**
  * @class    Mouse
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    down
@@ -2739,7 +2731,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -2860,7 +2852,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -2953,7 +2945,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -3023,7 +3015,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -3161,8 +3153,6 @@ var Pan =
                 // Test current style
                 var container_style = window.getComputedStyle( container ),
                     content_style   = window.getComputedStyle( content );
-
-                console.log(container_style);
 
                 // Force positioning
                 if( container_style.position !== 'fixed' && container_style.position !== 'relative' && container_style.position !== 'absolute' )
@@ -3351,6 +3341,319 @@ var Pan =
 } )();
 
 /**
+ * @class    Strings
+ * @author   Ariel Saldana / http://ahhriel.com
+ */
+( function()
+{
+    'use strict';
+
+    Pan.Tools.Strings = Pan.Core.Abstract.extend(
+    {
+        static  : 'strings',
+        options : {},
+        cases   :
+        {
+            camel          : [ 'camel', 'camelback', 'compoundnames' ],
+            pascal         : [ 'pascal', 'uppercamelcase', 'bumpycaps', 'camelcaps', 'capitalizedwords', 'capwords' ],
+            snake          : [ 'snake', 'underscore', 'plissken' ],
+            titlesnake     : [ 'titlesnake', 'capitalsnake' ],
+            screamingsnake : [ 'screamingsnake', 'uppersnake' ],
+            dash           : [ 'dash', 'dashed', 'hyphen', 'kebab', 'spinal' ],
+            train          : [ 'train' ],
+            space          : [ 'space' ],
+            title          : [ 'title' ],
+            dot            : [ 'dot' ],
+            slash          : [ 'slash', 'forwardslash', 'path' ],
+            backslash      : [ 'backslash', 'hack', 'whack', 'escape', 'reverseslash', 'slosh', 'backslant', 'downhill', 'backwhack' ],
+            lower          : [ 'lower' ],
+            upper          : [ 'upper' ],
+            studlycaps     : [ 'studlycaps' ],
+            burno          : [ 'burno', 'lol', 'yolo' ],
+        },
+        negatives :
+        [
+            '0',
+            'false',
+            'nop',
+            ':(',
+
+            'nee',
+            'jo',
+            'naï',
+            'laa',
+            'votch',
+            'xeyir',
+            'ez',
+            'hе nie', 'nie',
+            'na',
+            'aïlle',
+            'ne',
+            'nann',
+            'né',
+            'ma hoke phu', 'hmar te',
+            'no',
+            'tla', 'hla',
+            'pù shi',
+            'nò',
+            'nej',
+            'ei',
+            'nei',
+            'non',
+            'nanni',
+            'ara',
+            'nein',
+            'ohi',
+            'nahániri',
+            'ʻaole', 'aole',
+            'lo',
+            'nahin',
+            'nem',
+            'mba',
+            'tidak',
+            'iié',
+            'ala',
+            'thay',
+            'oya',
+            'ahneo',
+            'na',
+            'bo',
+            'minime',
+            'nē',
+            'te',
+            'neen',
+            'не', 'he',
+            'tsia',
+            'le',
+            'kaore',
+            'ugui', 'yгvй',
+            'nennin', 'nenn',
+            'нæй',
+            'kheyr',
+            'nie',
+            'não',
+            'nu',
+            'нет', 'niet',
+            'ag',
+            'aiwa',
+            'nae',
+            'aï',
+            'siyo', 'hapana',
+            'hindi', 'po',
+            'aita',
+            'lla',
+            'illaï',
+            'yuk',
+            'kadhu',
+            'ไม่', 'maï',
+            'hayir',
+            'oevoel', 'ug',
+            'ні', 'ni',
+            'نهين',
+            'neni',
+            'nage',
+            'awa',
+            'déedéet',
+            'rara',
+            'cha'
+        ],
+
+        /**
+         * Convert a value to any case listed above
+         * Return base value if case not found
+         * @param  {string} value  Any string value
+         * @param  {string} format Any case listed above (allow 'case' at the end and other chars than letters like camEl-CasE)
+         * @return {string}        Covnerted value
+         */
+        convert_case : function( value, format )
+        {
+            // Clean value
+            value = this.trim( value );
+
+            // Clean format
+            format = format.toLowerCase();               // To lower
+            format = format.replace( /[^[a-z]]*/g, '' ); // normalize
+            format = format.replace( /case/g, '' );      // Remove 'case'
+
+            // Find format
+            var true_format = null;
+            for( var original_name in this.cases )
+            {
+                for( var synonym_name_key in this.cases[ original_name ] )
+                {
+                    var synonym_name = this.cases[ original_name ][ synonym_name_key ];
+
+                    if( synonym_name === format )
+                        true_format = synonym_name;
+                }
+            }
+
+            // Format not found
+            if( !true_format )
+                return value;
+
+            // Convert case variation to dashes
+            value = value.replace( /([a-z])([A-Z])/g, "$1-$2" );
+            value = value.toLowerCase();
+
+            // Get parts
+            var parts = value.split( /[-_ .\/\\]/g );
+
+            // Convert
+            var new_value = null,
+                i         = null,
+                len       = null;
+
+            switch( true_format )
+            {
+                case 'camel' :
+                    for( i = 0, len = parts.length; i < len; i++ )
+                    {
+                        if( i !== 0 )
+                            parts[ i ] = parts[ i ].charAt( 0 ).toUpperCase() + parts[ i ].slice( 1 );
+                    }
+                    new_value = parts.join( '' );
+                    break;
+                case 'pascal' :
+                    for( i = 0, len = parts.length; i < len; i++ )
+                        parts[ i ] = parts[ i ].charAt( 0 ).toUpperCase() + parts[ i ].slice( 1 );
+                    new_value = parts.join( '' );
+                    break;
+                case 'snake' :
+                    new_value = parts.join( '_' );
+                    break;
+                case 'titlesnake' :
+                    for( i = 0, len = parts.length; i < len; i++ )
+                        parts[ i ] = parts[ i ].charAt( 0 ).toUpperCase() + parts[ i ].slice( 1 );
+                    new_value = parts.join( '_' );
+                    break;
+                case 'screamingsnake' :
+                    new_value = parts.join( '_' );
+                    new_value = new_value.toUpperCase();
+                    break;
+                case 'dash' :
+                    new_value = parts.join( '-' );
+                    break;
+                case 'train' :
+                    for( i = 0, len = parts.length; i < len; i++ )
+                        parts[ i ] = parts[ i ].charAt( 0 ).toUpperCase() + parts[ i ].slice( 1 );
+                    new_value = parts.join( '-' );
+                    break;
+                case 'space' :
+                    new_value = parts.join( ' ' );
+                    break;
+                case 'title' :
+                    for( i = 0, len = parts.length; i < len; i++ )
+                        parts[ i ] = parts[ i ].charAt( 0 ).toUpperCase() + parts[ i ].slice( 1 );
+                    new_value = parts.join( ' ' );
+                    break;
+                case 'dot' :
+                    new_value = parts.join( '.' );
+                    break;
+                case 'slash' :
+                    new_value = parts.join( '/' );
+                    break;
+                case 'backslash' :
+                    new_value = parts.join( '\\' );
+                    break;
+                case 'lower' :
+                    new_value = parts.join( '' );
+                    break;
+                case 'upper' :
+                    new_value = parts.join( '' );
+                    new_value = new_value.toUpperCase();
+                    break;
+                case 'studlycaps' :
+                    new_value = parts.join( '' );
+                    for( i = 0, len = new_value.length; i < len; i++ )
+                    {
+                        if( Math.random() > 0.5 )
+                            new_value = new_value.substr( 0, i ) + new_value[ i ].toUpperCase() + new_value.substr( i + 1 );
+                    }
+                    break;
+                case 'burno' :
+                    for( i = 0, len = parts.length; i < len; i++ )
+                        parts[ i ] = 'burno';
+                    new_value = parts.join( ' ' );
+                    break;
+            }
+
+            return new_value;
+        },
+
+        /**
+         * Smartly convert to boolean
+         * @return {[type]} [description]
+         */
+        to_boolean : function( value )
+        {
+            // Clean
+            value = '' + value;          // To string
+            value = this.trim( value );  // Trim
+            value = value.toLowerCase(); // To lower case
+
+            return this.negatives.indexOf( value ) === -1;
+        },
+
+        /**
+         * Remove start and trailing white spaces
+         * @param  {string} value      Value to trim
+         * @param  {string} characters Characters to trim
+         * @return {string}            Trimed value
+         */
+        trim : function( value, characters )
+        {
+            if( typeof characters === 'undefined' )
+            {
+                return value.replace( /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '' );
+            }
+            else
+            {
+                value = value.replace( new RegExp( '^[' + characters + ']+' ), '' );
+                value = value.replace( new RegExp( '[' + characters + ']+$' ), '' );
+                return value;
+            }
+        },
+
+        /**
+         * Convert to slug
+         * @param  {string} value Value to convert
+         * @return {string}       Converted value
+         */
+        to_slug : function( value )
+        {
+            // Clean
+            value = this.trim( value );  // Trim
+            value = value.toLowerCase(); // To lower case
+
+            // Remove accents and special letters
+            var from = 'ãàáäâẽèéëêìíïîõòóöôùúüûñç·/,:;',
+                to   = 'aaaaaeeeeeiiiiooooouuuunc-----';
+
+            for( var i = 0, len = from.length; i < len; i++ )
+                value = value.replace( new RegExp( from.charAt( i ), 'g' ), to.charAt( i ) );
+
+            value = value.replace( /[^a-z0-9 _-]/g, '' ); // Remove invalid resting chars
+            value = value.replace( /\s+/g, '-' );        // Collapse whitespace and replace by -
+            value = value.replace( /-+/g, '-' );         // Collapse dashes
+            value = this.trim( value, '-' );             // Final trim
+
+            return value;
+        },
+
+        /**
+         * Convert to slug ('to_slug' alias)
+         * @param  {string} value Value to convert
+         * @return {string}       Converted value
+         */
+        slugify : function( value )
+        {
+            return this.to_slug( value );
+        }
+    } );
+} )();
+
+/**
  * @class    Resizer
  * @author   Ariel Saldana / http://ahhriel.com
  */
@@ -3371,7 +3674,7 @@ var Pan =
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -3385,6 +3688,7 @@ var Pan =
             this.do_next_actions        = {};
             this.do_next_actions.before = [];
             this.do_next_actions.after  = [];
+            this.intervals              = {};
 
             if( this.options.auto_run )
                 this.run();
@@ -3478,6 +3782,9 @@ var Pan =
             // Trigger
             this.trigger( 'tick', [ this.time ] );
 
+            // Trigger intervals
+            this.trigger_intervals();
+
             // Do next (after trigger)
             i   = 0;
             len = this.do_next_actions.after.length;
@@ -3506,6 +3813,117 @@ var Pan =
             this.do_next_actions[ before ? 'before' : 'after' ].push( action );
 
             return this;
-        }
+        },
+
+        /**
+         * Create interval
+         * @param  {integer} interval Milliseconds between each tick
+         * @return {object}           Context
+         */
+        create_interval : function( interval )
+        {
+            this.intervals[ interval ] = {
+                interval     : interval,
+                next_trigger : interval,
+                start        : this.time.elapsed,
+                last_trigger : this.time.elapsed,
+            };
+
+            return this;
+        },
+
+        /**
+         * Destroy interval
+         * @param  {integer} interval Milliseconds between each tick
+         * @return {object}           Context
+         */
+        destroy_interval : function( interval )
+        {
+            delete this.intervals[ interval ];
+
+            return this;
+        },
+
+        /**
+         * Trigger intervals
+         * @return {object}           Context
+         */
+        trigger_intervals : function()
+        {
+            // Each interval
+            for( var _key in this.intervals )
+            {
+                var interval = this.intervals[ _key ];
+
+                // Test if interval should trigger
+                if( this.time.elapsed - interval.last_trigger > interval.next_trigger  )
+                {
+                    // Update next trigger to stay as close as possible to the interval
+                    interval.next_trigger = interval.interval - ( this.time.elapsed - interval.start ) % interval.interval;
+
+                    interval.last_trigger = this.time.elapsed;
+                    this.trigger( 'tick-' + interval.interval, [ this.time, interval ] );
+                }
+            }
+
+            return this;
+        },
+
+        /**
+         * Start listening specified events
+         * @param  {string}   names    Events names (can contain namespace)
+         * @param  {function} callback Function to apply if events are triggered
+         * @return {object}            Context
+         */
+        on : function( names, callback )
+        {
+            var that           = this,
+                resolved_names = this.resolve_names( names );
+
+            // Each resolved name
+            resolved_names.forEach( function( name )
+            {
+                // Has interval interval
+                if( name.match( /^tick([0-9]+)$/) )
+                {
+                    // Extract interval interval
+                    var interval = parseInt( name.replace( /^tick([0-9]+)$/, '$1' ) );
+
+                    // Create interval
+                    if( interval )
+                        that.create_interval( interval );
+                }
+            } );
+
+            return this._super( names, callback );
+        },
+
+        /**
+         * Stop listening specified events
+         * @param  {string}   names Events names (can contain namespace or be the namespace only)
+         * @return {object}         Context
+         */
+        off : function( names )
+        {
+            var that           = this,
+                resolved_names = this.resolve_names( names );
+
+            // Each resolved name
+            resolved_names.forEach( function( name )
+            {
+                // Has interval interval
+                if( name.match( /^tick([0-9]+)$/) )
+                {
+                    // Extract interval interval
+                    var interval = parseInt( name.replace( /^tick([0-9]+)$/, '$1' ) );
+
+                    // Create interval
+                    if( interval )
+                        that.destroy_interval( interval );
+                }
+            } );
+
+            return this._super( names );
+        },
     } );
 } )();
