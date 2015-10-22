@@ -45,7 +45,7 @@ gulp.task( 'js', function()
         options.paths.sources + 'tools/registry.class.js',
         options.paths.sources + 'tools/resizer.class.js',
         options.paths.sources + 'tools/strings.class.js',
-        options.paths.sources + 'tools/ticker.class.js',
+        options.paths.sources + 'tools/ticker.class.js'
   ] )
     ] )
     .pipe( concat( 'pan-' + options.version + '.js' ) )
