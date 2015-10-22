@@ -36,10 +36,12 @@
     <script src="../../src/tools/css.class.js"></script>
     <script src="../../src/tools/ga_tags.class.js"></script>
     <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/konami_code.class.js"></script>
     <script src="../../src/tools/mouse.class.js"></script>
     <script src="../../src/tools/offline.class.js"></script>
     <script src="../../src/tools/registry.class.js"></script>
     <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/strings.class.js"></script>
     <script src="../../src/tools/ticker.class.js"></script>
 
     <!-- Your classes -->
@@ -65,7 +67,7 @@
                 colors : 'red'
             },
 
-            init : function( options )
+            construct : function( options )
             {
                 this._super( options );
 
@@ -78,7 +80,7 @@
         // Create a class for the header
         Pan.Components.My_Header = Pan.Core.Abstract.extend(
         {
-            init : function()
+            construct : function()
             {
                 this.main = document.querySelector( 'header' );
 

@@ -30,7 +30,7 @@ gulp.task( 'js', function()
         options.paths.sources + 'polyfills/object-create.js',
         options.paths.sources + 'polyfills/requestanimationframe.js',
 
-        options.paths.sources + 'core/pan.class.js',
+        options.paths.sources + 'core/b.class.js',
         options.paths.sources + 'core/abstract.class.js',
         options.paths.sources + 'core/event_emitter.class.js',
 
@@ -39,11 +39,14 @@ gulp.task( 'js', function()
         options.paths.sources + 'tools/css.class.js',
         options.paths.sources + 'tools/ga_tags.class.js',
         options.paths.sources + 'tools/keyboard.class.js',
+        options.paths.sources + 'tools/konami_code.class.js',
         options.paths.sources + 'tools/mouse.class.js',
         options.paths.sources + 'tools/offline.class.js',
         options.paths.sources + 'tools/registry.class.js',
         options.paths.sources + 'tools/resizer.class.js',
+        options.paths.sources + 'tools/strings.class.js',
         options.paths.sources + 'tools/ticker.class.js',
+  ] )
     ] )
     .pipe( concat( 'pan-' + options.version + '.js' ) )
     .pipe( gulp.dest( options.paths.destination ) )
