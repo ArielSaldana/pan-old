@@ -40,6 +40,7 @@
             var paragraph = {};
             // var paragraphText = elementChildren[i].innerText;
             paragraph.text = elementChildren[i].innerText;
+            paragraph.type = 1;
             var markup = [];
             // var markupInfo = {};
             var strlen = 0;
@@ -78,11 +79,16 @@
             this.paragraphs.push(paragraph);
             // console.log(paragraph);
            }
-
            else if (elementChildren[i].nodeName === 'FIGURE'){
+             var paragraph = {};
+             paragraph.type = 2;
+             paragraph.text = "";
+             paragraph.layout = 1;
              for (var x=0; x < elementChildren[i].childNodes.length; x++){
 
              }
+             // dont push this yet... 
+             //this.paragraphs.push(paragraph);
            }
          }
          return this.paragraphs;
