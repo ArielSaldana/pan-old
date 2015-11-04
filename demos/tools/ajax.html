@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Demo - Ajax</title>
+    <link rel="stylesheet" href="../src/css/style.css">
+    <style>
+
+    </style>
+</head>
+<body>
+
+
+  <!-- <div id="foo2">
+      <div id="bar2"></div>
+  </div> -->
+
+    <!-- POLYFILLS -->
+    <script src="../../src/polyfills/classlist.js"></script>
+    <script src="../../src/polyfills/foreach.js"></script>
+    <script src="../../src/polyfills/getcomputedstyle.js"></script>
+    <script src="../../src/polyfills/htmlelement.js"></script>
+    <script src="../../src/polyfills/indexof.js"></script>
+    <script src="../../src/polyfills/object-keys.js"></script>
+    <script src="../../src/polyfills/object-create.js"></script>
+    <script src="../../src/polyfills/requestanimationframe.js"></script>
+
+    <!-- CORE -->
+    <script src="../../src/core/pan.class.js"></script>
+    <script src="../../src/core/abstract.class.js"></script>
+    <script src="../../src/core/event_emitter.class.js"></script>
+
+    <!-- TOOLS -->
+    <script src="../../src/tools/browser.class.js"></script>
+    <script src="../../src/tools/colors.class.js"></script>
+    <script src="../../src/tools/css.class.js"></script>
+    <script src="../../src/tools/ga_tags.class.js"></script>
+    <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/konami_code.class.js"></script>
+    <script src="../../src/tools/mouse.class.js"></script>
+    <script src="../../src/tools/offline.class.js"></script>
+    <script src="../../src/tools/registry.class.js"></script>
+    <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/strings.class.js"></script>
+    <script src="../../src/tools/ticker.class.js"></script>
+    <script src="../../src/tools/fit.class.js"></script>
+    <script src="../../src/tools/ajax.class.js"></script>
+
+    <!-- <script src="http://soulwire.github.io/fit.js/fit.js" charset="utf-8"></script> -->
+
+    <script>
+    var ajax = new Pan.Tools.Ajax();
+
+
+    ajax.getJson('http://jsonplaceholder.typicode.com/posts/1', function(err, callback){
+      if (!err) {
+        console.log(callback);
+      }
+    });
+
+    ajax.getJson('http://jsonplaceholder.typicode.com/comments?postId=1', function(err, callback){
+      if (!err) {
+        console.log(callback);
+      }
+    });
+    // console.log(ajax.getJson('http://jsonplaceholder.typicode.com/posts/1').request)
+    // ajax.getJson('http://unreal.io/work');
+    // ajax.getJson('./browser.html');
+
+    </script>
+</body>
+</html>
