@@ -30,7 +30,7 @@ gulp.task( 'js', function()
         options.paths.sources + 'polyfills/object-create.js',
         options.paths.sources + 'polyfills/requestanimationframe.js',
 
-        options.paths.sources + 'core/b.class.js',
+        options.paths.sources + 'core/pan.class.js',
         options.paths.sources + 'core/abstract.class.js',
         options.paths.sources + 'core/event_emitter.class.js',
 
