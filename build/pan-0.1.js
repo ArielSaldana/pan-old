@@ -3927,3 +3927,717 @@ if (typeof Object.create != 'function') {
         },
     } );
 } )();
+
+/**
+ * @class    Fit.js
+ * @author   Ariel Saldana / http://ahhriel.com
+ * TODO:     Add support to add options to he ajax request. (Headers)
+ */
+( function()
+{
+    'use strict';
+
+    Pan.Tools.Ajax = Pan.Core.Abstract.extend(
+    {
+        static  : 'ajax',
+        options : {
+
+        },
+
+        construct : function(options){
+          this._super( options );
+
+        },
+
+        /**
+         * Remove get json data over ajax
+         * @param  {string}   url        url
+         * @param  {function} callback   error and data callback
+         * @return {object}              object context
+         */
+
+        getJson : function(url, callback){
+          var that = this;
+          var request = new XMLHttpRequest();
+          request.open('GET', url, true);
+
+          request.onreadystatechange = function() {
+
+          if (this.readyState === 4) {
+            if (this.status >= 200 && this.status < 400) {
+              // Success!
+              var data = JSON.parse(this.responseText);
+              callback(false, this.responseText);
+              return that;
+
+            } else {
+              // Error :(
+              callback(true);
+              return that;
+            }
+          }
+        };
+
+        request.send();
+        request = null;
+        },
+
+        /**
+         * Remove get json data over ajax
+         * @param  {string}   url        url
+         * @return {object}              object context
+         */
+
+        postJson : function(url){
+          this.request.open('POST', url, true);
+          this.request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+          this.request.send(data);
+
+          return this;
+        }
+    } );
+} )();
+
+(function()
+{
+    'use strict';
+
+    Pan.Tools.History = Pan.Core.Event_Emitter.extend(
+    {
+        static  : 'history',
+        options :
+        {
+            parse   : true,
+            classes :
+            {
+                container : 'b-ajax-container',
+                to_set    : 'b-ajax',
+                set       : 'b-ajax-set',
+                link_class: 'pan-link'
+            }
+        },
+
+        /**
+         * CONSTRUCT
+         */
+        construct : function( options )
+        {
+            this._super( options );
+
+            // Set up
+            this.browser     = new Pan.Tools.Browser();
+            this.instance    = null;
+            //this.$           = {};
+            //this.$.container = $( '.' + this.options.classes.container ); // vatiable to hold container;
+            //this.$.title     = $( 'title' );
+            //this.$.body      = $( 'body' );
+
+            // Parse
+            //if( this.options.parse )
+            //    this.parse();
+
+            // Init
+            //this.init_navigation();
+            this.init_links();
+        },
+
+
+        doSomething : function(e){
+          event.preventDefault();
+          // console.log(e);
+          // console.log(this);
+          // console.log(e.target.getAttribute('href'));
+          this.trigger( 'link-clicked', [ e.target.getAttribute('href')] );
+          event.stopPropagation();
+        },
+
+        init_links : function(){
+          var that = this;
+          var activeLinks = document.getElementsByClassName(this.options.classes.link_class);
+          console.log(activeLinks);
+
+
+
+          // [].forEach.call(activeLinks, function(e) {
+          //     e.addEventListener('click', function(e){
+          //       e.preventDefault();
+          //       console.log('meow');
+          //       e.stopPropagation();
+          //     }, false);
+          // });
+
+          [].map.call(activeLinks, function(e) {
+              e.addEventListener('click', function(e){
+                that.doSomething(e);
+              } , false);
+          });
+          return this;
+
+          // // optimized loop - where order doesn't matter.
+          // for (var i = activeLinks.length; i--;)
+          // {
+          //   var that = this;
+          //   console.log(activeLinks[i]);
+          //
+          //   //activeLinks.item(i).style.color = 'red';
+          //
+          //   // [].map.call(activeLinks, function(e) {
+          //   //     e.addEventListener("click", that.doSomething(e), false);
+          //   // });
+          //
+          // }
+
+          // iterate through that list backwards for speed performanc gains..
+        }
+    } );
+
+})();
+
+/**
+ * @class    queue
+ * @author   Ariel Saldana / http://ahhriel.com
+ */
+(function() {
+    'use strict';
+
+    Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
+        static: 'queue',
+        slice: [].slice,
+
+
+        /**
+         * Initialise and merge options
+         * @constructor
+         * @param {object} options Properties to merge with defaults
+         */
+        construct: function(options) {
+            this._super(options);
+        },
+
+        queue: function(parallelism) {
+            var q,
+                tasks = [],
+                started = 0,
+                active = 0,
+                remaining = 0,
+                popping,
+                error,
+                await = this.noop,
+                all;
+
+            var that = this;
+
+            if (!parallelism) parallelism = Infinity;
+
+            this.pop = function() {
+                while (popping = started < tasks.length && active < parallelism) {
+                    var i = started++,
+                        t = tasks[i],
+                        a = that.slice.call(t, 1);
+                    a.push(that.callback(i));
+                    ++active;
+                    t[0].apply(null, a);
+                }
+            }
+
+            this.callback = function(i) {
+                return function(e, r) {
+                    --active;
+                    if (error != null) return;
+                    if (e != null) {
+                        error = e; // ignore new tasks and squelch active callbacks
+                        started = remaining = NaN; // stop queued tasks from starting
+                        notify();
+                    } else {
+                        tasks[i] = r;
+                        if (--remaining) popping || pop();
+                        else notify();
+                    }
+                };
+            }
+
+            this.notify = function() {
+                if (error != null) await (error);
+                else if (all) await (error, tasks);
+                else await.apply(null, [error].concat(tasks));
+            }
+
+
+            return q = {
+                defer: function() {
+                    if (!error) {
+                        tasks.push(arguments);
+                        ++remaining;
+                         that.pop();
+                    }
+                    return q;
+                },
+                await: function(f) {
+                    await = f;
+                    all = false;
+                    if (!remaining) notify();
+                    return q;
+                },
+                awaitAll: function(f) {
+                    await = f;
+                    all = true;
+                    if (!remaining) notify();
+                    return q;
+                }
+            };
+        },
+
+        /**
+         * simple queue that uses arrays but avoids expensive shift operations
+         * @return {object}            Context
+         * @function .enqueue()     adds item to the queue
+         * @function .dequeue()     removes an item from the queue, and returns that item.                  returns undefined is queue is empty
+         * @function .peek()        returns the item at the index of the queue without dequeueing it.       returns undefined if queue is empty
+         * @function .getLength()   returns the length of the queue
+         * @function .isEmpty()     returns true of false - if queue is empty.
+         */
+        simpleQueue: function() {
+            var queue = [],
+                offset = 0;
+
+            this.getLenth = function() {
+                return (queue.length - offset);
+            }
+
+            this.isEmpty = function() {
+                return (queue.length == 0);
+            }
+
+            this.enqueue = function(item) {
+                queue.push(item);
+            }
+
+            this.dequeue = function() {
+
+                // if the queue is empty, return immediately
+                if (queue.length == 0) return undefined;
+
+                // store the item at the front of the queue
+                var item = queue[offset];
+
+                // increment the offset and remove the free space if necessary
+                if (++offset * 2 >= queue.length) {
+                    queue = queue.slice(offset);
+                    offset = 0;
+                }
+
+                // return the dequeued item
+                return item;
+
+            }
+
+            this.peek = function() {
+                return (queue.length > 0 ? queue[offset] : undefined);
+            }
+
+            return this;
+        },
+
+        noop: function() {},
+
+        loop: function(qInstance, interval) {
+
+        },
+
+        stopLoop: function() {
+
+        }
+
+
+
+
+    });
+})();
+
+/**
+ * @class    Tooltip
+ * @author   Ariel Saldana / http://ahhriel.com
+ * @info     methods of convering html data into objects or bytes for transport.
+ */
+( function()
+{
+    'use strict';
+
+    Pan.Tools.Tooltip = Pan.Core.Abstract.extend(
+    {
+        static  : 'html_serializer',
+        options :
+        {
+
+        },
+
+        /**
+         * Initialise and merge options
+         * @constructor
+         * @param {object} options Properties to merge with defaults
+         */
+        construct : function( options )
+        {
+            this._super( options );
+            this.tooltipArray = document.querySelectorAll('[data-toggle]');
+            this.tooltipTopOffset = 8;
+
+            this.listen_to_events();
+        },
+        /**
+         * setup listeners
+         * @return object context
+         */
+        listen_to_events : function(){
+          var that = this;
+          [].forEach.call(
+            this.tooltipArray,function(e){
+              e.addEventListener('mouseover',function(){that.mouseEnter(e)},false),
+              e.addEventListener('mouseout',function(){that.mouseLeave(e)},false)
+            }
+          )
+          return this;
+        },
+
+        /**
+         * handle the mouseover event
+         */
+        mouseEnter : function(e){
+
+          var dataPlacement = e.getAttribute('data-placement');
+          var id = this.generateId();
+
+          e.setAttribute('aria-describedby',id);
+
+          if (dataPlacement === 'top') {
+            this.showTop(e, id);
+          } else if (dataPlacement === 'bottom') {
+            this.showBottom(e, id);
+          } else if (dataPlacement === 'left') {
+            this.showLeft(e, id);
+          } else if (dataPlacement === 'right') {
+            this.showRight(e, id);
+          }
+        },
+
+        /**
+         * handle the mouseout event
+         */
+        mouseLeave : function(e){
+          var idToRemove = e.getAttribute('aria-describedby');
+          Element.prototype.remove = function() {
+              this.parentElement.removeChild(this);
+          },
+          document.getElementById(idToRemove).remove();
+
+          e.removeAttribute('aria-describedby');
+
+          return this;
+          //console.log('Left');
+        },
+
+        /**
+         * create a tooltip element on the dom
+         * @return tooltip context
+         */
+        createTooltipElement : function(id, parentElement){
+          var that = this;
+
+          var innerText = parentElement.getAttribute('data-content');
+          var tooltip = document.createElement('div');
+          tooltip.innerHTML = innerText;
+          tooltip.className = "pan-tooltip pan-tooltip-initial";
+          tooltip.id = id;
+          document.body.appendChild(tooltip);
+
+          return tooltip;
+          //return this;
+        },
+
+        /**
+         * create tooltip placement top
+         * @return object context
+         */
+
+        showTop : function(e, id){
+          var that = this;
+
+          var tooltip = this.createTooltipElement(id, e);
+
+          var toolTipInfo = tooltip.getBoundingClientRect();
+          var parentInfo = e.getBoundingClientRect();
+          var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
+          var middleOfTooltip= (toolTipInfo.left + toolTipInfo.right) / 2;
+          var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
+              halfToolTip    = widthOfTooltip / 2;
+
+          tooltip.style.left = middleOfParent - halfToolTip + 'px';
+
+          // calculate top
+          var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
+          tooltip.style.top = parentInfo.top - (this.tooltipTopOffset+8+heightOfTooltip) + 'px';
+
+          tooltip.className = 'pan-tooltip top pan-tooltip-load';
+
+          window.setTimeout(function(){
+             tooltip.style.top = parentInfo.top - (that.tooltipTopOffset+heightOfTooltip) + 'px';
+          }, 10);
+
+          return this;
+        },
+
+        /**
+         * create tooltip placement left
+         * @return object context
+         */
+
+        showLeft : function(e, id){
+          var that = this;
+
+          var tooltip = this.createTooltipElement(id, e);
+
+          var toolTipInfo = tooltip.getBoundingClientRect();
+          var parentInfo = e.getBoundingClientRect();
+          var leftOfParent = (parentInfo.left);
+          var middleOfTooltip= (toolTipInfo.left + toolTipInfo.right) / 2;
+          var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
+              halfToolTip    = widthOfTooltip;
+
+          tooltip.style.left = leftOfParent - halfToolTip - 16 + 'px';
+
+          // calculate top
+          var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
+          var HeightOfParent = (parentInfo.bottom + parentInfo.top) / 2;
+
+          // tooltip.style.top = parentInfo.top - (this.tooltipTopOffset+8+heightOfTooltip) + 'px';
+          tooltip.style.top = HeightOfParent - (heightOfTooltip/2) + 'px';
+          tooltip.className = 'pan-tooltip left pan-tooltip-load';
+
+          window.setTimeout(function(){
+             tooltip.style.left = leftOfParent - halfToolTip - 9 + 'px';
+          }, 10);
+
+          return this;
+        },
+
+        /**
+         * create tooltip placement right
+         * @return object context
+         */
+
+        showRight: function(e, id){
+          var that = this;
+
+          var tooltip = this.createTooltipElement(id, e);
+
+          var toolTipInfo = tooltip.getBoundingClientRect();
+          var parentInfo = e.getBoundingClientRect();
+          var rightOfParent = (parentInfo.right);
+          var middleOfTooltip= (toolTipInfo.left + toolTipInfo.right) / 2;
+          var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
+              halfToolTip    = widthOfTooltip;
+
+          tooltip.style.left = rightOfParent + 16 + 'px';
+
+          // calculate top
+          var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
+          var HeightOfParent = (parentInfo.bottom + parentInfo.top) / 2;
+
+          // tooltip.style.top = parentInfo.top - (this.tooltipTopOffset+8+heightOfTooltip) + 'px';
+          tooltip.style.top = HeightOfParent - (heightOfTooltip/2) + 'px';
+          tooltip.className = 'pan-tooltip right pan-tooltip-load';
+
+          window.setTimeout(function(){
+             tooltip.style.left = rightOfParent + 9 + 'px';
+          }, 10);
+
+          return this;
+        },
+
+        /**
+         * create tooltip placement bottom
+         * @return object context
+         */
+
+        showBottom: function(e, id){
+          var that = this;
+
+          var tooltip = this.createTooltipElement(id, e);
+
+          var toolTipInfo = tooltip.getBoundingClientRect();
+          var parentInfo = e.getBoundingClientRect();
+          var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
+          var middleOfTooltip= (toolTipInfo.left + toolTipInfo.right) / 2;
+          var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
+              halfToolTip    = widthOfTooltip / 2;
+
+          tooltip.style.left = middleOfParent - halfToolTip + 'px';
+
+          // calculate top
+          var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
+          tooltip.style.top = parentInfo.bottom + 16 + 'px';
+
+          tooltip.className = 'pan-tooltip bottom pan-tooltip-load';
+
+          window.setTimeout(function(){
+             tooltip.style.top = parentInfo.bottom + 9 + 'px';
+          }, 10);
+
+          return this;
+        },
+
+        /**
+         * TODO: bug when you hover on the tooltip in the center causes it to disappear and reappear.
+         * create tooltip placement center
+         * @return object context
+         */
+
+        showCenter: function(e, id){
+          var that = this;
+
+          var tooltip = this.createTooltipElement(id, e);
+
+          var toolTipInfo = tooltip.getBoundingClientRect();
+          var parentInfo = e.getBoundingClientRect();
+          var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
+          var middleOfTooltip= (toolTipInfo.left + toolTipInfo.right) / 2;
+          var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
+              halfToolTip    = widthOfTooltip / 2;
+
+          tooltip.style.left = middleOfParent - halfToolTip + 'px';
+
+          // calculate top
+          var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
+          tooltip.style.top = parentInfo.top + (this.tooltipTopOffset+8+heightOfTooltip) + 'px';
+
+          tooltip.className = 'pan-tooltip bottom pan-tooltip-load';
+
+          window.setTimeout(function(){
+             tooltip.style.top = parentInfo.top + (that.tooltipTopOffset+heightOfTooltip) + 'px';
+          }, 10);
+          return this;
+        },
+
+        generateId: function(){
+          var id = 'tooltip'+ (Math.floor(Math.random()*90000) + 10000);
+          return id;
+        },
+
+        /**
+         * get the cumulativeOffset
+         * @return x / y coordinate of top left corner
+         */
+
+        cumulativeOffset : function(element){
+          var top = 0, left = 0;
+          do {
+              top += element.offsetTop  || 0;
+              left += element.offsetLeft || 0;
+              element = element.offsetParent;
+          } while(element);
+
+          return {
+              top: top,
+              left: left
+          };
+        }
+    });
+})();
+
+/**
+ * @class    pan
+ * @author   Ariel Saldana / http://ahhriel.com
+ * @function this executes automatically and defines pan and _ referencing pan.
+ */
+( function()
+{
+    'use strict';
+
+    Pan.Tools.Pan = Pan.Core.Event_Emitter.extend(
+    {
+        static  : 'pan',
+
+        options : {
+
+        },
+
+        construct : function( options )
+        {
+            this._super( options );
+            return this;
+        },
+
+        on : function (el, eventName, handler)
+        {
+            if (el.addEventListener) {
+              el.addEventListener(eventName, handler);
+            }
+            else {
+              el.attachEvent('on' + eventName, function(){
+                handler.call(el);
+              });
+            }
+        },
+
+        off : function(el, eventName, handler)
+        {
+          if (el.removeEventListener)
+            el.removeEventListener(eventName, handler);
+          else
+            el.detachEvent('on'+ eventName, handler);
+        },
+
+        ready : function(fn)
+        {
+          if (document.readyState != 'loading'){
+            fn();
+          }
+          else if (document.addEventListener) {
+            document.addEventListener('DOMContentLoaded', fn);
+          }
+          else {
+            document.attachEvent('onreadystatechange', function(){
+              if (document.readyState != 'loading')
+                fn();
+            })
+          }
+        },
+
+        fadeIn : function(el)
+        {
+          var opacity = 0;
+
+          el.style.opacity = 0;
+          el.style.filter = '';
+
+          var last = +new Date();
+          var tick = function() {
+            opacity += (new Date() - last) / 400;
+            el.style.opacity = opacity;
+            el.style.filter = 'alpha(opacity=' + (100 * opacity)|0 + ')';
+
+            last = +new Date();
+
+            if (opacity < 1) {
+              (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+            }
+          };
+          tick();
+        },
+
+        empty : function(el)
+        {
+          while(el.firstChild)
+          el.removeChild(el.firstChild);
+        }
+
+    } );
+
+    var pan = new Pan.Tools.Pan();
+
+    // return pan;
+    return (window.pan = window._ = pan)
+    // return (Pan.tools.Pan)
+
+
+} )(this);

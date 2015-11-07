@@ -7,11 +7,13 @@
 {
     'use strict';
 
-
-
     Pan.Tools.Pan = Pan.Core.Event_Emitter.extend(
     {
         static  : 'pan',
+
+        options : {
+
+        },
 
         construct : function( options )
         {
@@ -55,7 +57,7 @@
           }
         },
 
-        fadeIn : funcion (el)
+        fadeIn : function(el)
         {
           var opacity = 0;
 
@@ -83,9 +85,6 @@
           el.removeChild(el.firstChild);
         }
 
-
-
-
     } );
 
     var pan = new Pan.Tools.Pan();
@@ -93,8 +92,6 @@
     // return pan;
     return (window.pan = window._ = pan)
     // return (Pan.tools.Pan)
-
-
 
 
 } )(this);
