@@ -19,34 +19,6 @@
             return this;
         },
 
-        func : function(_func) {
-          var that = this;
-
-          this._func = _func;
-
-          return function(){
-            alert('Called a function');
-            that._func();
-          }
-        },
-
-        pan : function(){
-          new this.func(function(){
-
-          })
-        },
-
-        // pan: function(_pan)
-        // {
-        //   this._pan = _pan;
-        //
-        //   return function(){
-        //     alert('called a function');
-        //     this._func();
-        //   }
-        //   console.log('yep');
-        // },
-
         on : function (el, eventName, handler)
         {
             if (el.addEventListener) {
