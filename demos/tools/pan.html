@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pan.js - Demo - Keyboard</title>
-    <link rel="stylesheet" href="../src/css/style.css">
+    <title>Pan.js - Demo - Pan Tools</title>
+    <!-- <link rel="stylesheet" href="../src/css/style.css"> -->
+
 </head>
 <body>
 
-    <div class="element"><strong>keyboard</strong></div>
+
 
     <!-- POLYFILLS -->
     <script src="../../src/polyfills/classlist.js"></script>
@@ -37,38 +38,39 @@
     <script src="../../src/tools/resizer.class.js"></script>
     <script src="../../src/tools/strings.class.js"></script>
     <script src="../../src/tools/ticker.class.js"></script>
+    <script src="../../src/tools/html_serializer.class.js"></script>
+    <script src="../../src/tools/tooltip.class.js"></script>
+    <script src="../../src/tools/history.class.js"></script>
+    <script src="../../src/tools/queue.class.js"></script>
+    <script src="../../src/tools/pan.class.js"></script>
+
     <script>
+    // var pan = new Pan.Tools.Pan();
 
-        var keyboard = new Pan.Tools.Keyboard();
+    console.log(_);
+    _.ready(function(){
+      console.log('done');
+    });
 
-        keyboard.on( 'down up', function( character, keycode )
-        {
-            console.log( 'is space down ', keyboard.is_down( 'space' ) );
 
-            var text = [];
+    // _();
+    // pan();
+    // _.pan();
+    // _.ready(function(){
+    //   console.log('meow');
+    // })
 
-            text.push( '<strong>' );
-            text.push( 'keyboard' );
-            text.push( '</strong>' );
 
-            text.push( '<table>' );
+    // pan.ready(function(){
+    //   console.log('done');
+    // });
 
-            text.push( '<tr>' );
-            text.push( '<td class="label">' );
-            text.push( 'downs names' );
-            text.push( '</td>' );
-            text.push( '<td class="value">' );
-            text.push( keyboard.downs );
-            text.push( '</td>' );
-            text.push( '</tr>' );
+    // $.ready(function(){
+    //   console.log('done');
+    // });
 
-            text.push( '</table>' );
 
-            // Add to DOM
-            document.querySelector( '.element' ).innerHTML = text.join('');
 
-            return false;
-        } );
 
     </script>
 </body>

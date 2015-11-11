@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Demo - Queue</title>
+    <!-- <link rel="stylesheet" href="../src/css/style.css"> -->
+
+</head>
+<body>
+
+
+
+    <!-- POLYFILLS -->
+    <script src="../../src/polyfills/classlist.js"></script>
+    <script src="../../src/polyfills/foreach.js"></script>
+    <script src="../../src/polyfills/getcomputedstyle.js"></script>
+    <script src="../../src/polyfills/htmlelement.js"></script>
+    <script src="../../src/polyfills/indexof.js"></script>
+    <script src="../../src/polyfills/object-keys.js"></script>
+    <script src="../../src/polyfills/object-create.js"></script>
+    <script src="../../src/polyfills/requestanimationframe.js"></script>
+
+    <!-- CORE -->
+    <script src="../../src/core/pan.class.js"></script>
+    <script src="../../src/core/abstract.class.js"></script>
+    <script src="../../src/core/event_emitter.class.js"></script>
+
+    <!-- TOOLS -->
+    <script src="../../src/tools/browser.class.js"></script>
+    <script src="../../src/tools/colors.class.js"></script>
+    <script src="../../src/tools/css.class.js"></script>
+    <script src="../../src/tools/ga_tags.class.js"></script>
+    <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/konami_code.class.js"></script>
+    <script src="../../src/tools/mouse.class.js"></script>
+    <script src="../../src/tools/offline.class.js"></script>
+    <script src="../../src/tools/registry.class.js"></script>
+    <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/strings.class.js"></script>
+    <script src="../../src/tools/ticker.class.js"></script>
+    <script src="../../src/tools/html_serializer.class.js"></script>
+    <script src="../../src/tools/tooltip.class.js"></script>
+    <script src="../../src/tools/history.class.js"></script>
+    <script src="../../src/tools/queue.class.js"></script>
+
+    <script>
+
+    function test(s) {
+      console.log('Test working ' + s);
+    }
+
+    function done(){
+      console.log('All done');
+    }
+
+    var q = new Pan.Tools.Queue();
+
+    q.queue(2)
+    .defer(test, 'ariel')
+    .defer(test, 'fabian')
+    .awaitAll(done());
+
+    q.queue(2)
+    .defer(test, 'anais')
+    .defer(test, 'mark')
+    .awaitAll(done());
+    // advanced(2).defer(test, "ariel")
+
+
+
+
+    /* --------------------  simple  -------------------- */
+
+
+    var queue = new q.simpleQueue();
+
+    queue.enqueue('item1');
+    queue.enqueue('item3');
+    queue.enqueue('item4');
+    queue.enqueue('item5');
+    queue.enqueue('item6');
+    queue.enqueue('item7');
+    queue.enqueue('item8');
+    queue.enqueue('item9');
+    queue.enqueue('item10');
+
+    var queueLoop = setInterval(function(){
+
+    if (queue.isEmpty()){
+      queue = null;
+      delete queue;
+      clearInterval(queueLoop);
+    }
+    else {
+
+    var item = queue.peek();
+    //console.log(item);
+
+    console.log(item);
+
+     queue.dequeue();
+     }
+    }
+    , 200);
+
+    /* -------------------- */
+
+
+
+    var queue2 = new q.simpleQueue();
+
+    queue2.enqueue('item2-2');
+    queue2.enqueue('item3-2');
+    queue2.enqueue('item4-2');
+    queue2.enqueue('item5-2');
+    queue2.enqueue('item6-2');
+    queue2.enqueue('item7-2');
+    queue2.enqueue('item8-2');
+    queue2.enqueue('item9-2');
+    queue2.enqueue('item10-2');
+
+    var queueLoop2 = setInterval(function(){
+
+    if (queue2.isEmpty()){
+
+    }
+    else {
+
+    var item = queue2.peek();
+    //console.log(item);
+
+    console.log(item);
+
+     queue2.dequeue();
+     }
+    }
+    , 200);
+
+    </script>
+</body>
+</html>

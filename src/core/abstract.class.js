@@ -8,6 +8,7 @@
 
     Pan.Core.Abstract = Pan.Class.extend(
     {
+        register : false,
         static : false,
 
         /**
@@ -15,19 +16,28 @@
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             if( typeof options === 'undefined' )
                 options = {};
 
             Pan.merge( this.options, options );
 
+            this.$ = {}
+
             // Create statics container
             if( typeof Pan.Statics !== 'object' )
                 Pan.Statics = {};
 
+            // Register
+            if( this.register && typeof this.register === 'string' )
+            {
+                var registry = new Pan.Tools.Registry();
+                registry.set( this.register, this );
+            }
+
             // Static
-            if( this.static )
+            if( this.static && typeof this.static === 'string')
             {
                 // Add instance to statics
                 Pan.Statics[ this.static ] = this;

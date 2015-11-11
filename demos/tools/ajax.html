@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pan.js - Demo - Keyboard</title>
+    <title>Pan.js - Demo - Ajax</title>
     <link rel="stylesheet" href="../src/css/style.css">
+    <style>
+
+    </style>
 </head>
 <body>
-
-    <div class="element"><strong>keyboard</strong></div>
 
     <!-- POLYFILLS -->
     <script src="../../src/polyfills/classlist.js"></script>
@@ -37,38 +38,27 @@
     <script src="../../src/tools/resizer.class.js"></script>
     <script src="../../src/tools/strings.class.js"></script>
     <script src="../../src/tools/ticker.class.js"></script>
+    <script src="../../src/tools/fit.class.js"></script>
+    <script src="../../src/tools/ajax.class.js"></script>
+
     <script>
+    var ajax = new Pan.Tools.Ajax();
 
-        var keyboard = new Pan.Tools.Keyboard();
 
-        keyboard.on( 'down up', function( character, keycode )
-        {
-            console.log( 'is space down ', keyboard.is_down( 'space' ) );
+    ajax.getJson('http://jsonplaceholder.typicode.com/posts/1', function(err, callback){
+      if (!err) {
+        console.log(callback);
+      }
+    });
 
-            var text = [];
-
-            text.push( '<strong>' );
-            text.push( 'keyboard' );
-            text.push( '</strong>' );
-
-            text.push( '<table>' );
-
-            text.push( '<tr>' );
-            text.push( '<td class="label">' );
-            text.push( 'downs names' );
-            text.push( '</td>' );
-            text.push( '<td class="value">' );
-            text.push( keyboard.downs );
-            text.push( '</td>' );
-            text.push( '</tr>' );
-
-            text.push( '</table>' );
-
-            // Add to DOM
-            document.querySelector( '.element' ).innerHTML = text.join('');
-
-            return false;
-        } );
+    ajax.getJson('http://jsonplaceholder.typicode.com/comments?postId=1', function(err, callback){
+      if (!err) {
+        console.log(callback);
+      }
+    });
+    // console.log(ajax.getJson('http://jsonplaceholder.typicode.com/posts/1').request)
+    // ajax.getJson('http://unreal.io/work');
+    // ajax.getJson('./browser.html');
 
     </script>
 </body>

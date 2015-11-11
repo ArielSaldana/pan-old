@@ -16,7 +16,7 @@
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -167,8 +167,8 @@
             }
 
             var that         = this,
-                final_result = undefined,
-                result       = undefined;
+                final_result,
+                result;
 
             // Default args
             if( !( args instanceof Array ) )

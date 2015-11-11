@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pan.js - Demo - Keyboard</title>
+    <title>Pan.js - Demo - Konami Code</title>
     <link rel="stylesheet" href="../src/css/style.css">
 </head>
 <body>
 
-    <div class="element"><strong>keyboard</strong></div>
+    <div class="element"><strong>Use the konami code</strong><br><br><span class="value"></span></div>
 
     <!-- POLYFILLS -->
     <script src="../../src/polyfills/classlist.js"></script>
@@ -37,37 +37,24 @@
     <script src="../../src/tools/resizer.class.js"></script>
     <script src="../../src/tools/strings.class.js"></script>
     <script src="../../src/tools/ticker.class.js"></script>
+
     <script>
 
-        var keyboard = new Pan.Tools.Keyboard();
+        var konami = new Pan.Tools.Konami_Code();
 
-        keyboard.on( 'down up', function( character, keycode )
+        konami.on( 'used', function()
         {
-            console.log( 'is space down ', keyboard.is_down( 'space' ) );
+            document.querySelector( '.element .value' ).innerHTML = 'Hadouken!!!';
+        } );
 
-            var text = [];
+        konami.on( 'wrong', function( index )
+        {
+            document.querySelector( '.element .value' ).innerHTML = 'wrong after ' + index + ' keys';
+        } );
 
-            text.push( '<strong>' );
-            text.push( 'keyboard' );
-            text.push( '</strong>' );
-
-            text.push( '<table>' );
-
-            text.push( '<tr>' );
-            text.push( '<td class="label">' );
-            text.push( 'downs names' );
-            text.push( '</td>' );
-            text.push( '<td class="value">' );
-            text.push( keyboard.downs );
-            text.push( '</td>' );
-            text.push( '</tr>' );
-
-            text.push( '</table>' );
-
-            // Add to DOM
-            document.querySelector( '.element' ).innerHTML = text.join('');
-
-            return false;
+        konami.on( 'timeout', function( index )
+        {
+            document.querySelector( '.element .value' ).innerHTML = 'timeout after ' + index + ' keys';
         } );
 
     </script>
