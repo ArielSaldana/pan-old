@@ -1,5 +1,0 @@
-<snippet>
-    <content><![CDATA[new Burno.Tools.${1:Class}(${2});]]></content>
-    <tabTrigger>bnt</tabTrigger>
-    <scope>source.js</scope>
-</snippet>

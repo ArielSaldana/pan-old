@@ -49,7 +49,7 @@ You can use it as a simple library by instantiating the tools or you can use it 
 * Include the build in your HTML
 
 ```html
-<script src="../../build/pan-0.1.min.js"></script>
+<script src="../../build/pan-0.3.min.js"></script>
 ```
 
 * Instantiate the tools you need
@@ -74,7 +74,7 @@ Pan.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/We
 * Include the build in your HTML
 
 ```html
-<script src="../../build/pan-0.1.min.js"></script>
+<script src="../../build/pan-0.3.min.js"></script>
 ```
 
 * Create your own tools and components based on Pan.js **Abstract** or **Event Emitter** classes (you may want to put each class in a different file)
@@ -83,7 +83,7 @@ Pan.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/We
 // Create a class wrapping the all application
 Pan.Components.My_App = Pan.Core.Abstract.extend(
 {
-    init : function()
+    construct : function()
     {
         // Instantiate a sidebar and header
         this.sidebar = new Pan.Components.My_Sidebar( { color : 'blue' } );
@@ -100,7 +100,7 @@ Pan.Components.My_Sidebar = Pan.Core.Abstract.extend(
         colors : 'red'
     },
 
-    init : function( options )
+    construct : function( options )
     {
         this._super( options );
 
@@ -113,7 +113,7 @@ Pan.Components.My_Sidebar = Pan.Core.Abstract.extend(
 // Create a class for the header
 Pan.Components.My_Header = Pan.Core.Abstract.extend(
 {
-    init : function()
+    construct : function()
     {
         this.main = document.querySelector( 'header' );
 
@@ -136,18 +136,20 @@ Core classes are base classes you want to extend if your building custom compone
 
 `Pan.Core.Abstract` is the default class.
 
-* `extend` method
-* `init` method (called when instantiated)
-* `options` property that will be merged (see example bellow)
-* `static` property to set the class as a singleton (can be instantiated only one time)
+* `extend` : Extend from any class
+* `construct` : Method called when instantiated
+* `options` : Property that will be merged with construct parameter
+* `static` : Class can be instantiate only one time. Each other `new` will return the first one (also called singleton)
+* `registry` : Automatically add to the Registry tool
 
 
-###### Default
+###### Extend / Construct
+
 ```javascript
 // Inherit from Abstract
 Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
 {
-    init : function()
+    construct : function()
     {
         console.log( 'Welcome to my custom class' );
     }
@@ -156,7 +158,8 @@ Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
 var custom_class = new Pan.Components.Custom_Class();
 ```
 
-###### Options with deep merging
+###### Options (with deep merging)
+
 ```javascript
 Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
 {
@@ -171,7 +174,7 @@ Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
     },
 
     // Add options argument
-    init : function( options )
+    construct : function( options )
     {
         // Pass options to _super
         this._super( options );
@@ -199,7 +202,7 @@ Pan.Tools.Custom_Class = Pan.Core.Event_Emitter.extend(
     // Chose a name never used
     static : 'custom_tool',
 
-    init : function()
+    construct : function()
     {
         // Don't forget the _super
         this._super();
@@ -209,9 +212,24 @@ Pan.Tools.Custom_Class = Pan.Core.Event_Emitter.extend(
 } );
 
 // 'custom_class' and 'custom_class_again' will share the same instance
-// 'init' will be called only the first time
+// 'construct' will be called only the first time
 var custom_class       = new Pan.Tools.Custom_Class(),
     custom_class_again = new Pan.Tools.Custom_Class();
+```
+
+###### Registry
+
+```javascript
+// Create any class you'd like
+Pan.Components.Test_Class = Pan.Core.Abstract.extend( {} );
+
+// Instantiate and specify the register property in options object
+// The value is the key you want to retrieve the instance later
+var test_class = new Pan.Components.Test_Class( { register : 'my_key' } );
+
+// Instantiate the registry tools and get the test_class using the register key
+var registry     = new Pan.Tools.Registry(),
+    test_class_2 = registry.get( 'my_key' );
 ```
 
 
@@ -226,11 +244,12 @@ var custom_class       = new Pan.Tools.Custom_Class(),
 * Automatically normalized event names (`event-name` == `eventname` == `event_name`)
 
 ###### Default example
+
 ```javascript
 // Create a custom component that extends Event_Emitter
 Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
 {
-    init : function()
+    construct : function()
     {
         this._super();
 
@@ -257,11 +276,12 @@ custom_component.on( 'event-test', function( value )
 ```
 
 ###### Namespace example
+
 ```javascript
 // Create a custom component that extends Event_Emitter
 Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
 {
-    init : function()
+    construct : function()
     {
         this._super();
 
@@ -406,13 +426,6 @@ Breakpoints works a little like width and height for media queries. Specify some
 * **breakpoint**
     * `breakpoint` (string) Current breakpoint
     * `old_breakpoint` (string) Previous breakpoint
-
-**Todo**
-
-* Classes
-* Breakpoints
-* Disable hover on scroll
-* Match media
 
 
 ## Colors
@@ -617,13 +630,16 @@ Run a ticker that trigger events each frame base on requestAnimationFrame.
 * **run** : Run the ticker
 * **stop** : Stop the ticker
 * **tick** : Trigger tick (If you need to trigger it manually)
-* **do_next** : Apply function on the next frame
+* **wait** : Apply function after X frames
+    * `frames_count` (number)
     * `action` (function)
-    * `before` (optional, boolean) Should call the function before the `tick` event
+    * `after` (optional, boolean, values: *true* | *false*, default: *true*) Should apply the function after the `tick` event is triggered
 
 **Events**
 
 * **tick**
+    * `time` (object) Time informations
+* **tick-X**
     * `time` (object) Time informations
 
 
@@ -755,6 +771,104 @@ none
 none
 
 
+## Konami Code
+
+Know when your users use the konami code ↑ ↑ ↓ ↓ ← → ← → B A
+
+[See code](src/tools/konami_code.class.js)<br />
+[See example](demos/tools/konami_code.html)
+
+**Options**
+
+```javascript
+{
+    reset_duration : 1000, // Time in before reseting
+    sequence :             // Sequence to enter
+    [
+        'up',
+        'up',
+        'down',
+        'down',
+        'left',
+        'right',
+        'left',
+        'right',
+        'b',
+        'a',
+    ]
+}
+```
+
+**Properties**
+
+none
+
+**Methods**
+
+none
+
+**Events**
+
+* **used**
+* **timeout**
+    * `index` (int) Progress before timeout
+* **wrong**
+    * `index` (int) Progress before failing
+
+
+## Strings
+
+Method to manage strings
+
+[See code](src/tools/strings.class.js)<br />
+[See example](demos/tools/strings.html)
+
+**Options**
+
+none
+
+**Properties**
+
+none
+
+**Methods**
+
+* **convert_case**
+    * `value` (string) String that need to be case changed
+    * `format` (string) Wanted case
+        * camel
+        * pascal
+        * snake
+        * dash
+        * train
+        * space
+        * title
+        * dot
+        * slash
+        * backslash
+        * lower
+        * upper
+        * studlycaps
+        * ... ([see code](src/tools/strings.class.js) for complete list)
+* **trim**
+    * `value` (string) String to trim
+    * `characters` (string) Characters to trim
+* **to_boolean**
+    * `value` (string) Smartly convert to boolean with many supported languages
+        * 0
+        * false
+        * nop
+        * nein
+        * non
+        * ... ([see code](src/tools/strings.class.js) for complete list)
+* **to_slug**
+    * `value` (string) String to slugify
+
+**Events**
+
+none
+
+
 ## Utils
 
 #### Sublime Snippets
@@ -771,7 +885,7 @@ Pan.Components.Class = Pan.Core.Abstract.extend(
     static  : 'class',
     options : {},
 
-    init : function( options )
+    construct : function( options )
     {
         this._super( options );
 
@@ -792,7 +906,7 @@ Pan.Components.Class = Pan.Core.Abstract.extend(
         static  : 'class',
         options : {},
 
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -839,34 +953,59 @@ new Pan.Tools.Class();
 
 ## Todo
 
-* ~~IE8 compatible~~
+* ~~$ property on abstract~~
+* ~~Replace `init` by `construct`~~
+* ~~Replace `init` by `construct` in Sublime snippets~~
+* ~~Parsing classes prefix "b-"~~
+* ~~Option null bug~~
+* Loop error bug
 * Unit testing
-* Sublime snippets
+* ~~License~~
+* ~~No polyfills version~~
+* ~~Information on top of builds~~
+* ~~Global 'use strict'~~
 * Classes (create)
     * Storyline
     * Navigation
     * Scroll
-    * Page
     * Images
+        * Update images on pixel_ratio
+        * Load and show image
     * Loader
-    * Strings
-        * Capitalize
-        * SnakeCase
-        * CamelCase
-        * PascalCase
-        * Slugify
-        * Is false (0, nop, no, false, nein, non, ...)
+    * Unveiler
+    * ~~Konami Code~~
+        * ~~Doc~~
+    * ~~Strings~~
+        * ~~Case convertor~~
+        * ~~Slugify~~
+        * ~~To boolean (0, nop, no, false, nein, non, ...)~~
+        * ~~Trim with characters choice~~
+        * ~~Doc~~
+        * ~~Add SCREAMING_SNAKE_CASE and Title_Snake_Case~~
+        * To boolean with `undefined` or `null` or empty string
+        * Bug `convert_case` with `dashed`
     * Time / Date
         * Formater (custom formats (sprinf like))
         * Local
 * Classes (update)
-    * CSS
-        * IE translateZ and translate3d prevent (in options)
-    * ~~Browser~~
-        * ~~Array of breakpoints~~
-        * ~~Breakpoint name to breakpoint object method~~
+    * ~~Abstract~~
+        * ~~Auto save in registry~~
+        * ~~Register in options~~
+    * ~~CSS~~
+        * ~~IE translateZ and translate3d prevent (in options)~~
+        * ~~Use Strings class~~
+    * Browser
+        * ~~Add class "features-no-..."~~
+        * Trigger breakpoints at start event if no break point active
+        * `match_breakpoint( name )` method
+        * ~~Seperate Viewport~~
+        * ~~Seperate Detector~~
+        * Seperate Breakpoints
+        * Update doc
+        * ~~Choose initial triggers order~~
     * Event_Emitter
         * Deferred trigger (can specify event)
+        * ~~Add `dispatch` method~~
     * Better Match media
         * Multiple matches
         * Fallback for width and height
@@ -880,13 +1019,21 @@ new Pan.Tools.Class();
         * Better gradient (multiple steps)
         * Only one convertissor method (default any => rgb)
         * Use Strings Tool
+        * Darken method
+        * Merge method
     * Registry
         * Persistence (localstorage / cookie fallback)
+        * Events
+    * Resizer
+        * `get_sizes` return type in parameters ("cartesian", "css" or "both")
+    * ~~Ticker~~
+        * ~~Throttle by only specifying event like on('tick-250') for 250 ms~~
+        * ~~Wait method~~
 
 
 
 ## Changelog
 
-#### 0.1.0 (2015-10-17)
+#### 0.1.0 (2015-03-10)
 
 Init
