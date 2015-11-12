@@ -88,7 +88,6 @@
       }
   }
     </style>
-    <script src="http://code.jquery.com/jquery-2.1.1.min.js" charset="utf-8"></script>
 </head>
 <body class="chrome CH" style="touch-action: pan-x pan-y; -webkit-user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
 
@@ -246,6 +245,9 @@
       <a class="close ajax" data-direction="from-left" href=""></a>
       <a class="to-top hidden" href="#"></a>
           </div>
+
+            <div class="line line-to-screen-size current going-down" style="display: block; height:2000px;">
+            </div>
 
   <div class="line line-to-screen-size current going-down" style="display: block;">
       <div class="intro" style="height: 100vh;
@@ -557,45 +559,11 @@
 
 
 
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js" charset="utf-8"></script>
 
-
-    <!-- POLYFILLS -->
-    <script src="../../src/polyfills/classlist.js"></script>
-    <script src="../../src/polyfills/foreach.js"></script>
-    <script src="../../src/polyfills/getcomputedstyle.js"></script>
-    <script src="../../src/polyfills/indexof.js"></script>
-    <script src="../../src/polyfills/object-keys.js"></script>
-    <script src="../../src/polyfills/requestanimationframe.js"></script>
-
-    <!-- Pan.js -->
-    <!-- <script src="../../build/pan-0.1.min.js"></script> -->
-    <!-- CORE -->
-    <script src="../../src/core/pan.class.js"></script>
-    <script src="../../src/core/abstract.class.js"></script>
-    <script src="../../src/core/event_emitter.class.js"></script>
-
-    <!-- TOOLS -->
-    <script src="../../src/tools/browser.class.js"></script>
-    <script src="../../src/tools/colors.class.js"></script>
-    <script src="../../src/tools/css.class.js"></script>
-    <script src="../../src/tools/ga_tags.class.js"></script>
-    <script src="../../src/tools/keyboard.class.js"></script>
-    <script src="../../src/tools/konami_code.class.js"></script>
-    <script src="../../src/tools/mouse.class.js"></script>
-    <script src="../../src/tools/offline.class.js"></script>
-    <script src="../../src/tools/registry.class.js"></script>
-    <script src="../../src/tools/resizer.class.js"></script>
-    <script src="../../src/tools/strings.class.js"></script>
-    <script src="../../src/tools/ticker.class.js"></script>
-    <script src="../../src/tools/html_serializer.class.js"></script>
-    <script src="../../src/tools/tooltip.class.js"></script>
+    <script src="../../builds/pan-0.3.js"></script>
     <script src="../../src/components/project.class.js" charset="utf-8"></script>
 
-    <!-- gsap external testing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/plugins/ScrollToPlugin.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/plugins/ColorPropsPlugin.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.4/hammer.min.js" charset="utf-8"></script>
 
     <!-- Your classes -->
     <script>
