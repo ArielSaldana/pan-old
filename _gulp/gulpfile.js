@@ -39,12 +39,19 @@ gulp.task( 'js', function()
         options.paths.sources + 'tools/css.class.js',
         options.paths.sources + 'tools/ga_tags.class.js',
         options.paths.sources + 'tools/keyboard.class.js',
+        options.paths.sources + 'tools/konami_code.class.js',
         options.paths.sources + 'tools/mouse.class.js',
         options.paths.sources + 'tools/offline.class.js',
         options.paths.sources + 'tools/registry.class.js',
         options.paths.sources + 'tools/resizer.class.js',
+        options.paths.sources + 'tools/strings.class.js',
         options.paths.sources + 'tools/ticker.class.js',
-    ] )
+        options.paths.sources + 'tools/ajax.class.js',
+        options.paths.sources + 'tools/history.class.js',
+        options.paths.sources + 'tools/queue.class.js',
+        options.paths.sources + 'tools/tooltip.class.js',
+        options.paths.sources + 'tools/pan.class.js'
+  ] )
     .pipe( concat( 'pan-' + options.version + '.js' ) )
     .pipe( gulp.dest( options.paths.destination ) )
     .pipe( uglify() )

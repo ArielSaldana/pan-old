@@ -2,12 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pan.js - Demo - Keyboard</title>
-    <link rel="stylesheet" href="../src/css/style.css">
+    <title>pan.js - Sandbox - Custom components</title>
 </head>
 <body>
-
-    <div class="element"><strong>keyboard</strong></div>
 
     <!-- POLYFILLS -->
     <script src="../../src/polyfills/classlist.js"></script>
@@ -37,39 +34,36 @@
     <script src="../../src/tools/resizer.class.js"></script>
     <script src="../../src/tools/strings.class.js"></script>
     <script src="../../src/tools/ticker.class.js"></script>
+
+    <!-- YOUR SCRIPT -->
     <script>
 
-        var keyboard = new Pan.Tools.Keyboard();
+        var browser = new Pan.Tools.Browser();
 
-        keyboard.on( 'down up', function( character, keycode )
+        // continuously loops when an error occurs.
+        browser.on( 'resize', function( viewport )
         {
-            console.log( 'is space down ', keyboard.is_down( 'space' ) );
-
-            var text = [];
-
-            text.push( '<strong>' );
-            text.push( 'keyboard' );
-            text.push( '</strong>' );
-
-            text.push( '<table>' );
-
-            text.push( '<tr>' );
-            text.push( '<td class="label">' );
-            text.push( 'downs names' );
-            text.push( '</td>' );
-            text.push( '<td class="value">' );
-            text.push( keyboard.downs );
-            text.push( '</td>' );
-            text.push( '</tr>' );
-
-            text.push( '</table>' );
-
-            // Add to DOM
-            document.querySelector( '.element' ).innerHTML = text.join('');
-
-            return false;
+            console.log( dsdf );
         } );
 
+
+        // var tests      = [
+        //         function(){ console.log( '1' ); },
+        //         function(){ console.log( '2' ); },
+        //         function(){ console.log( '3' ); }
+        //     ];
+
+        // // for( var test in tests )
+        // // {
+        // //     callback.apply( window, [ test ] );
+        // // }
+
+        // tests.forEach( function( callback )
+        // {
+        //     callback.apply( window, [ 'hey' ] );
+        // } );
+
     </script>
+
 </body>
 </html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Demo - Tooltip</title>
+    <!-- <link rel="stylesheet" href="../src/css/style.css"> -->
+    <style>
+
+
+
+    .pan-tooltip {
+      font-family: unreal-content-primary;
+      border-radius: 2px;
+      -webkit-transition: opacity 1.15s ease-in-out;
+      -moz-transition: opacity 1.15s ease-in-out;
+      -ms-transition: opacity 1.15s ease-in-out;
+      -o-transition: opacity 1.15s ease-in-out;
+      transition: left .15s ease-in,right .15s ease-in,top .15s ease-in, opacity .45s ease-in-out;
+      /*transition: top .15s ease-in;*/
+      padding: 6px 12px;
+      display:inline-block;
+      background-color: rgb(51, 51, 51);
+      color : rgba(255,255,255,0.9);
+      position:absolute;
+          max-width: 300px;
+          /*text-align: center;*/
+          font-size:14px;
+    }
+
+    .top:after {
+      content:'';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -8px;
+      width: 0;
+      height: 0;
+      color : rgba(255,255,255,0.9);
+      border-top: solid 6px rgb(51, 51, 51);
+      border-left: solid 8px transparent;
+      border-right: solid 8px transparent;
+    }
+
+    .left:after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      margin-top: -6px;
+      width: 0;
+      height: 0;
+      color: rgba(255,255,255,0.9);
+      border-top: solid 6px transparent;
+      border-left: solid 8px rgb(51, 51, 51);
+      border-bottom: solid 6px transparent;
+}
+
+.right:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  margin-top: -6px;
+  width: 0;
+  height: 0;
+  color: rgba(255,255,255,0.9);
+  border-top: solid 6px transparent;
+  border-right: solid 8px rgb(51, 51, 51);
+  border-bottom: solid 6px transparent;
+}
+
+.bottom:after {
+    content: '';
+    position: absolute;
+    /* top: 100%; */
+    top: -6px;
+    left: 50%;
+    margin-left: -8px;
+    width: 0;
+    height: 0;
+    color: rgba(255,255,255,0.9);
+    border-bottom: solid 6px rgb(51, 51, 51);
+    border-left: solid 8px transparent;
+    border-right: solid 8px transparent;
+}
+
+
+
+
+    .pan-tooltip-initial {
+      opacity: 0;
+    }
+
+    .pan-tooltip-load {
+      opacity: 1;
+    }
+
+    </style>
+</head>
+<body>
+
+    <div data-toggle="tooltip" data-placement="top" data-content="Surprise mothafuka" style="width:100px;height:100px; position:absolute;top:100px;left:100px;background-color:darkolivegreen;">
+
+    </div>
+    <div data-toggle="tooltip" data-placement="left" data-content="Some Fries mothafuka" style="width:100px;height:100px; position:absolute;top:200px;left:200px;background-color:deeppink;">
+
+    </div>
+
+    <div data-toggle="tooltip" data-placement="right" data-content="Supplies mothafuka" style="width:100px;height:100px; position:absolute;top:300px;left:0px;background-color:aquamarine;">
+
+    </div>
+    <div data-toggle="tooltip" data-placement="bottom" data-content="Snake eyes mothafuka" style="width:100px;height:100px; position:absolute;top:400px;left:100px;background-color:coral;">
+
+    </div>
+
+    <!-- POLYFILLS -->
+    <script src="../../src/polyfills/classlist.js"></script>
+    <script src="../../src/polyfills/foreach.js"></script>
+    <script src="../../src/polyfills/getcomputedstyle.js"></script>
+    <script src="../../src/polyfills/htmlelement.js"></script>
+    <script src="../../src/polyfills/indexof.js"></script>
+    <script src="../../src/polyfills/object-keys.js"></script>
+    <script src="../../src/polyfills/object-create.js"></script>
+    <script src="../../src/polyfills/requestanimationframe.js"></script>
+
+    <!-- CORE -->
+    <script src="../../src/core/pan.class.js"></script>
+    <script src="../../src/core/abstract.class.js"></script>
+    <script src="../../src/core/event_emitter.class.js"></script>
+
+    <!-- TOOLS -->
+    <script src="../../src/tools/browser.class.js"></script>
+    <script src="../../src/tools/colors.class.js"></script>
+    <script src="../../src/tools/css.class.js"></script>
+    <script src="../../src/tools/ga_tags.class.js"></script>
+    <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/konami_code.class.js"></script>
+    <script src="../../src/tools/mouse.class.js"></script>
+    <script src="../../src/tools/offline.class.js"></script>
+    <script src="../../src/tools/registry.class.js"></script>
+    <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/strings.class.js"></script>
+    <script src="../../src/tools/ticker.class.js"></script>
+    <script src="../../src/tools/html_serializer.class.js"></script>
+    <script src="../../src/tools/tooltip.class.js"></script>
+
+    <!-- jQuery -->
+
+    <script>
+
+        var tooltip = new Pan.Tools.Tooltip();
+
+
+    </script>
+</body>
+</html>

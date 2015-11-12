@@ -2,12 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pan.js - Demo - Keyboard</title>
-    <link rel="stylesheet" href="../src/css/style.css">
+    <title>Pan.js - Demo - html_serializer</title>
+    <!-- <link rel="stylesheet" href="../src/css/style.css"> -->
 </head>
 <body>
 
-    <div class="element"><strong>keyboard</strong></div>
+    <div id="container">
+      <div id="paragraph-container" class="editable" contenteditable="true" spellcheck="true" data-medium-editor-element="true" role="textbox" aria-multiline="true" medium-editor-index="0" data-placeholder="Type your text" data-medium-focused="true">
+        <p><b>There are no</b> do-overs or reboots, and our primary job as parents is to lay a solid foundation for our children's <i>future</i>.</p>
+
+        <figure><img src=""><img></figure>
+
+        <p><i>Sure</i>, it's not all up to the <b>schools </b>to spark and develop the drive to strive for excellence. That should but doesn't always happen at home, too. But the place our kids spend the majority of their days cannot be the force working to undo all of our work as parents. We must work together as a team, setting and facilitating high expectations.</p>
+        <p>As former L.A. mayor Antonio Villaraigosa said of his family's choice to move from public to Catholic school when he was running for mayor:</p>
+      </div>
+    </div>
 
     <!-- POLYFILLS -->
     <script src="../../src/polyfills/classlist.js"></script>
@@ -37,38 +46,15 @@
     <script src="../../src/tools/resizer.class.js"></script>
     <script src="../../src/tools/strings.class.js"></script>
     <script src="../../src/tools/ticker.class.js"></script>
+    <script src="../../src/tools/html_serializer.class.js"></script>
+
+    <!-- jQuery -->
+
     <script>
 
-        var keyboard = new Pan.Tools.Keyboard();
+        var serializer = new Pan.Tools.HTML_Serializer();
+        console.log(serializer.applyJson('paragraph-container'));
 
-        keyboard.on( 'down up', function( character, keycode )
-        {
-            console.log( 'is space down ', keyboard.is_down( 'space' ) );
-
-            var text = [];
-
-            text.push( '<strong>' );
-            text.push( 'keyboard' );
-            text.push( '</strong>' );
-
-            text.push( '<table>' );
-
-            text.push( '<tr>' );
-            text.push( '<td class="label">' );
-            text.push( 'downs names' );
-            text.push( '</td>' );
-            text.push( '<td class="value">' );
-            text.push( keyboard.downs );
-            text.push( '</td>' );
-            text.push( '</tr>' );
-
-            text.push( '</table>' );
-
-            // Add to DOM
-            document.querySelector( '.element' ).innerHTML = text.join('');
-
-            return false;
-        } );
 
     </script>
 </body>

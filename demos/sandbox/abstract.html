@@ -27,10 +27,12 @@
     <script src="../../src/tools/css.class.js"></script>
     <script src="../../src/tools/ga_tags.class.js"></script>
     <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/konami_code.class.js"></script>
     <script src="../../src/tools/mouse.class.js"></script>
     <script src="../../src/tools/offline.class.js"></script>
     <script src="../../src/tools/registry.class.js"></script>
     <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/strings.class.js"></script>
     <script src="../../src/tools/ticker.class.js"></script>
 
     <!-- YOUR SCRIPT -->
@@ -43,7 +45,7 @@
         // Inherit from Abstract
         Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
         {
-            init : function()
+            construct : function()
             {
                 console.log( 'Welcome to my custom class' );
             }
@@ -69,7 +71,7 @@
             },
 
             // Add options argument
-            init : function( options )
+            construct : function( options )
             {
                 // Pass options to _super
                 this._super( options );
@@ -97,7 +99,7 @@
             // Chose a name never used
             static : 'custom_tool',
 
-            init : function()
+            construct : function()
             {
                 console.log( 'Init' );
             }
@@ -107,6 +109,30 @@
         // 'init' will be called only the first time
         var custom_class       = new Pan.Tools.Custom_Class(),
             custom_class_again = new Pan.Tools.Custom_Class();
+
+
+            /**
+           * Registry
+           */
+
+        Pan.Components.Test_Class = Pan.Core.Abstract.extend(
+        {
+            // Chose a registry name
+            register : 'test',
+
+            construct : function( options )
+            {
+                // Pass options to _super
+                this._super( options );
+            }
+        } );
+
+        // Instantiate
+        var test_class   = new Pan.Components.Test_Class();
+
+        // Instantiate the registry tools and get the test_class using the register name
+        var registry     = new Pan.Tools.Registry(),
+            test_class_2 = registry.get( 'test' );
 
     </script>
 

@@ -33,10 +33,12 @@
     <script src="../../src/tools/css.class.js"></script>
     <script src="../../src/tools/ga_tags.class.js"></script>
     <script src="../../src/tools/keyboard.class.js"></script>
+    <script src="../../src/tools/konami_code.class.js"></script>
     <script src="../../src/tools/mouse.class.js"></script>
     <script src="../../src/tools/offline.class.js"></script>
     <script src="../../src/tools/registry.class.js"></script>
     <script src="../../src/tools/resizer.class.js"></script>
+    <script src="../../src/tools/strings.class.js"></script>
     <script src="../../src/tools/ticker.class.js"></script>
 
     <!-- jQuery -->
@@ -50,16 +52,19 @@
         css.apply( document.querySelectorAll( '.target' ), { width : '100px', height : '100px', marginBottom : '10px', background : '#ccc' } );
 
         // One
-        css.apply( document.querySelector( '.target-1' ), { background : 'red' } );
+        css.apply( document.querySelector( '.target-1' ), { 'background-color' : 'red' } );
 
         // jQuery
         css.apply( $( '.target' ), { border : '1px solid #aaa' } );
 
         // With prefixes auto
-        css.apply( document.querySelector( '.target-2' ), { transform : 'translateX(100px)' }, true );
+        css.apply( document.querySelector( '.target-2' ), { transform : 'translateX(100px)', backgroundColor : 'orange' }, true );
 
         // With specified prefixes
         css.apply( document.querySelector( '.target-4' ), { transform : 'translateX(200px)' }, [ 'webkit', 'moz' ] );
+
+        // With translateZ
+        css.apply( document.querySelector( '.target-5' ), { transform : 'translateX(100px) translateZ(100px)' }, true );
 
     </script>
 </body>

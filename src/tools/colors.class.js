@@ -17,8 +17,8 @@
                 target  : document.body,
                 classes :
                 {
-                    to_convert : 'gradient-text',
-                    converted  : 'gradient-text-converted'
+                    to_convert : 'pan-gradient-text',
+                    converted  : 'pan-gradient-text-converted'
                 }
             }
         },
@@ -172,7 +172,7 @@
          * @constructor
          * @param {object} options Properties to merge with defaults
          */
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
