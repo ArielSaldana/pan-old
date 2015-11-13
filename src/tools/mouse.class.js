@@ -5,7 +5,7 @@
  * @fires    up
  * @fires    move
  * @fires    wheel
- * @requires Pan.Tools.Browser
+ * @requires Pan.Tools.Viewport
  */
 Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
 {
@@ -21,7 +21,7 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.browser          = new Pan.Tools.Browser();
+        this.viewport         = new Pan.Tools.Viewport();
         this.down             = false;
         this.position         = {};
         this.position.x       = 0;
@@ -68,8 +68,8 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
             that.position.x = e.clientX;
             that.position.y = e.clientY;
 
-            that.position.ratio.x = that.position.x / that.browser.viewport.width;
-            that.position.ratio.y = that.position.y / that.browser.viewport.height;
+            that.position.ratio.x = that.position.x / that.viewport.width;
+            that.position.ratio.y = that.position.y / that.viewport.height;
 
             that.trigger( 'move', [ that.position, e.target ] );
         }
