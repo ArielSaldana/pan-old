@@ -7,6 +7,11 @@ Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
     slice: [].slice,
 
 
+    options : {
+
+    },
+
+
     /**
      * Initialise and merge options
      * @constructor
