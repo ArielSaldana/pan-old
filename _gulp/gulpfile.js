@@ -65,6 +65,7 @@ gulp.task( 'js', function()
 
         options.paths.sources + 'components/tooltip.class.js',
 
+        options.paths.sources + 'tools/breakpoints.class.js',
         options.paths.sources + 'tools/browser.class.js',
         options.paths.sources + 'tools/colors.class.js',
         options.paths.sources + 'tools/css.class.js',
