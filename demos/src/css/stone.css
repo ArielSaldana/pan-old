@@ -1660,11 +1660,15 @@ body.dark .page.home .projects-list a.distinctions.active .icon.white,body.dark 
 }
 
 .page.project .intro .left {
-  position: absolute;
+  /*position: absolute;
   top: 0;
   right: 60%;
   bottom: 0;
-  left: 135px;
+  left: 135px;*/
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 200px;
+
 }
 
 .page.project .intro .left .container {
