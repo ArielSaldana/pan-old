@@ -19,7 +19,7 @@ Pan.Components.App = Pan.Core.Abstract.extend(
         this._super( options );
 
         this.ticker   = new Pan.Tools.Ticker();
-        this.browser  = new Pan.Tools.Browser();
+        this.viewport = new Pan.Tools.Viewport();
         this.css      = new Pan.Tools.Css();
         this.keyboard = new Pan.Tools.Keyboard();
         this.mouse    = new Pan.Tools.Mouse();
