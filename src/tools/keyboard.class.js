@@ -1,9 +1,8 @@
 /**
- * @class    Keyboard
- * @author   Ariel Saldana / http://ahhriel.com
- * @fires    down
- * @fires    up
- * @requires Pan.Tools.Browser
+ * @class  Keyboard
+ * @author Ariel Saldana / http://ahhriel.com
+ * @fires  down
+ * @fires  up
  */
 Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
 {
@@ -36,7 +35,6 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.browser = new Pan.Tools.Browser();
         this.downs   = [];
 
         this.listen_to_events();

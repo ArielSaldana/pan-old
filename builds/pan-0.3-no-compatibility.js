@@ -5,7 +5,7 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Thu Nov 12 2015 12:40:30 GMT-0500 (Eastern Standard Time)
+ * Date: Thu Nov 12 2015 21:53:07 GMT-0500 (Eastern Standard Time)
  */
 
 var P = Pan = ( function( window, document, undefined )
@@ -2078,151 +2078,152 @@ Pan.Tools.Colors = Pan.Core.Abstract.extend(
 /**
  * @class    Css
  * @author   Ariel Saldana / http://ahhriel.com
+ * @requires Pan.Tools.Detector
  */
-Pan.Tools.Css = Pan.Core.Abstract.extend(
-{
-    static  : 'css',
-    options :
-    {
-        prefixes : [ 'webkit', 'moz', 'o', 'ms', '' ]
-    },
+ Pan.Tools.Css = Pan.Core.Abstract.extend(
+ {
+     static  : 'css',
+     options :
+     {
+         prefixes : [ 'webkit', 'moz', 'o', 'ms', '' ]
+     },
 
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
-    {
-        this._super( options );
+     /**
+      * Initialise and merge options
+      * @constructor
+      * @param {object} options Properties to merge with defaults
+      */
+     construct : function( options )
+     {
+         this._super( options );
 
-        this.browser = new Pan.Tools.Browser();
-        this.strings = new Pan.Tools.Strings();
-    },
+         this.detector = new Pan.Tools.Detector();
+         this.strings  = new Pan.Tools.Strings();
+     },
 
-    /**
-     * Apply css on target and add every prefixes
-     * @param  {HTMLElement} target   HTML element that need to be applied
-     * @param  {object}      style    CSS style
-     * @param  {array}       prefixes Array of prefixes (default from options)
-     * @param  {boolean}     clean    Should clean the style
-     * @return {HTMLElement}     Modified element
-     */
-    apply : function( target, style, prefixes, clean )
-    {
-        // jQuery handling
-        if( typeof jQuery !== 'undefined' && target instanceof jQuery)
-            target = target.toArray();
+     /**
+      * Apply css on target and add every prefixes
+      * @param  {HTMLElement} target   HTML element that need to be applied
+      * @param  {object}      style    CSS style
+      * @param  {array}       prefixes Array of prefixes (default from options)
+      * @param  {boolean}     clean    Should clean the style
+      * @return {HTMLElement}     Modified element
+      */
+     apply : function( target, style, prefixes, clean )
+     {
+         // jQuery handling
+         if( typeof jQuery !== 'undefined' && target instanceof jQuery)
+             target = target.toArray();
 
-        // Force array
-        if( typeof target.length === 'undefined' )
-            target = [ target ];
+         // Force array
+         if( typeof target.length === 'undefined' )
+             target = [ target ];
 
-        // Prefixes
-        if( typeof prefixes === 'undefined' )
-            prefixes = false;
+         // Prefixes
+         if( typeof prefixes === 'undefined' )
+             prefixes = false;
 
-        if( prefixes === true )
-            prefixes = this.options.prefixes;
+         if( prefixes === true )
+             prefixes = this.options.prefixes;
 
-        // Clean
-        if( typeof clean === 'undefined' || clean )
-            style = this.clean_style( style );
+         // Clean
+         if( typeof clean === 'undefined' || clean )
+             style = this.clean_style( style );
 
-        // Add prefix
-        if( prefixes instanceof Array )
-        {
-            var new_style = {};
-            for( var property in style )
-            {
-                for( var prefix in prefixes )
-                {
-                    var new_property = null;
+         // Add prefix
+         if( prefixes instanceof Array )
+         {
+             var new_style = {};
+             for( var property in style )
+             {
+                 for( var prefix in prefixes )
+                 {
+                     var new_property = null;
 
-                    if( prefixes[ prefix ] )
-                        new_property = prefixes[ prefix ] + ( property.charAt( 0 ).toUpperCase() + property.slice( 1 ) );
-                    else
-                        new_property = property;
+                     if( prefixes[ prefix ] )
+                         new_property = prefixes[ prefix ] + ( property.charAt( 0 ).toUpperCase() + property.slice( 1 ) );
+                     else
+                         new_property = property;
 
-                    new_style[ new_property ] = style[ property ];
-                }
-            }
+                     new_style[ new_property ] = style[ property ];
+                 }
+             }
 
-            style = new_style;
-        }
+             style = new_style;
+         }
 
-        // Apply style on each element
-        for( var element in target )
-        {
-            element = target[ element ];
+         // Apply style on each element
+         for( var element in target )
+         {
+             element = target[ element ];
 
-            if( element instanceof HTMLElement )
-            {
-                for( var _property in style )
-                {
-                    element.style[ _property ] = style[ _property ];
-                }
-            }
-        }
+             if( element instanceof HTMLElement )
+             {
+                 for( var _property in style )
+                 {
+                     element.style[ _property ] = style[ _property ];
+                 }
+             }
+         }
 
-        return target;
-    },
+         return target;
+     },
 
-    /**
-     * Clean style
-     * @param  {object} value Style to clean
-     * @return {object}       Cleaned style
-     */
-    clean_style : function( style )
-    {
-        var new_style = {};
+     /**
+      * Clean style
+      * @param  {object} value Style to clean
+      * @return {object}       Cleaned style
+      */
+     clean_style : function( style )
+     {
+         var new_style = {};
 
-        // Each property
-        for( var property in style )
-        {
-            var value = style[ property ];
+         // Each property
+         for( var property in style )
+         {
+             var value = style[ property ];
 
-            // Clean property and value
-            new_style[ this.clean_property( property ) ] = this.clean_value( value );
-        }
+             // Clean property and value
+             new_style[ this.clean_property( property ) ] = this.clean_value( value );
+         }
 
-        return new_style;
-    },
+         return new_style;
+     },
 
-    /**
-     * Clean property by removing prefixes and converting to camelCase
-     * @param {string} value Property to clean
-     */
-    clean_property : function( value )
-    {
-        // Remove prefixes
-        value = value.replace( /(webkit|moz|o|ms)?/i, '' );
-        value = this.strings.convert_case( value, 'camel' );
+     /**
+      * Clean property by removing prefixes and converting to camelCase
+      * @param {string} value Property to clean
+      */
+     clean_property : function( value )
+     {
+         // Remove prefixes
+         value = value.replace( /(webkit|moz|o|ms)?/i, '' );
+         value = this.strings.convert_case( value, 'camel' );
 
-        return value;
-    },
+         return value;
+     },
 
-    /**
-     * Clean value
-     * @param {string} value Property to fix
-     */
-    clean_value : function( value )
-    {
-        // IE 9
-        if( this.browser.detect.browser.ie === 9 )
-        {
-            // Remove translateZ
-            if( /translateZ/.test( value ) )
-                value = value.replace( /translateZ\([^)]*\)/g, '' );
+     /**
+      * Clean value
+      * @param {string} value Property to fix
+      */
+     clean_value : function( value )
+     {
+         // IE 9
+         if( this.detector.browser.ie === 9 )
+         {
+             // Remove translateZ
+             if( /translateZ/.test( value ) )
+                 value = value.replace( /translateZ\([^)]*\)/g, '' );
 
-            // Replace translate3d by translateX and translateY
-            if( /   /.test( value ) )
-                value = value.replace( /translate3d\(([^,]*),([^,]*),([^)])*\)/g, 'translateX($1) translateY($2)' );
-        }
+             // Replace translate3d by translateX and translateY
+             if( /   /.test( value ) )
+                 value = value.replace( /translate3d\(([^,]*),([^,]*),([^)])*\)/g, 'translateX($1) translateY($2)' );
+         }
 
-        return value;
-    }
-} );
+         return value;
+     }
+ } );
 
 /**
  * @class    GA_Tags
@@ -2474,11 +2475,10 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
 } );
 
 /**
- * @class    Keyboard
- * @author   Ariel Saldana / http://ahhriel.com
- * @fires    down
- * @fires    up
- * @requires Pan.Tools.Browser
+ * @class  Keyboard
+ * @author Ariel Saldana / http://ahhriel.com
+ * @fires  down
+ * @fires  up
  */
 Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
 {
@@ -2511,7 +2511,6 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.browser = new Pan.Tools.Browser();
         this.downs   = [];
 
         this.listen_to_events();
@@ -2726,7 +2725,7 @@ Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
  * @fires    up
  * @fires    move
  * @fires    wheel
- * @requires Pan.Tools.Browser
+ * @requires Pan.Tools.Viewport
  */
 Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
 {
@@ -2742,7 +2741,7 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.browser          = new Pan.Tools.Browser();
+        this.viewport         = new Pan.Tools.Viewport();
         this.down             = false;
         this.position         = {};
         this.position.x       = 0;
@@ -2789,8 +2788,8 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
             that.position.x = e.clientX;
             that.position.y = e.clientY;
 
-            that.position.ratio.x = that.position.x / that.browser.viewport.width;
-            that.position.ratio.y = that.position.y / that.browser.viewport.height;
+            that.position.ratio.x = that.position.x / that.viewport.width;
+            that.position.ratio.y = that.position.y / that.viewport.height;
 
             that.trigger( 'move', [ that.position, e.target ] );
         }
@@ -2932,7 +2931,7 @@ Pan.Tools.Offline = Pan.Core.Event_Emitter.extend(
  * @class    Registry
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Registry = Pan.Core.Abstract.extend(
+Pan.Tools.Registry = Pan.Core.Event_Emitter.extend(
 {
     static  : 'registry',
     options : {},
@@ -2975,7 +2974,11 @@ Pan.Tools.Registry = Pan.Core.Abstract.extend(
      */
     set : function( key, value )
     {
+        // Set
         this.items[ key ] = value;
+
+        // Trigger
+        this.trigger( 'update', [ key, value ] );
 
         return value;
     }
@@ -3011,11 +3014,14 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
     {
         this._super( options );
 
+        // Set up
         this.elements = [];
 
+        // Parse
         if( this.options.parse )
             this.parse();
 
+        // Auto resize
         if( this.options.auto_resize )
             this.init_auto_resize();
     },
@@ -3028,9 +3034,11 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
     {
         var that = this;
 
-        this.browser = new Pan.Tools.Browser();
+        // Set up
+        this.viewport = new Pan.Tools.Viewport();
 
-        this.browser.on( 'resize', function()
+        // Viewport resize event
+        this.viewport.on( 'resize', function()
         {
             that.resize_all();
         } );
@@ -3181,12 +3189,11 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
      *         fit_type         : 'fit',
      *         alignment_x      : 'center',
      *         alignment_y      : 'center',
-     *         rounding         : 'floor',
-     *         coordinates      : 'cartesian'
+     *         rounding         : 'floor'
      *     } )
      *
      */
-    get_sizes : function( parameters )
+    get_sizes : function( parameters, format )
     {
         // Errors
         var errors = [];
@@ -3206,7 +3213,11 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
         if( errors.length )
             return false;
 
-        // Defaults
+        // Default format
+        if( typeof format === 'undefined' )
+            format = 'both';
+
+        // Defaults parameters
         parameters.fit_type = parameters.fit_type || 'fill';
         parameters.align_x  = parameters.align_x  || 'center';
         parameters.align_y  = parameters.align_y  || 'center';
@@ -3327,12 +3338,17 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
         // Fit in
         sizes.fit_in = fit_in;
 
-        return sizes;
+        if( format === 'both' )
+            return sizes;
+        else if( format === 'cartesian' )
+            return sizes.cartesian;
+        else if( format === 'css' )
+            return sizes.css;
     }
 } );
 
 /**
- * @class    Resizer
+ * @class    Strings
  * @author   Ariel Saldana / http://ahhriel.com
  */
 Pan.Tools.Strings = Pan.Core.Abstract.extend(
@@ -3574,6 +3590,10 @@ Pan.Tools.Strings = Pan.Core.Abstract.extend(
      */
     to_boolean : function( value )
     {
+        // Undefined or null
+        if( typeof value === 'undefined' || value === null )
+            return false;
+
         // Clean
         value = '' + value;          // To string
         value = this.trim( value );  // Trim
