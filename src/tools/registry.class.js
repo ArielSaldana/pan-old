@@ -2,7 +2,7 @@
  * @class    Registry
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Registry = Pan.Core.Abstract.extend(
+Pan.Tools.Registry = Pan.Core.Event_Emitter.extend(
 {
     static  : 'registry',
     options : {},
@@ -45,7 +45,11 @@ Pan.Tools.Registry = Pan.Core.Abstract.extend(
      */
     set : function( key, value )
     {
+        // Set
         this.items[ key ] = value;
+
+        // Trigger
+        this.trigger( 'update', [ key, value ] );
 
         return value;
     }
