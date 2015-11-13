@@ -5,7 +5,7 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Thu Nov 12 2015 12:40:30 GMT-0500 (Eastern Standard Time)
+ * Date: Thu Nov 12 2015 21:53:07 GMT-0500 (Eastern Standard Time)
  */
 
 var P = Pan = ( function( window, document, undefined )
@@ -1313,6 +1313,313 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
 });
 
 /**
+ * @class    Breakpoints
+ * @author   Ariel Saldana / http://ahhriel.com
+ * @fires    update
+ * @fires    change
+ * @requires Pan.Tools.Viewport
+ */
+Pan.Tools.Breakpoints = Pan.Core.Event_Emitter.extend(
+{
+    static  : 'breakpoints',
+    options :
+    {
+        breakpoints : []
+    },
+
+    /**
+     * Initialise and merge options
+     * @constructor
+     * @param {object} options Properties to merge with defaults
+     */
+    construct : function( options )
+    {
+        this._super( options );
+
+        // Set up
+        this.viewport   = new Pan.Tools.Viewport();
+        this.all        = {};
+        this.actives    = {};
+        this.first_test = true;
+
+        // Initial breakpoints
+        this.add( this.options.breakpoints );
+
+        // Init
+        this.init_events();
+    },
+
+    /**
+     * Listen to events
+     * @return {object} Context
+     */
+    init_events : function()
+    {
+        var that = this;
+
+        // Viewport resize event
+        this.viewport.on( 'resize', function()
+        {
+            // Test breakpoints
+            that.test();
+        } );
+
+        return this;
+    },
+
+    /**
+     * Add one breakpoint
+     * @param {object} breakpoint Breakpoint informations
+     * @return {object}           Context
+     * @example
+     *     add( {
+     *         name  : 'large',
+     *         width :
+     *         {
+     *             value    : 960,
+     *             extreme  : 'min',
+     *             included : false
+     *         }
+     *     } )
+     * @example
+     *     add_breakpoints( [
+     *          {
+     *              name  : 'large',
+     *              width :
+     *              {
+     *                  value    : 960,
+     *                  extreme  : 'min',
+     *                  included : false
+     *              }
+     *          },
+     *          {
+     *              name  : 'medium',
+     *              width :
+     *              {
+     *                  value    : 960,
+     *                  extreme  : 'max',
+     *                  included : true
+     *              }
+     *          },
+     *          {
+     *              name  : 'small',
+     *              width :
+     *              {
+     *                  value    : 500,
+     *                  extreme  : 'max',
+     *                  included : true
+     *              },
+     *              height :
+     *              {
+     *                  value    : 500,
+     *                  extreme  : 'max',
+     *                  included : true
+     *              }
+     *          }
+     *     ] )
+     *
+     */
+    add : function( breakpoints, silent )
+    {
+        // Default
+        silent = typeof silent === 'undefined' ? true : false;
+
+        // Force array
+        if( !( breakpoints instanceof Array ) )
+            breakpoints = [ breakpoints ];
+
+        // Add each one to breakpoints
+        for( var i = 0; i < breakpoints.length; i++ )
+        {
+            var breakpoint = breakpoints[ i ];
+            this.all[ breakpoint.name ] = breakpoint;
+        }
+
+        // Test breakpoints
+        if( !silent )
+            this.test();
+
+        return this;
+    },
+
+    /**
+     * Remove one breakpoint
+     * @param  {string} breakpoint Breakpoint name (can be the breakpoint object itself)
+     * @return {object}            Context
+     */
+    remove : function( breakpoints, silent )
+    {
+        // Force array
+        if( !( breakpoints instanceof Array ) )
+            breakpoints = [ breakpoints ];
+
+        // Object breakpoint
+        if( typeof breakpoint === 'object' && typeof breakpoint.name === 'string' )
+            breakpoint = breakpoint.name;
+
+        // Default
+        silent = typeof silent === 'undefined' ? false : true;
+
+        // Add each one to breakpoints
+        for( var i = 0; i < breakpoints.length; i++ )
+        {
+            delete this.all[ breakpoints[ i ] ];
+        }
+
+        // Test breakpoints
+        if( !silent )
+            this.test();
+
+        return this;
+    },
+
+    /**
+     * Test every breakpoint and trigger 'update' event if current breakpoint changed
+     * @return {object} Context
+     */
+    test : function()
+    {
+        // Set up
+        var current_breakpoints = {},
+            all_names           = Object.keys( this.all );
+
+        // Each breakpoint
+        for( var i = 0, len = all_names.length; i < len; i++ )
+        {
+            // Set up
+            var breakpoint = this.all[ all_names[ i ] ],
+                width      = !breakpoint.width,
+                height     = !breakpoint.height;
+
+            // Width must be tested
+            if( !width )
+            {
+                // Min
+                if( breakpoint.width.extreme === 'min' )
+                {
+                    if(
+                        // Included
+                        ( breakpoint.width.included && this.viewport.width >= breakpoint.width.value ) ||
+
+                        // Not included
+                        ( !breakpoint.width.included && this.viewport.width > breakpoint.width.value )
+                    )
+                        width = true;
+                }
+
+                // Max
+                else
+                {
+                    if(
+                        // Included
+                        ( breakpoint.width.included && this.viewport.width <= breakpoint.width.value ) ||
+
+                        // Not included
+                        ( !breakpoint.width.included && this.viewport.width < breakpoint.width.value )
+                    )
+                        width = true;
+                }
+            }
+
+            // Height must be tested
+            if( !height )
+            {
+                // Min
+                if( breakpoint.height.extreme === 'min' )
+                {
+                    if(
+                        // Included
+                        ( breakpoint.height.included && this.viewport.height >= breakpoint.height.value ) ||
+
+                        // Not included
+                        ( !breakpoint.height.included && this.viewport.height > breakpoint.height.value )
+                    )
+                        height = true;
+                }
+
+                // Max
+                else
+                {
+                    if(
+                        // Included
+                        ( breakpoint.height.included && this.viewport.height <= breakpoint.height.value ) ||
+
+                        // Not included
+                        ( !breakpoint.height.included && this.viewport.height < breakpoint.height.value )
+                    )
+                        height = true;
+                }
+            }
+
+            if( width && height )
+            {
+                current_breakpoints[ breakpoint.name ] = breakpoint;
+            }
+        }
+
+        // Set up
+        var current_names = Object.keys( current_breakpoints ),
+            old_names     = Object.keys( this.actives ),
+            difference    = this.get_arrays_differences( current_names, old_names );
+
+        if( difference.length || this.first_test )
+        {
+            // Set actives
+            this.actives = current_breakpoints;
+
+            this.first_test = false;
+
+            // Trigger
+            this.trigger( 'update change', [ this.actives ] );
+        }
+
+        return this;
+    },
+
+    /**
+     * Test if breakpoint is active
+     * @param  {string}  breakpoint Breakpoint name (can be the breakpoint object itself)
+     * @return {boolean}            True or false depending on if the breakpoint is active
+     */
+    is_active : function( breakpoint )
+    {
+        // Object breakpoint
+        if( typeof breakpoint === 'object' && typeof breakpoint.name === 'string' )
+            breakpoint = breakpoint.name;
+
+        return typeof this.actives[ breakpoint ] !== 'undefined';
+    },
+
+    /**
+     * Get differences between two arrays
+     * @param  {array} a First array
+     * @param  {array} b Second array
+     * @return {array}   Items in one but not in the other
+     */
+    get_arrays_differences : function( a, b )
+    {
+        var a_new = [],
+            diff  = [];
+
+        for( var i = 0; i < a.length; i++ )
+            a_new[ a[ i ] ] = true;
+
+        for( i = 0; i < b.length; i++ )
+        {
+            if( a_new[ b[ i ] ] )
+                delete a_new[ b[ i ] ];
+            else
+                a_new[ b[ i ] ] = true;
+        }
+
+        for( var k in a_new )
+            diff.push( k );
+
+        return diff;
+    }
+} );
+
+/**
  * @class    Browser
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    resize
@@ -2554,166 +2861,163 @@ Pan.Tools.Colors = Pan.Core.Abstract.extend(
 /**
  * @class    Css
  * @author   Ariel Saldana / http://ahhriel.com
+ * @requires Pan.Tools.Detector
  */
-Pan.Tools.Css = Pan.Core.Abstract.extend(
-{
-    static  : 'css',
-    options :
-    {
-        prefixes : [ 'webkit', 'moz', 'o', 'ms', '' ]
-    },
+ Pan.Tools.Css = Pan.Core.Abstract.extend(
+ {
+     static  : 'css',
+     options :
+     {
+         prefixes : [ 'webkit', 'moz', 'o', 'ms', '' ]
+     },
 
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
-    {
-        this._super( options );
+     /**
+      * Initialise and merge options
+      * @constructor
+      * @param {object} options Properties to merge with defaults
+      */
+     construct : function( options )
+     {
+         this._super( options );
 
-        this.browser = new Pan.Tools.Browser();
-        this.strings = new Pan.Tools.Strings();
-    },
+         this.detector = new Pan.Tools.Detector();
+         this.strings  = new Pan.Tools.Strings();
+     },
 
-    /**
-     * Apply css on target and add every prefixes
-     * @param  {HTMLElement} target   HTML element that need to be applied
-     * @param  {object}      style    CSS style
-     * @param  {array}       prefixes Array of prefixes (default from options)
-     * @param  {boolean}     clean    Should clean the style
-     * @return {HTMLElement}     Modified element
-     */
-    apply : function( target, style, prefixes, clean )
-    {
-        // jQuery handling
-        if( typeof jQuery !== 'undefined' && target instanceof jQuery)
-            target = target.toArray();
+     /**
+      * Apply css on target and add every prefixes
+      * @param  {HTMLElement} target   HTML element that need to be applied
+      * @param  {object}      style    CSS style
+      * @param  {array}       prefixes Array of prefixes (default from options)
+      * @param  {boolean}     clean    Should clean the style
+      * @return {HTMLElement}     Modified element
+      */
+     apply : function( target, style, prefixes, clean )
+     {
+         // jQuery handling
+         if( typeof jQuery !== 'undefined' && target instanceof jQuery)
+             target = target.toArray();
 
-        // Force array
-        if( typeof target.length === 'undefined' )
-            target = [ target ];
+         // Force array
+         if( typeof target.length === 'undefined' )
+             target = [ target ];
 
-        // Prefixes
-        if( typeof prefixes === 'undefined' )
-            prefixes = false;
+         // Prefixes
+         if( typeof prefixes === 'undefined' )
+             prefixes = false;
 
-        if( prefixes === true )
-            prefixes = this.options.prefixes;
+         if( prefixes === true )
+             prefixes = this.options.prefixes;
 
-        // Clean
-        if( typeof clean === 'undefined' || clean )
-            style = this.clean_style( style );
+         // Clean
+         if( typeof clean === 'undefined' || clean )
+             style = this.clean_style( style );
 
-        // Add prefix
-        if( prefixes instanceof Array )
-        {
-            var new_style = {};
-            for( var property in style )
-            {
-                for( var prefix in prefixes )
-                {
-                    var new_property = null;
+         // Add prefix
+         if( prefixes instanceof Array )
+         {
+             var new_style = {};
+             for( var property in style )
+             {
+                 for( var prefix in prefixes )
+                 {
+                     var new_property = null;
 
-                    if( prefixes[ prefix ] )
-                        new_property = prefixes[ prefix ] + ( property.charAt( 0 ).toUpperCase() + property.slice( 1 ) );
-                    else
-                        new_property = property;
+                     if( prefixes[ prefix ] )
+                         new_property = prefixes[ prefix ] + ( property.charAt( 0 ).toUpperCase() + property.slice( 1 ) );
+                     else
+                         new_property = property;
 
-                    new_style[ new_property ] = style[ property ];
-                }
-            }
+                     new_style[ new_property ] = style[ property ];
+                 }
+             }
 
-            style = new_style;
-        }
+             style = new_style;
+         }
 
-        // Apply style on each element
-        for( var element in target )
-        {
-            element = target[ element ];
+         // Apply style on each element
+         for( var element in target )
+         {
+             element = target[ element ];
 
-            if( element instanceof HTMLElement )
-            {
-                for( var _property in style )
-                {
-                    element.style[ _property ] = style[ _property ];
-                }
-            }
-        }
+             if( element instanceof HTMLElement )
+             {
+                 for( var _property in style )
+                 {
+                     element.style[ _property ] = style[ _property ];
+                 }
+             }
+         }
 
-        return target;
-    },
+         return target;
+     },
 
-    /**
-     * Clean style
-     * @param  {object} value Style to clean
-     * @return {object}       Cleaned style
-     */
-    clean_style : function( style )
-    {
-        var new_style = {};
+     /**
+      * Clean style
+      * @param  {object} value Style to clean
+      * @return {object}       Cleaned style
+      */
+     clean_style : function( style )
+     {
+         var new_style = {};
 
-        // Each property
-        for( var property in style )
-        {
-            var value = style[ property ];
+         // Each property
+         for( var property in style )
+         {
+             var value = style[ property ];
 
-            // Clean property and value
-            new_style[ this.clean_property( property ) ] = this.clean_value( value );
-        }
+             // Clean property and value
+             new_style[ this.clean_property( property ) ] = this.clean_value( value );
+         }
 
-        return new_style;
-    },
+         return new_style;
+     },
 
-    /**
-     * Clean property by removing prefixes and converting to camelCase
-     * @param {string} value Property to clean
-     */
-    clean_property : function( value )
-    {
-        // Remove prefixes
-        value = value.replace( /(webkit|moz|o|ms)?/i, '' );
-        value = this.strings.convert_case( value, 'camel' );
+     /**
+      * Clean property by removing prefixes and converting to camelCase
+      * @param {string} value Property to clean
+      */
+     clean_property : function( value )
+     {
+         // Remove prefixes
+         value = value.replace( /(webkit|moz|o|ms)?/i, '' );
+         value = this.strings.convert_case( value, 'camel' );
 
-        return value;
-    },
+         return value;
+     },
 
-    /**
-     * Clean value
-     * @param {string} value Property to fix
-     */
-    clean_value : function( value )
-    {
-        // IE 9
-        if( this.browser.detect.browser.ie === 9 )
-        {
-            // Remove translateZ
-            if( /translateZ/.test( value ) )
-                value = value.replace( /translateZ\([^)]*\)/g, '' );
+     /**
+      * Clean value
+      * @param {string} value Property to fix
+      */
+     clean_value : function( value )
+     {
+         // IE 9
+         if( this.detector.browser.ie === 9 )
+         {
+             // Remove translateZ
+             if( /translateZ/.test( value ) )
+                 value = value.replace( /translateZ\([^)]*\)/g, '' );
 
-            // Replace translate3d by translateX and translateY
-            if( /   /.test( value ) )
-                value = value.replace( /translate3d\(([^,]*),([^,]*),([^)])*\)/g, 'translateX($1) translateY($2)' );
-        }
+             // Replace translate3d by translateX and translateY
+             if( /   /.test( value ) )
+                 value = value.replace( /translate3d\(([^,]*),([^,]*),([^)])*\)/g, 'translateX($1) translateY($2)' );
+         }
 
-        return value;
-    }
-} );
+         return value;
+     }
+ } );
 
 /**
- * @class    Detector
- * @author   Ariel Saldana / http://ahhriel.com
- * @fires    resize
- * @fires    scroll
- * @fires    breakpoint
- * @requires Pan.Tools.Ticker
+ * @class  Detector
+ * @author Ariel Saldana / http://ahhriel.com
  */
 Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
 {
     static  : 'detector',
     options :
     {
-        add_classes_to : [ 'html' ]
+        classes_targets : [ 'html' ]
     },
 
     /**
@@ -2937,34 +3241,49 @@ Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
     init_classes : function()
     {
         // Don't add
-        if( !this.options.add_classes_to || this.options.add_classes_to.length === 0 )
+        if( !this.options.classes_targets || this.options.classes_targets.length === 0 )
             return false;
 
         // Set up
-        var targets  = null,
-            selector = null;
+        var targets = [],
+            target  = null;
 
         // Each element that need to add classes
-        for( var i = 0, len = this.options.add_classes_to.length; i < len; i++ )
+        for( var i = 0, len = this.options.classes_targets.length; i < len; i++ )
         {
-            // Selector
-            selector = this.options.add_classes_to[ i ];
-
             // Target
-            switch( selector )
+            target = this.options.classes_targets[ i ];
+
+            // String
+            if( typeof target === 'string' )
             {
-                case 'html' :
-                    targets = [ document.documentElement ];
-                    break;
+                // Target
+                switch( target )
+                {
+                    case 'html' :
+                        targets.push( document.documentElement );
+                        break;
 
-                case 'body' :
-                    targets = [ document.body ];
-                    break;
+                    case 'body' :
+                        targets.push( document.body );
+                        break;
 
-                default :
-                    targets = document.querySelectorAll( selector );
-                    break;
+                    default :
+                        var temp_targets = document.querySelectorAll( target );
+
+                        for( var j = 0; j < temp_targets.length; j++ )
+                            targets.push( temp_targets[ j ] );
+
+                        break;
+                }
             }
+            // DOM Element
+            else if( target instanceof Element )
+            {
+                targets.push( target );
+            }
+
+            console.log(targets);
 
             // Targets found
             if( targets.length )
@@ -3279,11 +3598,10 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
 } );
 
 /**
- * @class    Keyboard
- * @author   Ariel Saldana / http://ahhriel.com
- * @fires    down
- * @fires    up
- * @requires Pan.Tools.Browser
+ * @class  Keyboard
+ * @author Ariel Saldana / http://ahhriel.com
+ * @fires  down
+ * @fires  up
  */
 Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
 {
@@ -3316,7 +3634,6 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.browser = new Pan.Tools.Browser();
         this.downs   = [];
 
         this.listen_to_events();
@@ -3531,7 +3848,7 @@ Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
  * @fires    up
  * @fires    move
  * @fires    wheel
- * @requires Pan.Tools.Browser
+ * @requires Pan.Tools.Viewport
  */
 Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
 {
@@ -3547,7 +3864,7 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.browser          = new Pan.Tools.Browser();
+        this.viewport         = new Pan.Tools.Viewport();
         this.down             = false;
         this.position         = {};
         this.position.x       = 0;
@@ -3594,8 +3911,8 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
             that.position.x = e.clientX;
             that.position.y = e.clientY;
 
-            that.position.ratio.x = that.position.x / that.browser.viewport.width;
-            that.position.ratio.y = that.position.y / that.browser.viewport.height;
+            that.position.ratio.x = that.position.x / that.viewport.width;
+            that.position.ratio.y = that.position.y / that.viewport.height;
 
             that.trigger( 'move', [ that.position, e.target ] );
         }
@@ -3737,7 +4054,7 @@ Pan.Tools.Offline = Pan.Core.Event_Emitter.extend(
  * @class    Registry
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Registry = Pan.Core.Abstract.extend(
+Pan.Tools.Registry = Pan.Core.Event_Emitter.extend(
 {
     static  : 'registry',
     options : {},
@@ -3780,7 +4097,11 @@ Pan.Tools.Registry = Pan.Core.Abstract.extend(
      */
     set : function( key, value )
     {
+        // Set
         this.items[ key ] = value;
+
+        // Trigger
+        this.trigger( 'update', [ key, value ] );
 
         return value;
     }
@@ -3816,11 +4137,14 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
     {
         this._super( options );
 
+        // Set up
         this.elements = [];
 
+        // Parse
         if( this.options.parse )
             this.parse();
 
+        // Auto resize
         if( this.options.auto_resize )
             this.init_auto_resize();
     },
@@ -3833,9 +4157,11 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
     {
         var that = this;
 
-        this.browser = new Pan.Tools.Browser();
+        // Set up
+        this.viewport = new Pan.Tools.Viewport();
 
-        this.browser.on( 'resize', function()
+        // Viewport resize event
+        this.viewport.on( 'resize', function()
         {
             that.resize_all();
         } );
@@ -3986,12 +4312,11 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
      *         fit_type         : 'fit',
      *         alignment_x      : 'center',
      *         alignment_y      : 'center',
-     *         rounding         : 'floor',
-     *         coordinates      : 'cartesian'
+     *         rounding         : 'floor'
      *     } )
      *
      */
-    get_sizes : function( parameters )
+    get_sizes : function( parameters, format )
     {
         // Errors
         var errors = [];
@@ -4011,7 +4336,11 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
         if( errors.length )
             return false;
 
-        // Defaults
+        // Default format
+        if( typeof format === 'undefined' )
+            format = 'both';
+
+        // Defaults parameters
         parameters.fit_type = parameters.fit_type || 'fill';
         parameters.align_x  = parameters.align_x  || 'center';
         parameters.align_y  = parameters.align_y  || 'center';
@@ -4132,12 +4461,17 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
         // Fit in
         sizes.fit_in = fit_in;
 
-        return sizes;
+        if( format === 'both' )
+            return sizes;
+        else if( format === 'cartesian' )
+            return sizes.cartesian;
+        else if( format === 'css' )
+            return sizes.css;
     }
 } );
 
 /**
- * @class    Resizer
+ * @class    Strings
  * @author   Ariel Saldana / http://ahhriel.com
  */
 Pan.Tools.Strings = Pan.Core.Abstract.extend(
@@ -4379,6 +4713,10 @@ Pan.Tools.Strings = Pan.Core.Abstract.extend(
      */
     to_boolean : function( value )
     {
+        // Undefined or null
+        if( typeof value === 'undefined' || value === null )
+            return false;
+
         // Clean
         value = '' + value;          // To string
         value = this.trim( value );  // Trim
@@ -4762,8 +5100,7 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
     options :
     {
         disable_hover_on_scroll : false,
-        initial_triggers        : [ 'resize', 'scroll' ],
-        add_classes_to          : [ 'html' ],
+        initial_triggers        : [ 'resize', 'scroll' ]
     },
 
     /**
