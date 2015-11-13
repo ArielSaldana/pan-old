@@ -11,8 +11,7 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
     options :
     {
         disable_hover_on_scroll : false,
-        initial_triggers        : [ 'resize', 'scroll' ],
-        add_classes_to          : [ 'html' ],
+        initial_triggers        : [ 'resize', 'scroll' ]
     },
 
     /**
