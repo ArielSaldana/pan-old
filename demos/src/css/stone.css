@@ -3179,6 +3179,16 @@ header .links a.twitter:after {
     font-size: 15px;
   }
 
+  .page.project .intro .center{
+    left: 200px !important;
+    right:200px !important;
+  }
+
+  .page.project .intro .centerbig{
+    left: 50px !important;
+    right:50px !important;
+  }
+
   .page.project .intro .left {
     left: 65px;
     right: 62%;
@@ -3611,7 +3621,7 @@ header .links a.twitter:after {
     display: none;
   }
 
-  .page.project .intro .left {
+  .page.project .intro .left , .page.project .intro .center {
     left: 65px;
     right: 65px;
   }
