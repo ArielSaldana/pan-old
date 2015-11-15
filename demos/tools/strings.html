@@ -18,34 +18,8 @@
     <div class="element booleans"></div>
     <div class="element slugs"></div>
 
-    <!-- POLYFILLS -->
-    <script src="../../src/polyfills/classlist.js"></script>
-    <script src="../../src/polyfills/foreach.js"></script>
-    <script src="../../src/polyfills/getcomputedstyle.js"></script>
-    <script src="../../src/polyfills/htmlelement.js"></script>
-    <script src="../../src/polyfills/indexof.js"></script>
-    <script src="../../src/polyfills/object-keys.js"></script>
-    <script src="../../src/polyfills/object-create.js"></script>
-    <script src="../../src/polyfills/requestanimationframe.js"></script>
-
-    <!-- CORE -->
-    <script src="../../src/core/pan.class.js"></script>
-    <script src="../../src/core/abstract.class.js"></script>
-    <script src="../../src/core/event_emitter.class.js"></script>
-
-    <!-- TOOLS -->
-    <script src="../../src/tools/browser.class.js"></script>
-    <script src="../../src/tools/colors.class.js"></script>
-    <script src="../../src/tools/css.class.js"></script>
-    <script src="../../src/tools/ga_tags.class.js"></script>
-    <script src="../../src/tools/keyboard.class.js"></script>
-    <script src="../../src/tools/konami_code.class.js"></script>
-    <script src="../../src/tools/mouse.class.js"></script>
-    <script src="../../src/tools/offline.class.js"></script>
-    <script src="../../src/tools/registry.class.js"></script>
-    <script src="../../src/tools/resizer.class.js"></script>
-    <script src="../../src/tools/strings.class.js"></script>
-    <script src="../../src/tools/ticker.class.js"></script>
+    <!-- Pan.js -->
+    <script src="../../builds/pan-0.3.js"></script>
 
     <script>
 
@@ -101,20 +75,23 @@
                 '-_',
             ],
             example_booleans = [
-                0,
-                '0',
-                false,
-                'false',
-                'nop',
-                'no',
-                'nein',
-                ':(',
-                1,
-                '1',
-                true,
-                'true',
-                'yes',
-                'foo'
+                { label : 'undefined', value : undefined },
+                { label : 'null', value : null },
+                { label : '0', value : 0 },
+                { label : '"0"', value : '0' },
+                { label : 'false', value : false },
+                { label : '"false"', value : 'false' },
+                { label : '"nop"', value : 'nop' },
+                { label : '"no"', value : 'no' },
+                { label : '"nein"', value : 'nein' },
+                { label : '":("', value : ':(' },
+                { label : '1', value : 1 },
+                { label : '"1"', value : '1' },
+                { label : 'true', value : true },
+                { label : '"true"', value : 'true' },
+                { label : '"yes"', value : 'yes' },
+                { label : '"foo"', value : 'foo' },
+                { label : '":)"', value : ':)' },
             ],
             example_to_slugs = [
                 'Lorem Ipsum Dolores',
@@ -192,10 +169,10 @@
 
         for( i = 0, i_len = example_booleans.length; i < i_len; i++ )
         {
-            text.push( '<tr><td>"' );
-            text.push( example_booleans[ i ] );
-            text.push( '"</td><td>' );
-            text.push( strings.to_boolean( example_booleans[ i ] ) );
+            text.push( '<tr><td>' );
+            text.push( example_booleans[ i ].label );
+            text.push( '</td><td>' );
+            text.push( strings.to_boolean( example_booleans[ i ].value ) );
             text.push( '</td></tr>' );
         }
         text.push( '</table>' );

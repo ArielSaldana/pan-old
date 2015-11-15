@@ -4,14 +4,13 @@ Pan.js
 #### Yet another JS framework ####
 
 Pan.js (or **Pan.js**) is a light (< 40ko) and simple **JS framework** made to help you develop well structured web applications quickly.
-Because Internet is a place of love and sharing, here it is.
 
-You can organize your web application into **Components** and **Tools**. It comes with some useful premade [tools](#tools).
+You can organize your web application into **Components** and **Tools**. It comes with some useful premade stuff.
 Simply include the JS files in your HTML and start using it. Pan.js is still in development, don't hesitate if you have any advice.
 
 **Table of contents**
 
-* [Compatibility](#compatibility)
+* [Compatibility](#compatibility
 * [Usage](#usage)
     * [As a library](#as-a-library-the-easy-way)
     * [As a framework](#as-a-framework-the-powerful-way)
@@ -19,15 +18,19 @@ Simply include the JS files in your HTML and start using it. Pan.js is still in 
     * [Abstract class](#abstract-class)
     * [Event Emitter class](#event-emitter-class)
 * [Tools](#tools)
-    * [Browser](#browser)
+    * [Breakpoints](#breakpoints)
     * [Colors](#colors)
+    * [Css](#css)
+    * [Detector](#detector)
     * [GA tags](#ga-tags)
     * [Keyboard](#keyboard)
+    * [Konami Code](#konami-code)
     * [Mouse](#mouse)
-    * [Ticker](#ticker)
     * [Registry](#registry)
-    * [Css](#css)
     * [Resizer](#resizer)
+    * [Strings](#strings)
+    * [Ticker](#ticker)
+    * [Viewport](#viewport)
 * [Todo](#todo)
 * [Changelog](#changelog)
 
@@ -35,13 +38,14 @@ Simply include the JS files in your HTML and start using it. Pan.js is still in 
 ## Compatibility
 
 Pan.js has no dependencies (no, you don't need jQuery).
-It's compatible with all modern browsers down to IE8 (included).<br />
-Depending on the browsers and classes you are using, you may need polyfills which are included in the [src/polyfills](src/polyfills) folder.
+It's compatible with all modern browsers down to IE8.<br>
+Depending on the browsers and classes you are using, you may need polyfills which are included in the [src/polyfills](src/polyfills) folder.<br>
+The default build includes all needed polyfills but you can use the `no-compatibility` version.
 
 
 ## Usage
 
-There are two ways of using Pan.js.<br />
+There are two ways of using Pan.js.<br>
 You can use it as a simple library by instantiating the tools or you can use it as a Framework by extending Pan.js to create your own tools and components.
 
 #### As a library (the easy way)
@@ -49,18 +53,18 @@ You can use it as a simple library by instantiating the tools or you can use it 
 * Include the build in your HTML
 
 ```html
-<script src="../../build/pan-0.1.min.js"></script>
+<script src="../../builds/pan-0.3.min.js"></script>
 ```
 
 * Instantiate the tools you need
 * Start using them
 
 ```javascript
-var browser = new Pan.Tools.Browser();
+var viewport = new Pan.Tools.Viewport();
 
-browser.on( 'resize', function( viewport )
+viewport.on( 'resize', function( width, height )
 {
-    console.log( 'viewport height ', viewport.height );
+    console.log( width, height );
 } );
 ```
 
@@ -68,13 +72,13 @@ browser.on( 'resize', function( viewport )
 #### As a framework (the powerful way)
 
 Create your own tools and components based on Pan.js classes. You can put your components inside `Pan.Components` object or you can create your own namespace like `Foo.Bar.My_Class`.<br/>
-Inheritance is based on the [John Resig code](http://ejohn.org/blog/simple-javascript-inheritance/) with some improvements like deep property merging.<br />
+Inheritance is based on the [John Resig code](http://ejohn.org/blog/simple-javascript-inheritance/) with some improvements like deep property merging, singleton, defualt options, etc.<br>
 Pan.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode). Do as you whish and feel free to share your custom tools and components.
 
 * Include the build in your HTML
 
 ```html
-<script src="../../build/pan-0.1.min.js"></script>
+<script src="../../builds/pan-0.3.min.js"></script>
 ```
 
 * Create your own tools and components based on Pan.js **Abstract** or **Event Emitter** classes (you may want to put each class in a different file)
@@ -83,7 +87,7 @@ Pan.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/We
 // Create a class wrapping the all application
 Pan.Components.My_App = Pan.Core.Abstract.extend(
 {
-    init : function()
+    construct : function()
     {
         // Instantiate a sidebar and header
         this.sidebar = new Pan.Components.My_Sidebar( { color : 'blue' } );
@@ -100,7 +104,7 @@ Pan.Components.My_Sidebar = Pan.Core.Abstract.extend(
         colors : 'red'
     },
 
-    init : function( options )
+    construct : function( options )
     {
         this._super( options );
 
@@ -113,7 +117,7 @@ Pan.Components.My_Sidebar = Pan.Core.Abstract.extend(
 // Create a class for the header
 Pan.Components.My_Header = Pan.Core.Abstract.extend(
 {
-    init : function()
+    construct : function()
     {
         this.main = document.querySelector( 'header' );
 
@@ -130,24 +134,27 @@ var my_app = new Pan.Components.My_App();
 
 # Core classes
 
-Core classes are base classes you want to extend if your building custom components and tools.
+Core classes are the foundations of Pan.js.<br>
+Every tool or component inherit from one of those classes and your custom classes should too.
 
 ## Abstract Class
 
 `Pan.Core.Abstract` is the default class.
 
-* `extend` method
-* `init` method (called when instantiated)
-* `options` property that will be merged (see example bellow)
-* `static` property to set the class as a singleton (can be instantiated only one time)
+* Can be extended
+* `construct` method will be called when instantiated
+* `static` property set the class as a Singleton. That mean that the first instiantiation with `new` will act normally but every next instiantiation with `new` will return the first one.
+* `options` property is an object that will be merge with the options when instantiated
+* `register` property inside the `options` property will automatically add the instantiation to the [Registry](#registry) tool with the `register` value as key
+* calling `_super( parameters )` inside a method will call the parent overrided method
 
+###### Extend / Construct
 
-###### Default
 ```javascript
 // Inherit from Abstract
 Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
 {
-    init : function()
+    construct : function()
     {
         console.log( 'Welcome to my custom class' );
     }
@@ -156,7 +163,8 @@ Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
 var custom_class = new Pan.Components.Custom_Class();
 ```
 
-###### Options with deep merging
+###### Options (with deep merging)
+
 ```javascript
 Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
 {
@@ -171,7 +179,7 @@ Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
     },
 
     // Add options argument
-    init : function( options )
+    construct : function( options )
     {
         // Pass options to _super
         this._super( options );
@@ -199,7 +207,7 @@ Pan.Tools.Custom_Class = Pan.Core.Event_Emitter.extend(
     // Chose a name never used
     static : 'custom_tool',
 
-    init : function()
+    construct : function()
     {
         // Don't forget the _super
         this._super();
@@ -209,9 +217,24 @@ Pan.Tools.Custom_Class = Pan.Core.Event_Emitter.extend(
 } );
 
 // 'custom_class' and 'custom_class_again' will share the same instance
-// 'init' will be called only the first time
+// 'construct' will be called only the first time
 var custom_class       = new Pan.Tools.Custom_Class(),
     custom_class_again = new Pan.Tools.Custom_Class();
+```
+
+###### Registring (with Registry tool)
+
+```javascript
+// Create any class you'd like
+Pan.Components.Test_Class = Pan.Core.Abstract.extend( {} );
+
+// Instantiate and specify the register property in options object
+// The value is the key you want to retrieve the instance later
+var test_class = new Pan.Components.Test_Class( { register : 'my_key' } );
+
+// Instantiate the registry tools and get the test_class using the register key
+var registry     = new Pan.Tools.Registry(),
+    test_class_2 = registry.get( 'my_key' );
 ```
 
 
@@ -226,11 +249,12 @@ var custom_class       = new Pan.Tools.Custom_Class(),
 * Automatically normalized event names (`event-name` == `eventname` == `event_name`)
 
 ###### Default example
+
 ```javascript
 // Create a custom component that extends Event_Emitter
 Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
 {
-    init : function()
+    construct : function()
     {
         this._super();
 
@@ -257,11 +281,12 @@ custom_component.on( 'event-test', function( value )
 ```
 
 ###### Namespace example
+
 ```javascript
 // Create a custom component that extends Event_Emitter
 Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
 {
-    init : function()
+    construct : function()
     {
         this._super();
 
@@ -311,53 +336,63 @@ Pan.js comes with some premade tools. Each one is a singleton (static). You can 
 
 You can extend those tools if you want.
 
-* [Browser](#browser)
+* [Breakpoints](#breakpoints)
 * [Colors](#colors)
+* [Css](#css)
+* [Detector](#detector)
 * [GA tags](#ga-tags)
 * [Keyboard](#keyboard)
+* [Konami Code](#konami-code)
 * [Mouse](#mouse)
-* [Ticker](#ticker)
 * [Registry](#registry)
-* [Css](#css)
 * [Resizer](#resizer)
+* [Strings](#strings)
+* [Ticker](#ticker)
+* [Viewport](#viewport)
 
-## Browser
 
-Gives you informations like system, browser, engine, viewport and methods to handle breakpoints and media queries.<br />
-Breakpoints works a little like width and height for media queries. Specify some breakpoints and the class will trigger events when resizing the viewport.
+## Breakpoints
 
-[See code](src/tools/browser.class.js)<br />
-[See example](demos/tools/browser.html)
+Breakpoints works a little like width and height for media queries. Specify some breakpoints and it will trigger events when resizing the viewport.
+
+[See code](src/tools/breakpoints.class.js)<br>
+[See example](demos/tools/breakpoints.html)
 
 **Options**
 ```javascript
 {
-    disable_hover_on_scroll : true,       // Improve performance when scrolling but disable hovers
-    initial_trigger         : true,       // Trigger 'scroll' and 'resize' events on the next frame
-    add_classes_to          : [ 'html' ], // Add detect informations to selectors in array
-    breakpoints             : [           // Breakpoints
+    breakpoints : [ // Breakpoints
         {
-            name     : 'large',
-            limits   :
+            name  : 'large',
+            width :
             {
-                width :
-                {
-                    value    : 960,
-                    extreme  : 'min',
-                    included : false
-                }
+                value    : 960,
+                extreme  : 'min',
+                included : false
             }
         },
         {
-            name     : 'medium',
-            limits   :
+            name  : 'medium',
+            width :
             {
-                width :
-                {
-                    value    : 960,
-                    extreme  : 'max',
-                    included : true
-                }
+                value    : 960,
+                extreme  : 'max',
+                included : true
+            }
+        },
+        {
+            name  : 'small',
+            width :
+            {
+                value    : 500,
+                extreme  : 'max',
+                included : true
+            },
+            height :
+            {
+                value    : 500,
+                extreme  : 'max',
+                included : true
             }
         }
     ]
@@ -366,53 +401,26 @@ Breakpoints works a little like width and height for media queries. Specify some
 
 **Properties**
 
-* **viewport** (object) Informations about the viewport
-    * `top` | `y` (number) Scroll top
-    * `left` | `x` (number) Scroll left
-    * `delta` (object)
-        * `top` | `y` (number) Scroll delta top
-        * `left` | `x` (number) Scroll delta left
-    * `direction` (object)
-        * `y` (string) Vertical scroll direction
-        * `x` (string) Horizontal scroll direction
-    * `width` (number) Width
-    * `height` (number) Height
-* **pixel_ratio** (number) Pixel ratio
-* **detect** (object)
-    * `enfine` (object) Liste of engines with boolean true if detected
-    * `browser` (object) Liste of browsers with boolean true if detected
-    * `system` (object) Liste of systems with boolean true if detected
-    * `features` (object) Liste of features with boolean true if detected
-* **breakpoints** (object)
-    * `all` (array) Every current breakpoints
-    * `currents` (array) Every active breakpoints
-    * `currents_names` (array) Names of every active breakpoints
+* **all** (array) Every registered breakpoints
+* **actives** (array) Actives breakpoints
 
 **Methods**
 
+* **add**
+    * `breakpoints` (object|array) Add one are multiple breakpoints
+    * `silent` (optional, boolean, default: true) Should not trigger event
+* **remove**
+    * `breakpoints` (string|array) Remove one are multiple breakpoints by name
+    * `silent` (optional, boolean, default: false) Should not trigger event
+* **is_active**
+    * `breakpoint` (string) Test if breakpoint is curently active
 * **match_media**
     * `condition` (string) Proceed to a classic matchMedia but only return a boolean
-* **add_breakpoint**
-    * `breakpoint` (object) Add a breakpoint
-* **add_breakpoints**
-    * `breakpoints` (array) Add multiple breakpoints
 
 **Events**
 
-* **resize**
-    * `viewport` (object)
-* **scroll**
-    * `viewport` (object)
-* **breakpoint**
-    * `breakpoint` (string) Current breakpoint
-    * `old_breakpoint` (string) Previous breakpoint
-
-**Todo**
-
-* Classes
-* Breakpoints
-* Disable hover on scroll
-* Match media
+* **update**
+    * `breakpoints` (array) Currently active breakpoints
 
 
 ## Colors
@@ -420,7 +428,7 @@ Breakpoints works a little like width and height for media queries. Specify some
 Help you convert strings to well formated colors.<br>
 Create beautifuls rainbows. :rainbow:
 
-[See code](src/tools/colors.class.js)<br />
+[See code](src/tools/colors.class.js)<br>
 [See example](demos/tools/colors.html)
 
 **Options**
@@ -432,8 +440,8 @@ Create beautifuls rainbows. :rainbow:
         target  : document.body, // Default target when parsing
         classes :
         {
-            to_convert : 'gradient-text',           // Searched class
-            converted  : 'gradient-text-converted', // Converted class
+            to_convert : 'gradient-text',          // Searched class
+            converted  : 'gradient-text-converted' // Converted class
         }
     }
 }
@@ -465,12 +473,102 @@ Create beautifuls rainbows. :rainbow:
 none
 
 
+## CSS
+
+Apply CSS on targeted element and automatically add prefixes.
+Property will automatically be formated.
+
+[See code](src/tools/css.class.js)<br>
+[See example](demos/tools/css.html)
+
+**Options**
+
+```javascript
+{
+    prefixes : [ 'webkit', 'moz', 'o', 'ms', '' ] // Default prefixes
+}
+```
+
+**Properties**
+
+none
+
+**Methods**
+
+* **apply** : Apply CSS on target and add prefixes
+    * `target` (DOM element|jQuery) Element retrieved with classic fetcher like querySelector or jQuery
+    * `values` (object) Value to apply
+    * `prefixes` (optional, boolean|array) True for default prefixes or prefixes array
+
+**Events**
+
+none
+
+
+## Detector
+
+Provide informations like engine, browser, system and features.
+
+[See code](src/tools/detector.class.js)<br>
+[See example](demos/tools/detector.html)
+
+**Options**
+```javascript
+{
+    targets : [ 'html' ] // Add detected informations to targets in array (selector or DOM Elements)
+}
+```
+
+**Properties**
+
+* **engine** (object)
+    * `ie` (number)
+    * `gecko` (number)
+    * `webkit` (number)
+    * `khtml` (number)
+    * `opera` (number)
+    * `version` (number)
+* **browser** (object)
+    * `ie` (number)
+    * `firefox` (number)
+    * `safari` (number)
+    * `konq` (number)
+    * `opera` (number)
+    * `chrome` (number)
+    * `version` (number)
+* **system** (object)
+    * `windows` (boolean)
+    * `mac` (boolean)
+    * `osx` (boolean)
+    * `iphone` (boolean)
+    * `ipod` (boolean)
+    * `ipad` (boolean)
+    * `ios` (boolean)
+    * `blackberry` (boolean)
+    * `android` (boolean)
+    * `opera_mini` (boolean)
+    * `windows_mobile` (boolean)
+    * `wii` (boolean)
+    * `ps` (boolean)
+* **features** (object)
+    * `touch` (boolean)
+    * `media_query` (boolean)
+
+**Methods**
+
+none
+
+**Events**
+
+none
+
+
 ## GA Tags
 
 Send informations to Google Analytics using the current instance.
 You must instantiate Google Analytics yourself.
 
-[See code](src/tools/ga_tags.class.js)<br />
+[See code](src/tools/ga_tags.class.js)<br>
 [See example](demos/tools/ga_tags.html)
 
 **Options**
@@ -519,7 +617,7 @@ none
 
 Methods, properties and events relatives to the keyboard
 
-[See code](src/tools/keyboard.class.js)<br />
+[See code](src/tools/keyboard.class.js)<br>
 [See example](demos/tools/keyboard.html)
 
 **Options**
@@ -550,11 +648,56 @@ none
     * `character` (string)
 
 
+## Konami Code
+
+Know when your users use the konami code ↑ ↑ ↓ ↓ ← → ← → B A
+
+[See code](src/tools/konami_code.class.js)<br>
+[See example](demos/tools/konami_code.html)
+
+**Options**
+
+```javascript
+{
+    reset_duration : 1000, // Time in before reseting
+    sequence :             // Sequence to enter
+    [
+        'up',
+        'up',
+        'down',
+        'down',
+        'left',
+        'right',
+        'left',
+        'right',
+        'b',
+        'a'
+    ]
+}
+```
+
+**Properties**
+
+none
+
+**Methods**
+
+none
+
+**Events**
+
+* **used**
+* **timeout**
+    * `index` (int) Progress before timeout
+* **wrong**
+    * `index` (int) Progress before failing
+
+
 ## Mouse
 
 Properties and events relatives to the mouse
 
-[See code](src/tools/mouse.class.js)<br />
+[See code](src/tools/mouse.class.js)<br>
 [See example](demos/tools/mouse.html)
 
 **Options**
@@ -587,52 +730,13 @@ none
     * `wheel` (object) Mouse wheel informations
     * If you wan't to prevent the default event, just return `false` in the callback
 
-## Ticker
-
-Run a ticker that trigger events each frame base on requestAnimationFrame.
-
-[See code](src/tools/ticker.class.js)<br />
-[See example](demos/tools/ticker.html)
-
-**Options**
-```javascript
-{
-    auto_run : true
-}
-```
-
-**Properties**
-
-* **running** (boolean) Is the ticker running now
-* **time** (object) Informations about the time (ms)
-    * `start` When did the ticker start last
-    * `elapsed` Time spent
-    * `delta` Time spent since last tick
-    * `current` Current time
-
-**Methods**
-
-* **reset** : Reset the ticker
-    * `run` (boolean) Should start running the timer
-* **run** : Run the ticker
-* **stop** : Stop the ticker
-* **tick** : Trigger tick (If you need to trigger it manually)
-* **do_next** : Apply function on the next frame
-    * `action` (function)
-    * `before` (optional, boolean) Should call the function before the `tick` event
-
-**Events**
-
-* **tick**
-    * `time` (object) Time informations
-
 
 ## Registry
 
-Key/value registry for when you need to store variable and retrieve it anywhere without using ugly global variables.
+Key/value registry for when you need to store variable and retrieve it anywhere without using ugly global variables.<br>
 You may use it to cache variables.
 
-[See code](src/tools/registry.class.js)<br />
+[See code](src/tools/registry.class.js)<br>
 [See example](demos/tools/registry.html)
 
 **Options**
@@ -654,39 +758,9 @@ none
 
 **Events**
 
-none
-
-
-## CSS
-
-Apply CSS on targeted element and automatically add prefixes.
-Property will automatically be formated.
-
-[See code](src/tools/css.class.js)<br />
-[See example](demos/tools/css.html)
-
-**Options**
-
-```javascript
-{
-    prefixes : [ 'webkit', 'moz', 'o', 'ms', '' ] // Default prefixes
-}
-```
-
-**Properties**
-
-none
-
-**Methods**
-
-* **apply** : Apply CSS on target and add prefixes
-    * `target` (DOM element|jQuery) Element retrieved with classic fetcher like querySelector or jQuery
-    * `values` (object) Value to apply
-    * `prefixes` (optional, boolean|array) True for default prefixes or prefixes array
-
-**Events**
-
-none
+* **update**
+    * `key` (string)
+    * `value` (any)
 
 
 ## Resizer
@@ -706,7 +780,7 @@ Resize elements inside containers according to many possible options.
     * `data-align-y` (optional, string, values: *'top'* | *'center'* | *'bottom'*, default: *'center'*)
     * `data-rounding` (optional, string, values: *'ceil'* | *'floor'* | *'round'* | none, default: *'ceil'*)
 
-[See code](src/tools/resizer.class.js)<br />
+[See code](src/tools/resizer.class.js)<br>
 [See example](demos/tools/resizer.html)
 
 **Options**
@@ -740,7 +814,7 @@ none
     * `force_style` (optional, boolean, default: true) Add 'position' and 'overflow' style properties if not set yet
 * **resize_all** : Resize every content inside their containers
 * **get_sizes** : Calculate and send back sizes needed to center the content inside the container
-    * `parameters` (Object)
+    * `parameters` (object)
         * `content_width` (number)
         * `content_height` (number)
         * `container_width` (number)
@@ -749,10 +823,151 @@ none
         * `align_x` (optional, string, default: *center*, value: *left* | *center* | *right*)
         * `align_y` (optional, string, default: *center*, value: *top* | *center* | *bottom*)
         * `rounding` (optional, string, default: *ceil*, value: *ceil* | *floor* | *round* | none)
+    * `format` (optional, string, default: *both*, value: *both* | *cartesian* | *css*)
 
 **Events**
 
 none
+
+
+## Strings
+
+Method to manage strings
+
+[See code](src/tools/strings.class.js)<br>
+[See example](demos/tools/strings.html)
+
+**Options**
+
+none
+
+**Properties**
+
+none
+
+**Methods**
+
+* **convert_case**
+    * `value` (string) String that need to be case changed
+    * `format` (string) Wanted case
+        * camel
+        * pascal
+        * snake
+        * dash
+        * train
+        * space
+        * title
+        * dot
+        * slash
+        * backslash
+        * lower
+        * upper
+        * studlycaps
+        * ... ([see code](src/tools/strings.class.js) for complete list)
+* **trim**
+    * `value` (string) String to trim
+    * `characters` (string) Characters to trim
+* **to_boolean**
+    * `value` (string) Smartly convert to boolean with many supported languages
+        * 0
+        * false
+        * nop
+        * nein
+        * non
+        * ... ([see code](src/tools/strings.class.js) for complete list)
+* **to_slug**
+    * `value` (string) String to slugify
+
+**Events**
+
+none
+
+
+## Ticker
+
+Run a ticker that trigger events each frame base on requestAnimationFrame.
+
+[See code](src/tools/ticker.class.js)<br>
+[See example](demos/tools/ticker.html)
+
+**Options**
+```javascript
+{
+    auto_run : true
+}
+```
+
+**Properties**
+
+* **running** (boolean) Is the ticker running now
+* **time** (object) Informations about the time (ms)
+    * `start` When did the ticker start last
+    * `elapsed` Time spent
+    * `delta` Time spent since last tick
+    * `current` Current time
+
+**Methods**
+
+* **reset** : Reset the ticker
+    * `run` (boolean) Should start running the timer
+* **run** : Run the ticker
+* **stop** : Stop the ticker
+* **tick** : Trigger tick (If you need to trigger it manually)
+* **wait** : Apply function after X frames
+    * `frames_count` (number)
+    * `action` (function)
+    * `after` (optional, boolean, values: *true* | *false*, default: *true*) Should apply the function after the `tick` event is triggered
+
+**Events**
+
+* **tick**
+    * `time` (object) Time informations
+* **tick-X**
+    * `time` (object) Time informations
+
+
+## Viewport
+
+Gives you informations about viewport like width, height, scroll top, scroll left, scroll delta, etc.<br>
+Trigger events on scroll and resize.<br>
+Can disable hover on scroll for performance improvement
+
+[See code](src/tools/viewport.class.js)<br>
+[See example](demos/tools/viewport.html)
+
+**Options**
+```javascript
+{
+    disable_hover_on_scroll : false,                 // Improve performance when scrolling but disable hovers
+    initial_triggers        : [ 'resize', 'scroll' ] // On the next frame, triggers 'resize' then 'resize' events
+}
+```
+
+**Properties**
+
+
+* **top** | **y** (number) Viewport top
+* **left** | **x** (number) Viewport left
+* **scroll** | **x** (object) Informations about scroll
+    * `delta` (object)
+        * `top` | `y` (number) Scroll delta top
+        * `left` | `x` (number) Scroll delta left
+    * `direction` (object)
+        * `y` (string) Vertical scroll direction
+        * `x` (string) Horizontal scroll direction
+* **pixel_ratio** (number) Pixel ratio
+
+**Methods**
+
+* **match_media**
+    * `condition` (string) Proceed to a classic matchMedia but only return a boolean
+
+**Events**
+
+* **resize**
+    * `viewport` (object)
+* **scroll**
+    * `viewport` (object)
 
 
 ## Utils
@@ -771,7 +986,7 @@ Pan.Components.Class = Pan.Core.Abstract.extend(
     static  : 'class',
     options : {},
 
-    init : function( options )
+    construct : function( options )
     {
         this._super( options );
 
@@ -792,7 +1007,7 @@ Pan.Components.Class = Pan.Core.Abstract.extend(
         static  : 'class',
         options : {},
 
-        init : function( options )
+        construct : function( options )
         {
             this._super( options );
 
@@ -839,54 +1054,77 @@ new Pan.Tools.Class();
 
 ## Todo
 
-* ~~IE8 compatible~~
-* Unit testing
-* Sublime snippets
-* Classes (create)
-    * Storyline
-    * Navigation
-    * Scroll
-    * Page
-    * Images
-    * Loader
-    * Strings
-        * Capitalize
-        * SnakeCase
-        * CamelCase
-        * PascalCase
-        * Slugify
-        * Is false (0, nop, no, false, nein, non, ...)
-    * Time / Date
-        * Formater (custom formats (sprinf like))
-        * Local
-* Classes (update)
-    * CSS
-        * IE translateZ and translate3d prevent (in options)
-    * ~~Browser~~
-        * ~~Array of breakpoints~~
-        * ~~Breakpoint name to breakpoint object method~~
-    * Event_Emitter
-        * Deferred trigger (can specify event)
-    * Better Match media
-        * Multiple matches
-        * Fallback for width and height
-    * GA Tags
-        * Dynamically add GA script with method "init( ua_code )"
-            * Trigger event
-    * Mouse
-        * Wheel type detection
-    * Colors
-        * Better param names (input/output)
-        * Better gradient (multiple steps)
-        * Only one convertissor method (default any => rgb)
-        * Use Strings Tool
-    * Registry
-        * Persistence (localstorage / cookie fallback)
-
+- [ ] Loop error bug
+- [ ] Unit testing
+- [ ] Classes (create)
+    - [ ] Touch
+    - [ ] Storyline
+    - [ ] Navigation
+    - [ ] Scroll
+    - [ ] Images
+        - [ ] Update images on pixel_ratio
+        - [ ] Load and show image
+    - [ ] Loader
+    - [ ] Unveiler
+    - [ ] Strings
+        - [ ] Bug `convert_case` with `dashed`
+    - [ ] Time / Date
+        - [ ] Formater (custom formats (sprinf like))
+        - [ ] Local
+- [ ] Classes (update)
+    - [ ] Breakpoints
+        - [ ] Add classes to elements/selectors in options
+    - [ ] Keyboard
+        - [ ] Event listening for specified key
+    - [ ] Event_Emitter
+        - [ ] Deferred trigger (can specify event)
+    - [ ] Better Match media
+        - [ ] Multiple matches
+        - [ ] Fallback for width and height
+    - [ ] GA Tags
+        - [ ] Dynamically add GA script with method "init( ua_code )"
+            - [ ] Trigger event
+    - [ ] Mouse
+        - [ ] Wheel type detection
+    - [ ] Colors
+        - [ ] Better param names (input/output)
+        - [ ] Better gradient (multiple steps)
+        - [ ] Only one convertissor method (default any => rgb)
+        - [ ] Use Strings Tool
+        - [ ] Darken method
+        - [ ] Merge method
+        - [ ] Color as component
+    - [ ] Registry
+        - [ ] Persistence (localstorage / cookie fallback)
 
 
 ## Changelog
 
-#### 0.1.0 (2015-10-17)
+#### 0.2.0 (2015-11-14)
+
+- Replace `init` by `construct`
+- Add `$` property on Abstract
+- Add `b-` to default classes
+- Fix `null` option bug
+- Add license
+- Add no polyfills builds
+- Add information on top of builds
+- Update structure with better scope and general `'use strict'`
+- Add Konami Code class
+- Add Strings class
+- Add autosave in registry on Abstract
+- Split Browser class into Viewport, Breakpoints and Detector classes
+- Add trigger order to Viewport
+- Add `match_breakpoint` to Viewport
+- Fix `no-features` classes not working on Detector
+- Fix initial trigger on Breakpoints when no breakpoint active
+- Add DOM Element support for Detector css classes targets
+- Add events on Registry
+- Add `format` parameter on  `get_sizes` method (support "cartesian", "css" or "both")
+- Add throttle by only specifying event like on('tick-250') for 250 ms
+- Add `wait` method
+
+
+#### 0.1.0 (2015-03-10)
 
 Init

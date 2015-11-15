@@ -4,32 +4,13 @@
     <meta charset="UTF-8">
     <title>Pan.js - Sandbox - Custom components</title>
     <style>
-        section.wrapper {position:relative;width:800px;margin:0 auto;}
+        section.wrapper {position:relative;width:800px;margin:0 auto;background:#eee;}
         section.wrapper .content {padding:50px;}
         section.wrapper aside {position:absolute;top:0;right:820px;width:0;overflow:hidden;}
         section.wrapper aside.active {width:200px;}
-        #id_of_element {
-          -webkit-transition: background-color, color 1s ease-in-out;
-          -moz-transition: background-color, color 1s ease-in-out;
-          -o-transition: background-color, color 1s ease-in-out;
-          transition: background-color, color 1s ease-in-out;
-        }
-
-        .change {
-          background-color: black;
-          color:rgba(0,0,0,0);
-        //  transform: translateY(-200px);
-        }
-
-        .change2 {
-          background-color:black;
-        }
     </style>
 </head>
-<body id="id_of_element">
-  <div id="fps" style="color:red;background-color:white;">
-
-  </div>
+<body>
 
     <section class="wrapper">
         <aside class="active">
@@ -45,28 +26,15 @@
                 <li><a href="#">link</a></li>
             </ul>
         </aside>
-        <div  id="id_of_element" class="content">
+        <div class="content">
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam architecto sit, consectetur nisi minus ab porro dolor, beatae recusandae quo doloremque soluta ipsum quod sequi voluptates rem numquam enim laborum.</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam architecto sit, consectetur nisi minus ab porro dolor, beatae recusandae quo doloremque soluta ipsum quod sequi voluptates rem numquam enim laborum.</p>
             <p>Presse SPACE key to toggle sidebar</p>
         </div>
     </section>
 
-    <!-- POLYFILLS -->
-    <script src="../../src/polyfills/classlist.js"></script>
-    <script src="../../src/polyfills/foreach.js"></script>
-    <script src="../../src/polyfills/getcomputedstyle.js"></script>
-    <script src="../../src/polyfills/indexof.js"></script>
-    <script src="../../src/polyfills/object-keys.js"></script>
-    <script src="../../src/polyfills/requestanimationframe.js"></script>
-
     <!-- Pan.js -->
-    <script src="../../build/pan-0.1.min.js"></script>
-
-    <!-- gsap external testing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/plugins/ScrollToPlugin.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/plugins/ColorPropsPlugin.min.js"></script>
+    <script src="../../builds/pan-0.3.js"></script>
 
     <!-- Your classes -->
     <script>
@@ -77,7 +45,7 @@
             // No default options
             options : {},
 
-            init : function( options )
+            construct : function( options )
             {
                 this._super( options );
 
@@ -93,21 +61,6 @@
                 this.sidebar.on( 'activate deactivate', function( status )
                 {
                     console.log( 'sidebar active :', status );
-
-                    var element = document.getElementsByTagName("body")[0];
-                    var ele = document.getElementsByClassName('content')[0];
-
-                    if (status) {
-                      TweenLite.to(element, 1, {backgroundColor:'#fff'});
-                      TweenLite.to(ele, 1, {backgroundColor:'#fff', color:'black', y:0});
-                    }
-
-                    else {
-                      TweenLite.to(element, 1, {backgroundColor:'#000'});
-                      //TweenLite.to(ele, 1, {backgroundColor:'#000', color:'white', y:-200});
-                      TweenLite.to(ele, 1, {backgroundColor:'#000', color:'rgba(0,0,0,0)', y:-200});
-                    }
-
                 } );
             }
         } );
@@ -125,14 +78,12 @@
                 }
             },
 
-            init : function( options )
+            construct : function( options )
             {
                 this._super( options );
 
                 // Set variables
                 this.main     = document.querySelector( 'aside' );
-                this.ele      = document.getElementsByClassName('content')[0];
-                this.bod      = document.getElementsByTagName("body")[0];
                 this.title    = this.main.querySelector( '.title' );
                 this.active   = this.main.classList.contains( 'active' );
                 this.keyboard = new Pan.Tools.Keyboard();
@@ -175,9 +126,6 @@
 
                 // Update sidebar
                 this.main.classList.add( 'active' );
-
-                this.ele.classList.remove('change');
-                this.bod.classList.remove('change2');
                 this.active = true;
 
                 // Fire 'activate' event
@@ -193,8 +141,6 @@
 
                 // Update sidebar
                 this.main.classList.remove( 'active' );
-                this.ele.classList.add('change');
-                this.bod.classList.add('change2');
                 this.active = false;
 
                 // Fire 'deactivate' event
@@ -209,32 +155,6 @@
 
         // Let's rock
         var my_app = new Pan.Components.My_App({});
-
-    </script>
-
-    <script>
-
-    var fps = document.getElementById('fps'),
-    startTime = Date.now(),
-    frame = 0,
-    requestAnimationFrame = window.requestAnimationFrame ||
-                            window.webkitRequestAnimationFrame ||
-                            window.mozRequestAnimationFrame ||
-                            window.oRequestAnimationFrame ||
-                            window.msRequestAnimationFrame;
-
-function tick() {
-    var time = Date.now();
-    frame++;
-    if (time - startTime > 1000) {
-        fps.innerHTML = Number(frame / ((time - startTime) / 1000)).toFixed(1) + ' fps';
-	startTime = time;
-	frame = 0;
-    }
-    requestAnimationFrame(tick);
-}
-TweenLite.delayedCall( 1, tick );
-
 
     </script>
 
