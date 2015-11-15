@@ -7,7 +7,7 @@ Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
     static  : 'detector',
     options :
     {
-        classes_targets : [ 'html' ]
+        targets : [ 'html' ]
     },
 
     /**
