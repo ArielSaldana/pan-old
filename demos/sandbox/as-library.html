@@ -12,11 +12,14 @@
     <!-- YOUR SCRIPT -->
     <script>
 
-        var browser = new Pan.Tools.Browser();
+        // var browser = new Pan.Tools.Browser();
+        var viewport = new B.Tools.Viewport();
 
-        browser.on( 'resize', function( viewport )
+        // browser.on( 'resize', function( viewport )
+        viewport.on( 'resize', function( width, height )
         {
-            console.log( 'viewport height ', viewport.height );
+            // console.log( 'viewport height ', viewport.height );
+            console.log( width, height );
         } );
 
     </script>
