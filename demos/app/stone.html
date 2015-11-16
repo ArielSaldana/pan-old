@@ -698,40 +698,38 @@
                 })
             },
             init_keyboard: function() {
-
-
-                var t = this;
+                var that = this;
                 this.keyboard.on("down", function(e, n) {
                     switch (n) {
                         case "down":
                         case "j":
                             console.log('IN KEYBOARD DOWN');
-                            t.go_to_line(t.index + 1);
+                            that.go_to_line(that.index + 1);
                             break;
                         case "esc":
-                            t.header.active ? t.header.deactivate() : "project" === t.page.type && t.page.$.main.find("a.close").first().trigger("click");
+                            that.header.active ? that.header.deactivate() : "project" === that.page.type && that.page.$.main.find("a.close").first().trigger("click");
                             break;
                         case "up":
                         case "k":
-                            t.go_to_line(t.index - 1);
+                            that.go_to_line(that.index - 1);
                             break;
                         case "space":
                         case "enter":
                         case "right":
-                            if (t.can_navigate && "home" === t.page.type && !t.password.active) {
-                                var i = t.$.lines.filter(".current");
+                            if (that.can_navigate && "home" === that.page.type && !that.password.active) {
+                                var i = that.$.lines.filter(".current");
                                 i.length && i.hasClass("project") && i.find("a").first().trigger("click")
                             }
                             break;
                         case "left":
-                            t.can_navigate && "project" === t.page.type && t.page.$.main.find("a.close").first().trigger("click")
+                            that.can_navigate && "project" === that.page.type && that.page.$.main.find("a.close").first().trigger("click")
                     }
-                    return -1 !== ["down", "j", "esc", "up", "k", "space", "right", "left"].indexOf(n) || "enter" === n && !t.password.active ? !1 : void 0
+                    return -1 !== ["down", "j", "esc", "up", "k", "space", "right", "left"].indexOf(n) || "enter" === n && !that.password.active ? !1 : void 0
                 })
             },
 
             init_lines : function(){
-              var t = this;
+              var that = this;
 
                 if (this.can_scroll = !0, this.$.lines = $(".line"), this.index = 0, window.location.hash) {
                     var e = this.$.lines.filter(".line-" + window.location.hash.replace("#", ""));
@@ -739,14 +737,9 @@
                 }
                 this.go_to_line(this.index, 30),
                 this.mouse.on("wheel", function(e) {
-                    var n = t.index + (0 > e.delta ? 1 : -1);
+                    var n = that.index + (0 > e.delta ? 1 : -1);
 
-                    t.go_to_line(n)
-                    //
-                    // if (n > 0)
-                    // {
-                    //   console.log('display nav');
-                    // }
+                    that.go_to_line(n)
 
                 })
             },
@@ -775,9 +768,6 @@
                 }
             }
         } );
-
-        // Create a  class for the sidebar
-
 
     </script>
 
