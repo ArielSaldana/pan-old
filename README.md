@@ -10,7 +10,7 @@ Simply include the JS files in your HTML and start using it. Pan.js is still in 
 
 **Table of contents**
 
-* [Compatibility](#compatibility
+* [Compatibility](#compatibility)
 * [Usage](#usage)
     * [As a library](#as-a-library-the-easy-way)
     * [As a framework](#as-a-framework-the-powerful-way)
