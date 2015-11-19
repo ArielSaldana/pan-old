@@ -1072,6 +1072,8 @@ new Pan.Tools.Class();
         - [ ] Formater (custom formats (sprinf like))
         - [ ] Local
 - [ ] Classes (update)
+    - [ ] Detector
+        - [ ] `add_detector` method
     - [ ] Breakpoints
         - [ ] Add classes to elements/selectors in options
     - [ ] Keyboard

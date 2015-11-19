@@ -5,7 +5,7 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Thu Nov 12 2015 21:53:07 GMT-0500 (Eastern Standard Time)
+ * Date: Thu Nov 19 2015 10:49:44 GMT-0500 (Eastern Standard Time)
  */
 
 var P = Pan = ( function( window, document, undefined )
@@ -3017,7 +3017,7 @@ Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
     static  : 'detector',
     options :
     {
-        classes_targets : [ 'html' ]
+        targets : [ 'html' ]
     },
 
     /**
@@ -5114,6 +5114,7 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
 
         // Set up
         this.ticker             = new Pan.Tools.Ticker();
+        this.detector           = new Pan.Tools.Detector();
         this.top                = 0;
         this.left               = 0;
         this.y                  = 0;
@@ -5284,7 +5285,7 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
      */
     match_media : function( condition )
     {
-        if( this.detect.features.media_query || typeof condition !== 'string' || condition === '' )
+        if( !this.detector.features.media_query || typeof condition !== 'string' || condition === '' )
             return false;
 
         return !!window.matchMedia( condition ).matches;
@@ -5298,6 +5299,11 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
 Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
     static: 'queue',
     slice: [].slice,
+
+
+    options : {
+
+    },
 
 
     /**

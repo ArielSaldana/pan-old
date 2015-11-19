@@ -5,7 +5,7 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Thu Nov 12 2015 21:53:07 GMT-0500 (Eastern Standard Time)
+ * Date: Thu Nov 19 2015 10:49:44 GMT-0500 (Eastern Standard Time)
  */
 
 var P = Pan = ( function( window, document, undefined )
@@ -3971,6 +3971,11 @@ Pan.Tools.Ticker = Pan.Core.Event_Emitter.extend(
 Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
     static: 'queue',
     slice: [].slice,
+
+
+    options : {
+
+    },
 
 
     /**
