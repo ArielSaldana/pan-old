@@ -1054,8 +1054,24 @@ new Pan.Tools.Class();
 
 ## Todo
 
-- [ ] Loop error bug
-- [ ] Unit testing
+- [ ] NPM
+- [ ] :warning: Loop error bug
+- [x] Unit testing
+    - [x] Core
+    - [x] Breakpoints
+    - [x] Colors
+    - [x] Css
+    - [x] Detector
+    - [x] GA Tags
+    - [x] Keyboard
+    - [x] Konami Code
+    - [x] Mouse
+    - [x] Registry
+    - [x] Resizer
+    - [x] Strings
+    - [x] Ticker
+    - [x] Viewport
+- [x] camelCase / PascalCase aliases
 - [ ] Classes (create)
     - [ ] Touch
     - [ ] Storyline
@@ -1072,12 +1088,15 @@ new Pan.Tools.Class();
         - [ ] Formater (custom formats (sprinf like))
         - [ ] Local
 - [ ] Classes (update)
-    - [ ] Detector
-        - [ ] `add_detector` method
+    - [ ] Detector
+        - [ ] :warning: `add_detector` method
     - [ ] Breakpoints
-        - [ ] Add classes to elements/selectors in options
+        - [ ] :warning: Add classes to elements/selectors in options
+    - [ ] Resizer
+        - [ ] :warning: Add `none` in rounding
     - [ ] Keyboard
-        - [ ] Event listening for specified key
+        - [ ] :warning: Event listening for specified key
+        - [ ] :warning: Character to keycode
     - [ ] Event_Emitter
         - [ ] Deferred trigger (can specify event)
     - [ ] Better Match media
@@ -1106,7 +1125,7 @@ new Pan.Tools.Class();
 
 - Replace `init` by `construct`
 - Add `$` property on Abstract
-- Add `b-` to default classes
+- Add `pan-` to default classes
 - Fix `null` option bug
 - Add license
 - Add no polyfills builds
@@ -1130,3 +1149,5 @@ new Pan.Tools.Class();
 #### 0.1.0 (2015-03-10)
 
 Init
+
+

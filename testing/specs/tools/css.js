@@ -12,7 +12,7 @@ describe( 'Css', function()
     {
         // Set up
         Pan.Statics = {};
-        css   = new Pan.Tools.Css( {} );
+        css       = new Pan.Tools.Css( {} );
 
         // Wait
         window.setTimeout( function()

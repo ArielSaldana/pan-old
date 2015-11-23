@@ -2,7 +2,7 @@
  * @class  Event Emmiter
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Core.Event_Emitter = Pan.Core.Abstract.extend(
+Pan.Core.EventEmitter = Pan.Core.Event_Emitter = Pan.Core.Abstract.extend(
 {
     static  : false,
     options : {},

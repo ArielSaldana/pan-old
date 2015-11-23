@@ -5,7 +5,7 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Thu Nov 19 2015 10:49:44 GMT-0500 (Eastern Standard Time)
+ * Date: Mon Nov 23 2015 12:16:16 GMT-0500 (Eastern Standard Time)
  */
 
 var P = Pan = ( function( window, document, undefined )
@@ -272,7 +272,7 @@ Pan.Core.Abstract = Pan.Class.extend(
  * @class  Event Emmiter
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Core.Event_Emitter = Pan.Core.Abstract.extend(
+Pan.Core.EventEmitter = Pan.Core.Event_Emitter = Pan.Core.Abstract.extend(
 {
     static  : false,
     options : {},
@@ -2230,19 +2230,20 @@ Pan.Tools.Colors = Pan.Core.Abstract.extend(
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    send
  */
-Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
+Pan.Tools.GATags = Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
 {
     static  : 'ga_tags',
     options :
     {
+        testing            : false,
         send               : true,
         parse              : true,
         true_link_duration : 300,
         target  : document.body,
         classes :
         {
-            to_tag : 'b-tag',
-            tagged : 'b-tagged'
+            to_tag : 'pan-tag',
+            tagged : 'pan-tagged'
         },
         logs :
         {
@@ -2368,7 +2369,8 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
      */
     send : function( datas )
     {
-        var send = [];
+        var send = [],
+            sent = false;
 
         // Error
         if( typeof datas !== 'object' )
@@ -2393,8 +2395,6 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
         // Send
         if( this.options.send )
         {
-            var sent = false;
-
             // Category
             if( typeof datas.category !== 'undefined' )
             {
@@ -2431,6 +2431,12 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
                     {
                         ga.apply( ga, [ 'send', 'event' ].concat( send ) );
 
+                        sent = true;
+                    }
+
+                    // Testing
+                    else if( this.options.testing )
+                    {
                         sent = true;
                     }
 
@@ -2511,8 +2517,10 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.downs   = [];
+        // Set up
+        this.downs = [];
 
+        // Init
         this.listen_to_events();
     },
 
@@ -2525,7 +2533,7 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
         var that = this;
 
         // Down
-        function keydown_handle(e)
+        function keydown_handle( e )
         {
             var character = that.keycode_to_character( e.keyCode );
 
@@ -2624,7 +2632,7 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
  * @class    Strings
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
+Pan.Tools.KonamiCode = Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
 {
     static  : 'konami_code',
     options :
@@ -2641,7 +2649,7 @@ Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
             'left',
             'right',
             'b',
-            'a',
+            'a'
         ]
     },
 
@@ -2654,10 +2662,12 @@ Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
+        // Set up
         this.index    = 0;
         this.timeout  = null;
         this.keyboard = new Pan.Tools.Keyboard();
 
+        // Init
         this.listen_to_events();
     },
 
@@ -2717,6 +2727,7 @@ Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
         } );
     }
 } );
+
 
 /**
  * @class    Mouse
@@ -3065,7 +3076,6 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
         // Each element
         for( var i = 0, len = containers.length; i < len; i++ )
         {
-
             var container = containers[ i ],
                 content   = container.querySelector( '.' + this.options.classes.content );
 

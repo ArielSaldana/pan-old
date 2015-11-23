@@ -7,11 +7,11 @@ describe( 'Konami_Code', function()
     var konami_code = null;
 
     // Before all
-    beforeAll( function( done )
+    beforeAll( function()
     {
         // Set up
-        Pan.Statics = {};
-        konami_code   = new Pan.Tools.Konami_Code( {} );
+        Pan.Statics   = {};
+        konami_code = new Pan.Tools.Konami_Code( {} );
 
         // // Wait
         // window.setTimeout( function()
@@ -29,9 +29,8 @@ describe( 'Konami_Code', function()
 
     } );
 
-    // // Expectations
-    // it( 'method() called', function()
-    // {
-    //     expect( konami_code.method ).toHaveBeenCalled();
-    // } );
+    // Expectations
+    xit( 'No test available', function()
+    {
+    } );
 } );
