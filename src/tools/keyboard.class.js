@@ -4,7 +4,7 @@
  * @fires  down
  * @fires  up
  */
-Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
+P.Tools.Keyboard = P.Core.Event_Emitter.extend(
 {
     static        : 'keyboard',
     options       : {},

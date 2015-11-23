@@ -2,7 +2,7 @@
  * @class    Strings
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.KonamiCode = Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
+P.Tools.KonamiCode = P.Tools.Konami_Code = P.Core.Event_Emitter.extend(
 {
     static  : 'konami_code',
     options :
@@ -35,7 +35,7 @@ Pan.Tools.KonamiCode = Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
         // Set up
         this.index    = 0;
         this.timeout  = null;
-        this.keyboard = new Pan.Tools.Keyboard();
+        this.keyboard = new P.Tools.Keyboard();
 
         // Init
         this.listen_to_events();

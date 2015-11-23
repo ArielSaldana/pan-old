@@ -3,7 +3,7 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * @info     methods of convering html data into objects or bytes for transport.
  */
-Pan.Tools.HTML_Serializer = Pan.Core.Abstract.extend({
+P.Tools.HTML_Serializer = P.Core.Abstract.extend({
     static: 'html_serializer',
     options: {
 

@@ -1,9 +1,9 @@
 /**
  * @class    Css
  * @author   Ariel Saldana / http://ahhriel.com
- * @requires Pan.Tools.Detector
+ * @requires P.Tools.Detector
  */
- Pan.Tools.Css = Pan.Core.Abstract.extend(
+ P.Tools.Css = P.Core.Abstract.extend(
  {
      static  : 'css',
      options :
@@ -20,8 +20,8 @@
      {
          this._super( options );
 
-         this.detector = new Pan.Tools.Detector();
-         this.strings  = new Pan.Tools.Strings();
+         this.detector = new P.Tools.Detector();
+         this.strings  = new P.Tools.Strings();
      },
 
      /**

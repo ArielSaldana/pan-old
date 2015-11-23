@@ -3,9 +3,9 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    resize
  * @fires    scroll
- * @requires Pan.Tools.Ticker
+ * @requires P.Tools.Ticker
  */
-Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
+P.Tools.Viewport = P.Core.Event_Emitter.extend(
 {
     static  : 'viewport',
     options :
@@ -24,8 +24,8 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
         this._super( options );
 
         // Set up
-        this.ticker             = new Pan.Tools.Ticker();
-        this.detector           = new Pan.Tools.Detector();
+        this.ticker             = new P.Tools.Ticker();
+        this.detector           = new P.Tools.Detector();
         this.top                = 0;
         this.left               = 0;
         this.y                  = 0;

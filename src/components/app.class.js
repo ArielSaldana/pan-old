@@ -2,7 +2,7 @@
  * @class  Resizer
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Components.App = Pan.Core.Abstract.extend(
+P.Components.App = P.Core.Abstract.extend(
 {
     options:
     {
@@ -18,12 +18,12 @@ Pan.Components.App = Pan.Core.Abstract.extend(
     {
         this._super( options );
 
-        this.ticker   = new Pan.Tools.Ticker();
-        this.viewport = new Pan.Tools.Viewport();
-        this.css      = new Pan.Tools.Css();
-        this.keyboard = new Pan.Tools.Keyboard();
-        this.mouse    = new Pan.Tools.Mouse();
-        this.ga_tags  = new Pan.Tools.GA_Tags();
+        this.ticker   = new P.Tools.Ticker();
+        this.viewport = new P.Tools.Viewport();
+        this.css      = new P.Tools.Css();
+        this.keyboard = new P.Tools.Keyboard();
+        this.mouse    = new P.Tools.Mouse();
+        this.ga_tags  = new P.Tools.GA_Tags();
 
         console.log( 'All good' );
     }

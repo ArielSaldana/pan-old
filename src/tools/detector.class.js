@@ -2,7 +2,7 @@
  * @class  Detector
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
+P.Tools.Detector = P.Core.Event_Emitter.extend(
 {
     static  : 'detector',
     options :

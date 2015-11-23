@@ -3,7 +3,7 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    send
  */
-Pan.Tools.GATags = Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
+P.Tools.GATags = P.Tools.GA_Tags = P.Core.Event_Emitter.extend(
 {
     static  : 'ga_tags',
     options :

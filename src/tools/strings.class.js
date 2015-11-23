@@ -2,7 +2,7 @@
  * @class    Strings
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Strings = Pan.Core.Abstract.extend(
+P.Tools.Strings = P.Core.Abstract.extend(
 {
     static  : 'strings',
     options : {},

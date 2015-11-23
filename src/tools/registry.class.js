@@ -2,7 +2,7 @@
  * @class    Registry
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Registry = Pan.Core.Event_Emitter.extend(
+P.Tools.Registry = P.Core.Event_Emitter.extend(
 {
     static  : 'registry',
     options : {},

@@ -3,7 +3,7 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * @info     methods of convering html data into objects or bytes for transport.
  */
-Pan.Components.Tooltip = Pan.Core.Abstract.extend({
+P.Components.Tooltip = P.Core.Abstract.extend({
     static: 'html_serializer',
     options: {
 

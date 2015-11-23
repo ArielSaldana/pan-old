@@ -3,9 +3,9 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    update
  * @fires    change
- * @requires Pan.Tools.Viewport
+ * @requires P.Tools.Viewport
  */
-Pan.Tools.Breakpoints = Pan.Core.Event_Emitter.extend(
+P.Tools.Breakpoints = P.Core.Event_Emitter.extend(
 {
     static  : 'breakpoints',
     options :
@@ -23,7 +23,7 @@ Pan.Tools.Breakpoints = Pan.Core.Event_Emitter.extend(
         this._super( options );
 
         // Set up
-        this.viewport   = new Pan.Tools.Viewport();
+        this.viewport   = new P.Tools.Viewport();
         this.all        = {};
         this.actives    = {};
         this.first_test = true;

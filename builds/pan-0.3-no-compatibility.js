@@ -5,14 +5,14 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Mon Nov 23 2015 12:16:16 GMT-0500 (Eastern Standard Time)
+ * Date: Mon Nov 23 2015 12:41:06 GMT-0500 (Eastern Standard Time)
  */
 
-var P = Pan = ( function( window, document, undefined )
+var Pan = P = ( function( window, document, undefined )
 {
     'use strict';
 // Simple structure
-var Pan =
+var P =
 {
     Core       : {},
     Tools      : {},
@@ -25,7 +25,7 @@ var Pan =
  * MIT Licensed.
  * Inspired by base2 and Prototype
  */
-Pan.copy = function( object )
+P.copy = function( object )
 {
     var c = null;
 
@@ -38,7 +38,7 @@ Pan.copy = function( object )
         c = {};
 
         for( var key in object )
-            c[ key ] = Pan.copy( object[ key ] );
+            c[ key ] = P.copy( object[ key ] );
 
         return c;
     }
@@ -49,7 +49,7 @@ Pan.copy = function( object )
         c = [];
 
         for( var i = 0, l = object.length; i < l; i++ )
-            c[ i ] = Pan.copy( object[ i ] );
+            c[ i ] = P.copy( object[ i ] );
 
         return c;
     }
@@ -61,7 +61,7 @@ Pan.copy = function( object )
     }
 };
 
-Pan.merge = function( original, extended )
+P.merge = function( original, extended )
 {
     for( var key in extended )
     {
@@ -74,7 +74,7 @@ Pan.merge = function( original, extended )
 
             // ext = Object.create( ext );
 
-            original[ key ] = Pan.merge( original[ key ], ext );
+            original[ key ] = P.merge( original[ key ], ext );
         }
         else
         {
@@ -91,7 +91,7 @@ var initializing = false,
         xyz;
     } ) ? /\b_super\b/ : /.*/;
 
-Pan.Class = function(){};
+P.Class = function(){};
 
 var inject = function( prop )
 {
@@ -123,7 +123,7 @@ var inject = function( prop )
     }
 };
 
-Pan.Class.extend = function( prop )
+P.Class.extend = function( prop )
 {
     var _super    = this.prototype;
     initializing  = true;
@@ -154,10 +154,10 @@ Pan.Class.extend = function( prop )
                 if( typeof prototype[ name ] === 'undefined' )
                     prototype[ name ] = {};
 
-                var prototype_copy = Pan.copy( prototype[ name ] ),
-                    prop_copy      = Pan.copy( prop[ name ] );
+                var prototype_copy = P.copy( prototype[ name ] ),
+                    prop_copy      = P.copy( prop[ name ] );
 
-                prototype[ name ] = Pan.merge( prototype_copy, prop_copy );
+                prototype[ name ] = P.merge( prototype_copy, prop_copy );
             }
             else
             {
@@ -181,7 +181,7 @@ Pan.Class.extend = function( prop )
             {
                 if( typeof this[ p ] === 'object' )
                 {
-                    this[ p ] = Pan.copy( this[ p ] );
+                    this[ p ] = P.copy( this[ p ] );
                 }
             }
 
@@ -199,7 +199,7 @@ Pan.Class.extend = function( prop )
 
     Class.prototype             = prototype;
     Class.prototype.constructor = Class;
-    Class.extend                = Pan.Class.extend;
+    Class.extend                = P.Class.extend;
     Class.inject                = inject;
 
     return Class;
@@ -209,7 +209,7 @@ Pan.Class.extend = function( prop )
  * @class  Abstract
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Core.Abstract = Pan.Class.extend(
+P.Core.Abstract = P.Class.extend(
 {
     options : {},
     static  : false,
@@ -224,18 +224,18 @@ Pan.Core.Abstract = Pan.Class.extend(
         if( typeof options === 'undefined' )
             options = {};
 
-        Pan.merge( this.options, options );
+        P.merge( this.options, options );
 
         this.$ = {};
 
         // Create statics container
-        if( typeof Pan.Statics !== 'object' )
-            Pan.Statics = {};
+        if( typeof P.Statics !== 'object' )
+            P.Statics = {};
 
         // Register
         if( options.register && typeof options.register === 'string' )
         {
-            var registry = new Pan.Tools.Registry();
+            var registry = new P.Tools.Registry();
             registry.set( options.register, this );
         }
 
@@ -243,7 +243,7 @@ Pan.Core.Abstract = Pan.Class.extend(
         if( this.static && typeof this.static === 'string' )
         {
             // Add instance to statics
-            Pan.Statics[ this.static ] = this;
+            P.Statics[ this.static ] = this;
         }
     },
 
@@ -253,8 +253,8 @@ Pan.Core.Abstract = Pan.Class.extend(
      */
     static_instantiate : function()
     {
-        if( Pan.Statics && Pan.Statics[ this.static ] )
-            return Pan.Statics[ this.static ];
+        if( P.Statics && P.Statics[ this.static ] )
+            return P.Statics[ this.static ];
         else
             return null;
     },
@@ -272,7 +272,7 @@ Pan.Core.Abstract = Pan.Class.extend(
  * @class  Event Emmiter
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Core.EventEmitter = Pan.Core.Event_Emitter = Pan.Core.Abstract.extend(
+P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
 {
     static  : false,
     options : {},
@@ -553,7 +553,7 @@ Pan.Core.EventEmitter = Pan.Core.Event_Emitter = Pan.Core.Abstract.extend(
  * @author   Ariel Saldana / http://ahhriel.com
  * @info     methods of convering html data into objects or bytes for transport.
  */
-Pan.Components.Tooltip = Pan.Core.Abstract.extend({
+P.Components.Tooltip = P.Core.Abstract.extend({
     static: 'html_serializer',
     options: {
 
@@ -837,782 +837,10 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
 });
 
 /**
- * @class    Browser
- * @author   Ariel Saldana / http://ahhriel.com
- * @fires    resize
- * @fires    scroll
- * @fires    breakpoint
- * @requires Pan.Tools.Ticker
- */
-Pan.Tools.Browser = Pan.Core.Event_Emitter.extend(
-{
-    static  : 'browser',
-    options :
-    {
-        disable_hover_on_scroll : false,
-        initial_trigger         : true,
-        add_classes_to          : [ 'html' ],
-        breakpoints             : []
-    },
-
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
-    {
-        this._super( options );
-
-        this.ticker = new Pan.Tools.Ticker();
-
-        this.viewport             = {};
-        this.viewport.top         = 0;
-        this.viewport.left        = 0;
-        this.viewport.y           = 0;
-        this.viewport.x           = 0;
-        this.viewport.delta       = {};
-        this.viewport.delta.top   = 0;
-        this.viewport.delta.left  = 0;
-        this.viewport.delta.y     = 0;
-        this.viewport.delta.x     = 0;
-        this.viewport.direction   = {};
-        this.viewport.direction.x = null;
-        this.viewport.direction.y = null;
-        this.viewport.width       = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
-        this.viewport.height      = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-        this.pixel_ratio = window.devicePixelRatio || 1;
-
-        this.init_detection();
-        this.init_breakpoints();
-        this.init_disable_hover_on_scroll();
-        this.listen_to_events();
-
-        this.add_detection_classes();
-        this.trigger_initial_events();
-    },
-
-    /**
-     * Listen to events
-     * @return {object} Context
-     */
-    listen_to_events : function()
-    {
-        var that = this;
-
-        // Callbacks
-        function resize_callback()
-        {
-            that.resize_handler();
-        }
-        function scroll_callback()
-        {
-            that.scroll_handler();
-        }
-
-        // Listeing to events
-        if( window.addEventListener )
-        {
-            window.addEventListener( 'resize', resize_callback );
-            window.addEventListener( 'scroll', scroll_callback );
-        }
-        else
-        {
-            window.attachEvent( 'onresize', resize_callback );
-            window.attachEvent( 'onscroll', scroll_callback );
-        }
-
-        return this;
-    },
-
-    /**
-     * Handle the resize event
-     * @return {object} Context
-     */
-    resize_handler : function()
-    {
-        this.viewport.width  = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
-        this.viewport.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-        this.test_breakpoints();
-
-        this.trigger( 'resize', [ this.viewport ] );
-
-        return this;
-    },
-
-    /**
-     * Handle the scroll event
-     * @return {object} Context
-     */
-    scroll_handler : function()
-    {
-        var direction_y = null,
-            direction_x = null,
-            top         = null,
-            left        = null;
-
-        if( this.detect.browser.ie && document.compatMode === 'CSS1Compat' )
-        {
-            direction_y = window.document.documentElement.scrollTop  > this.viewport.top  ? 'down'  : 'up';
-            direction_x = window.document.documentElement.scrollLeft > this.viewport.left ? 'right' : 'left';
-            top         = window.document.documentElement.scrollTop;
-            left        = window.document.documentElement.scrollLeft;
-        }
-        else
-        {
-            direction_y = window.pageYOffset > this.viewport.top  ? 'down'  : 'up';
-            direction_x = window.pageXOffset > this.viewport.left ? 'right' : 'left';
-            top         = window.pageYOffset;
-            left        = window.pageXOffset;
-        }
-
-        this.viewport.direction.y = direction_y;
-        this.viewport.direction.x = direction_x;
-        this.viewport.delta.top   = top  - this.viewport.top;
-        this.viewport.delta.left  = left - this.viewport.left;
-        this.viewport.delta.y     = this.viewport.delta.top;
-        this.viewport.delta.x     = this.viewport.delta.left;
-        this.viewport.top         = top;
-        this.viewport.left        = left;
-        this.viewport.y           = this.viewport.top;
-        this.viewport.x           = this.viewport.left;
-
-        this.trigger( 'scroll', [ this.viewport ] );
-
-        return this;
-    },
-
-    /**
-     * Trigger initial events on next frame
-     * @return {object} Context
-     */
-    trigger_initial_events : function()
-    {
-        var that = this;
-
-        if( this.options.initial_trigger )
-        {
-            // Do next frame
-            this.ticker.wait( 1, function()
-            {
-                // Trigger scroll and resize
-                that.scroll_handler();
-                that.resize_handler();
-            } );
-        }
-
-        return this;
-    },
-
-    /**
-     * Initialise breakpoints
-     * @return {object} Context
-     */
-    init_breakpoints : function()
-    {
-        this.breakpoints                = {};
-        this.breakpoints.all            = [];
-        this.breakpoints.currents       = [];
-        this.breakpoints.currents_names = [];
-
-        this.add_breakpoints( this.options.breakpoints );
-
-        return this;
-    },
-
-    /**
-     * Add one breakpoint
-     * @param {object} breakpoint Breakpoint informations
-     * @return {object}           Context
-     * @example
-     *
-     *     add_breakpoint( {
-     *         name     : 'large',
-     *         limits   :
-     *         {
-     *             width :
-     *             {
-     *                 value    : 960,
-     *                 extreme  : 'min',
-     *                 included : false
-     *             }
-     *         }
-     *     } )
-     *
-     */
-    add_breakpoint : function( breakpoint )
-    {
-        this.breakpoints.all.push( breakpoint );
-
-        return this;
-    },
-
-    /**
-     * Add multiple breakpoint
-     * @param {array} breakpoints Array of breakpoints
-     * @return {object}           Context
-     * @example
-     *
-     *     add_breakpoints( [
-     *         {
-     *             name     : 'large',
-     *             limits   :
-     *             {
-     *                 width :
-     *                 {
-     *                     value    : 960,
-     *                     extreme  : 'min',
-     *                     included : false
-     *                 }
-     *             }
-     *         },
-     *         {
-     *             name     : 'medium',
-     *             limits   :
-     *             {
-     *                 width :
-     *                 {
-     *                     value    : 960,
-     *                     extreme  : 'max',
-     *                     included : true
-     *                 }
-     *             }
-     *         },
-     *         {
-     *             name     : 'small',
-     *             limits   :
-     *             {
-     *                 width :
-     *                 {
-     *                     value    : 500,
-     *                     extreme  : 'max',
-     *                     included : true
-     *                 }
-     *             }
-     *         }
-     *     ] )
-     *
-     */
-    add_breakpoints : function( breakpoints )
-    {
-        for( var i = 0; i < breakpoints.length; i++ )
-        {
-            this.add_breakpoint( breakpoints[ i ] );
-        }
-
-        return this;
-    },
-
-    /**
-     * Remove one breakpoint
-     * @param  {string} breakpoint Breakpoint name (can be the breakpoint object itself)
-     * @return {object}            Context
-     */
-    remove_breakpoint : function( breakpoint )
-    {
-        var name = null;
-
-        // String
-        if( typeof breakpoint === 'string' )
-            name = breakpoint;
-
-        // Object
-        else if( typeof breakpoint === 'object' && typeof breakpoint.name === 'string' )
-            name = breakpoint.name;
-
-        // Each breakpoint
-        for( var i = 0, len = this.breakpoints.all.length; i < len; i++ )
-        {
-            var item = this.breakpoints.all[ i ];
-
-            // Breakpoint name match
-            if( item.name === name )
-            {
-                this.breakpoints.all.splice( i--, 1 );
-                len--;
-                i--;
-            }
-        }
-
-        // Test breakpoints
-        this.test_breakpoints();
-
-        return this;
-    },
-
-    /**
-     * Test every breakpoint and trigger 'breakpoint' event if current breakpoint changed
-     * @return {object} Context
-     */
-    test_breakpoints : function()
-    {
-        var breakpoints = [];
-
-        // Each breakpoint
-        for( var i = 0, len = this.breakpoints.all.length; i < len; i++ )
-        {
-            var breakpoint = this.breakpoints.all[ i ],
-                width      = !breakpoint.limits.width,
-                height     = !breakpoint.limits.height;
-
-            // Width must be tested
-            if( !width )
-            {
-                // Min
-                if( breakpoint.limits.width.extreme === 'min' )
-                {
-                    if(
-                        // Included
-                        ( breakpoint.limits.width.included && this.viewport.width >= breakpoint.limits.width.value ) ||
-
-                        // Not included
-                        ( !breakpoint.limits.width.included && this.viewport.width > breakpoint.limits.width.value )
-                    )
-                        width = true;
-                }
-
-                // Max
-                else
-                {
-                    if(
-                        // Included
-                        ( breakpoint.limits.width.included && this.viewport.width <= breakpoint.limits.width.value ) ||
-
-                        // Not included
-                        ( !breakpoint.limits.width.included && this.viewport.width < breakpoint.limits.width.value )
-                    )
-                        width = true;
-                }
-            }
-
-            // Height must be tested
-            if( !height )
-            {
-                // Min
-                if( breakpoint.limits.height.extreme === 'min' )
-                {
-                    if(
-                        // Included
-                        ( breakpoint.limits.height.included && this.viewport.height >= breakpoint.limits.height.value ) ||
-
-                        // Not included
-                        ( !breakpoint.limits.height.included && this.viewport.height > breakpoint.limits.height.value )
-                    )
-                        height = true;
-                }
-
-                // Max
-                else
-                {
-                    if(
-                        // Included
-                        ( breakpoint.limits.height.included && this.viewport.height <= breakpoint.limits.height.value ) ||
-
-                        // Not included
-                        ( !breakpoint.limits.height.included && this.viewport.height < breakpoint.limits.height.value )
-                    )
-                        height = true;
-                }
-            }
-
-            if( width && height )
-            {
-                breakpoints.push( breakpoint );
-            }
-        }
-
-
-        var current_names = this.get_breakpoints_names( breakpoints ),
-            old_names     = this.get_breakpoints_names( this.breakpoints.currents ),
-            difference    = this.get_arrays_differences( current_names, old_names );
-
-        if( difference.length )
-        {
-            this.breakpoints.currents       = breakpoints;
-            this.breakpoints.currents_names = current_names;
-            this.trigger( 'breakpoint', [ this.breakpoints.currents, this.breakpoints.currents_names ] );
-        }
-
-        return this;
-    },
-
-    /**
-     * Get differences between two arrays
-     * @param  {array} a First array
-     * @param  {array} b Second array
-     * @return {array}   Items in one but not in the other
-     */
-    get_arrays_differences : function( a, b )
-    {
-        var a_new = [],
-            diff  = [];
-
-        for( var i = 0; i < a.length; i++ )
-            a_new[ a[ i ] ] = true;
-
-        for( i = 0; i < Pan.length; i++ )
-        {
-            if( a_new[ b[ i ] ] )
-                delete a_new[ b[ i ] ];
-            else
-                a_new[ b[ i ] ] = true;
-        }
-
-        for( var k in a_new )
-            diff.push( k );
-
-        return diff;
-    },
-
-    /**
-     * Retrieve breakpoints names
-     * @param {object} breakpoints Array of breakpoints well formated
-     * @return {array}             Array of breakpoints names
-     */
-    get_breakpoints_names : function( breakpoints )
-    {
-        var names = [];
-
-        for( var i = 0, len = breakpoints.length; i < len; i++ )
-            names.push( breakpoints[ i ].name );
-
-        return names;
-    },
-
-    /**
-     * Disable pointer events on body when scrolling for performance
-     * @return {object} Context
-     */
-    init_disable_hover_on_scroll : function()
-    {
-        if( !this.options.disable_hover_on_scroll )
-            return;
-
-        var that    = this,
-            timeout = null,
-            active  = false;
-
-        function disable()
-        {
-            // Clear timeout if exist
-            if( timeout )
-                window.clearTimeout( timeout );
-
-            // Not active
-            if( !active )
-            {
-                // Activate
-                active = true;
-                document.body.style.pointerEvents = 'none';
-            }
-
-            timeout = window.setTimeout( function()
-            {
-                // Deactivate
-                active = false;
-                document.body.style.pointerEvents = 'auto';
-            }, 60 );
-        }
-
-        this.on( 'scroll', disable );
-
-        return this;
-    },
-
-    /**
-     * Detect engine, browser, system and feature in a specified list and store in 'detect' property
-     * @return {object} Context
-     */
-    init_detection : function()
-    {
-        var detect = {};
-
-        // Prepare
-        var engine     = {};
-        engine.ie      = 0;
-        engine.gecko   = 0;
-        engine.webkit  = 0;
-        engine.khtml   = 0;
-        engine.opera   = 0;
-        engine.version = 0;
-
-        var browser = {};
-        browser.ie      = 0;
-        browser.firefox = 0;
-        browser.safari  = 0;
-        browser.konq    = 0;
-        browser.opera   = 0;
-        browser.chrome  = 0;
-        browser.safari  = 0;
-        browser.version = 0;
-
-        var system            = {};
-        system.windows        = false;
-        system.mac            = false;
-        system.osx            = false;
-        system.iphone         = false;
-        system.ipod           = false;
-        system.ipad           = false;
-        system.ios            = false;
-        system.blackberry     = false;
-        system.android        = false;
-        system.opera_mini     = false;
-        system.windows_mobile = false;
-        system.wii            = false;
-        system.ps             = false;
-
-        var features   = {};
-        features.touch = false;
-
-        // Detect
-        var user_agent = navigator.userAgent;
-        if( window.opera )
-        {
-            engine.version = browser.version = window.opera.version();
-            engine.opera   = browser.opera   = parseInt( engine.version );
-        }
-        else if( /AppleWebKit\/(\S+)/.test( user_agent ) || /AppleWebkit\/(\S+)/.test( user_agent ) )
-        {
-            engine.version = RegExp.$1;
-            engine.webkit  = parseInt( engine.version );
-
-            // figure out if it's Chrome or Safari
-            if( /Chrome\/(\S+)/.test( user_agent ) )
-            {
-                browser.version = RegExp.$1;
-                browser.chrome  = parseInt( browser.version );
-            }
-            else if( /Version\/(\S+)/.test( user_agent ) )
-            {
-                browser.version = RegExp.$1;
-                browser.safari  = parseInt( browser.version );
-            }
-            else
-            {
-                // Approximate version
-                var safariVersion = 1;
-
-                if( engine.webkit < 100 )
-                    safariVersion = 1;
-                else if( engine.webkit < 312 )
-                    safariVersion = 1.2;
-                else if( engine.webkit < 412 )
-                    safariVersion = 1.3;
-                else
-                    safariVersion = 2;
-
-                browser.safari = browser.version = safariVersion;
-            }
-        }
-        else if( /KHTML\/(\S+)/.test( user_agent ) || /Konqueror\/([^;]+)/.test( user_agent ) )
-        {
-            engine.version = browser.version = RegExp.$1;
-            engine.khtml   = browser.konq    = parseInt( engine.version );
-        }
-        else if( /rv:([^\)]+)\) Gecko\/\d{8}/.test( user_agent ) )
-        {
-            engine.version = RegExp.$1;
-            engine.gecko   = parseInt( engine.version );
-
-            // Determine if it's Firefox
-            if ( /Firefox\/(\S+)/.test( user_agent ) )
-            {
-                browser.version = RegExp.$1;
-                browser.firefox = parseInt( browser.version );
-            }
-        }
-        else if( /MSIE ([^;]+)/.test( user_agent ) )
-        {
-            engine.version = browser.version = RegExp.$1;
-            engine.ie      = browser.ie      = parseInt( engine.version );
-        }
-        else if( /Trident.*rv[ :]*(11[\.\d]+)/.test( user_agent ) )
-        {
-            engine.version = browser.version = RegExp.$1;
-            engine.ie      = browser.ie      = parseInt( engine.version );
-        }
-
-        // Detect browsers
-        browser.ie    = engine.ie;
-        browser.opera = engine.opera;
-
-        // Detect platform (using navigator.plateform)
-        var plateform  = navigator.platform;
-        // system.windows = plateform.indexOf( 'Win' ) === 0;
-        // system.mac     = plateform.indexOf( 'Mac' ) === 0;
-        // system.x11     = ( plateform === 'X11' ) || ( plateform.indexOf( 'Linux' ) === 0);
-
-        // Detect platform (using navigator.userAgent)
-        system.windows = !!user_agent.match( /Win/ );
-        system.mac     = !!user_agent.match( /Mac/ );
-        // system.x11     = ( plateform === 'X11' ) || ( plateform.indexOf( 'Linux' ) === 0);
-
-        // Detect windows operating systems
-        if( system.windows )
-        {
-            if( /Win(?:dows )?([^do]{2})\s?(\d+\.\d+)?/.test( user_agent ) )
-            {
-                if( RegExp.$1 === 'NT' )
-                {
-                    switch( RegExp.$2 )
-                    {
-                        case '5.0':
-                            system.windows = '2000';
-                            break;
-
-                        case '5.1':
-                            system.windows = 'XP';
-                            break;
-
-                        case '6.0':
-                            system.windows = 'Vista';
-                            break;
-
-                        default:
-                            system.windows = 'NT';
-                            break;
-                    }
-                }
-                else if( RegExp.$1 === '9x' )
-                {
-                    system.windows = 'ME';
-                }
-                else
-                {
-                    system.windows = RegExp.$1;
-                }
-            }
-        }
-
-        // Detect mobile (mix between OS and device)
-        system.nokia          = !!user_agent.match( /Nokia/i );
-        system.kindle_fire    = !!user_agent.match( /Silk/ );
-        system.iphone         = !!user_agent.match( /iPhone/ );
-        system.ipod           = !!user_agent.match( /iPod/ );
-        system.ipad           = !!user_agent.match( /iPad/ );
-        system.blackberry     = !!user_agent.match( /BlackBerry/ ) || !!user_agent.match( /BB[0-9]+/ ) || !!user_agent.match( /PlayBook/ );
-        system.android        = !!user_agent.match( /Android/ );
-        system.opera_mini     = !!user_agent.match( /Opera Mini/i );
-        system.windows_mobile = !!user_agent.match( /IEMobile/i );
-
-        // iOS / OS X exception
-        system.ios = system.iphone || system.ipod || system.ipad;
-        system.osx = !system.ios && !!user_agent.match( /OS X/ );
-
-        // Detect gaming systems
-        system.wii         = user_agent.indexOf( 'Wii' ) > -1;
-        system.playstation = /playstation/i.test( user_agent );
-
-        //Detect features (Not as reliable as Modernizr)
-        features.touch       = !!( ( 'ontouchstart' in window ) || window.DocumentTouch && document instanceof DocumentTouch );
-        features.media_query = !!( window.matchMedia || window.msMatchMedia );
-
-        this.user_agent      = user_agent;
-        this.plateform       = plateform;
-        this.detect          = {};
-        this.detect.browser  = browser;
-        this.detect.engine   = engine;
-        this.detect.system   = system;
-        this.detect.features = features;
-    },
-
-    /**
-     * Add detected informations to the DOM (on <html> by default)
-     * @return {object} Context
-     */
-    add_detection_classes : function()
-    {
-        var targets  = null,
-            selector = null;
-
-        // Each element that need to add classes
-        for( var i = 0, len = this.options.add_classes_to.length; i < len; i++ )
-        {
-            // Selector
-            selector = this.options.add_classes_to[ i ];
-
-            // Target
-            switch( selector )
-            {
-                case 'html' :
-                    targets = [ document.documentElement ];
-                    break;
-
-                case 'body' :
-                    targets = [ document.body ];
-                    break;
-
-                default :
-                    targets = document.querySelectorAll( selector );
-                    break;
-            }
-
-            // Targets found
-            if( targets.length )
-            {
-                this.classes = [];
-
-                // Each category
-                for( var category in this.detect )
-                {
-                    // Each property in category
-                    for( var property in this.detect[ category ] )
-                    {
-                        var value = this.detect[ category ][ property ];
-
-                        // Ignore version
-                        if( property !== 'version' )
-                        {
-                            // Feature
-                            if( category === 'features' )
-                            {
-                                this.classes.push( category + '-' + ( value ? '' : 'no-' ) + property );
-                            }
-
-                            // Not feature
-                            else
-                            {
-                                if( value )
-                                {
-                                    this.classes.push( category + '-' + property );
-                                    if( category === 'browser'  )
-                                        this.classes.push( category + '-' + property + '-' + value );
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Add classes
-                for( var j = 0; j < targets.length; j++ )
-                    targets[ j ].classList.add.apply( targets[ j ].classList, this.classes );
-            }
-        }
-
-        return this;
-    },
-
-    /**
-     * Test media and return false if not compatible
-     * @param  {string} condition Condition to test
-     * @return {boolean}          Match
-     */
-    match_media : function( condition )
-    {
-        if( this.detect.features.media_query || typeof condition !== 'string' || condition === '' )
-            return false;
-
-        return !!window.matchMedia( condition ).matches;
-    }
-} );
-
-/**
  * @class    Colors
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Colors = Pan.Core.Abstract.extend(
+P.Tools.Colors = P.Core.Abstract.extend(
 {
     static  : 'colors',
     options :
@@ -2078,9 +1306,9 @@ Pan.Tools.Colors = Pan.Core.Abstract.extend(
 /**
  * @class    Css
  * @author   Ariel Saldana / http://ahhriel.com
- * @requires Pan.Tools.Detector
+ * @requires P.Tools.Detector
  */
- Pan.Tools.Css = Pan.Core.Abstract.extend(
+ P.Tools.Css = P.Core.Abstract.extend(
  {
      static  : 'css',
      options :
@@ -2097,8 +1325,8 @@ Pan.Tools.Colors = Pan.Core.Abstract.extend(
      {
          this._super( options );
 
-         this.detector = new Pan.Tools.Detector();
-         this.strings  = new Pan.Tools.Strings();
+         this.detector = new P.Tools.Detector();
+         this.strings  = new P.Tools.Strings();
      },
 
      /**
@@ -2230,7 +1458,7 @@ Pan.Tools.Colors = Pan.Core.Abstract.extend(
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    send
  */
-Pan.Tools.GATags = Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
+P.Tools.GATags = P.Tools.GA_Tags = P.Core.Event_Emitter.extend(
 {
     static  : 'ga_tags',
     options :
@@ -2486,7 +1714,7 @@ Pan.Tools.GATags = Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
  * @fires  down
  * @fires  up
  */
-Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
+P.Tools.Keyboard = P.Core.Event_Emitter.extend(
 {
     static        : 'keyboard',
     options       : {},
@@ -2632,7 +1860,7 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
  * @class    Strings
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.KonamiCode = Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
+P.Tools.KonamiCode = P.Tools.Konami_Code = P.Core.Event_Emitter.extend(
 {
     static  : 'konami_code',
     options :
@@ -2665,7 +1893,7 @@ Pan.Tools.KonamiCode = Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
         // Set up
         this.index    = 0;
         this.timeout  = null;
-        this.keyboard = new Pan.Tools.Keyboard();
+        this.keyboard = new P.Tools.Keyboard();
 
         // Init
         this.listen_to_events();
@@ -2736,9 +1964,9 @@ Pan.Tools.KonamiCode = Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
  * @fires    up
  * @fires    move
  * @fires    wheel
- * @requires Pan.Tools.Viewport
+ * @requires P.Tools.Viewport
  */
-Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
+P.Tools.Mouse = P.Core.Event_Emitter.extend(
 {
     static  : 'mouse',
     options : {},
@@ -2752,7 +1980,7 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.viewport         = new Pan.Tools.Viewport();
+        this.viewport         = new P.Tools.Viewport();
         this.down             = false;
         this.position         = {};
         this.position.x       = 0;
@@ -2845,7 +2073,7 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
  * @fires    offline
  * @fires    change
  */
-Pan.Tools.Offline = Pan.Core.Event_Emitter.extend(
+P.Tools.Offline = P.Core.Event_Emitter.extend(
 {
     static  : 'offline',
     options :
@@ -2942,7 +2170,7 @@ Pan.Tools.Offline = Pan.Core.Event_Emitter.extend(
  * @class    Registry
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Registry = Pan.Core.Event_Emitter.extend(
+P.Tools.Registry = P.Core.Event_Emitter.extend(
 {
     static  : 'registry',
     options : {},
@@ -2998,9 +2226,9 @@ Pan.Tools.Registry = Pan.Core.Event_Emitter.extend(
 /**
  * @class    Resizer
  * @author   Ariel Saldana / http://ahhriel.com
- * @requires Pan.Tools.Browser
+ * @requires P.Tools.Browser
  */
-Pan.Tools.Resizer = Pan.Core.Abstract.extend(
+P.Tools.Resizer = P.Core.Abstract.extend(
 {
     static  : 'resizer',
     options :
@@ -3046,7 +2274,7 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
         var that = this;
 
         // Set up
-        this.viewport = new Pan.Tools.Viewport();
+        this.viewport = new P.Tools.Viewport();
 
         // Viewport resize event
         this.viewport.on( 'resize', function()
@@ -3361,7 +2589,7 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
  * @class    Strings
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Strings = Pan.Core.Abstract.extend(
+P.Tools.Strings = P.Core.Abstract.extend(
 {
     static  : 'strings',
     options : {},
@@ -3673,7 +2901,7 @@ Pan.Tools.Strings = Pan.Core.Abstract.extend(
  * @class    Resizer
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Ticker = Pan.Core.Event_Emitter.extend(
+P.Tools.Ticker = P.Core.Event_Emitter.extend(
 {
     static  : 'ticker',
     options :
@@ -3978,7 +3206,7 @@ Pan.Tools.Ticker = Pan.Core.Event_Emitter.extend(
  * @class    queue
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
+P.Tools.Queue = P.Core.Event_Emitter.extend({
     static: 'queue',
     slice: [].slice,
 
@@ -4133,5 +3361,5 @@ Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
 
 });
 
-return Pan;
+return P;
 } )( window, document );

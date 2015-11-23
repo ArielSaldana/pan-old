@@ -2,7 +2,7 @@
  * @class    queue
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
+P.Tools.Queue = P.Core.Event_Emitter.extend({
     static: 'queue',
     slice: [].slice,
 

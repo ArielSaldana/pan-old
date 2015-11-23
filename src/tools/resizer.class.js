@@ -1,9 +1,9 @@
 /**
  * @class    Resizer
  * @author   Ariel Saldana / http://ahhriel.com
- * @requires Pan.Tools.Browser
+ * @requires P.Tools.Browser
  */
-Pan.Tools.Resizer = Pan.Core.Abstract.extend(
+P.Tools.Resizer = P.Core.Abstract.extend(
 {
     static  : 'resizer',
     options :
@@ -49,7 +49,7 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
         var that = this;
 
         // Set up
-        this.viewport = new Pan.Tools.Viewport();
+        this.viewport = new P.Tools.Viewport();
 
         // Viewport resize event
         this.viewport.on( 'resize', function()

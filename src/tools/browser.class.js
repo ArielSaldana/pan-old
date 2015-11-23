@@ -4,9 +4,9 @@
  * @fires    resize
  * @fires    scroll
  * @fires    breakpoint
- * @requires Pan.Tools.Ticker
+ * @requires P.Tools.Ticker
  */
-Pan.Tools.Browser = Pan.Core.Event_Emitter.extend(
+P.Tools.Browser = P.Core.Event_Emitter.extend(
 {
     static  : 'browser',
     options :
@@ -26,7 +26,7 @@ Pan.Tools.Browser = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.ticker = new Pan.Tools.Ticker();
+        this.ticker = new P.Tools.Ticker();
 
         this.viewport             = {};
         this.viewport.top         = 0;
@@ -414,7 +414,7 @@ Pan.Tools.Browser = Pan.Core.Event_Emitter.extend(
         for( var i = 0; i < a.length; i++ )
             a_new[ a[ i ] ] = true;
 
-        for( i = 0; i < Pan.length; i++ )
+        for( i = 0; i < P.length; i++ )
         {
             if( a_new[ b[ i ] ] )
                 delete a_new[ b[ i ] ];

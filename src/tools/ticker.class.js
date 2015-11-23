@@ -2,7 +2,7 @@
  * @class    Resizer
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Ticker = Pan.Core.Event_Emitter.extend(
+P.Tools.Ticker = P.Core.Event_Emitter.extend(
 {
     static  : 'ticker',
     options :

@@ -3,7 +3,7 @@
  * @author   Ariel Saldana / http://ahhriel.com
  */
 
-Pan.Tools.History = Pan.Core.Event_Emitter.extend({
+P.Tools.History = P.Core.Event_Emitter.extend({
     static: 'history',
     options: {
         parse: true,
@@ -22,7 +22,7 @@ Pan.Tools.History = Pan.Core.Event_Emitter.extend({
         this._super(options);
 
         // Set up
-        this.browser = new Pan.Tools.Browser();
+        this.browser = new P.Tools.Browser();
         this.instance = null;
         //this.$           = {};
         //this.$.container = $( '.' + this.options.classes.container ); // vatiable to hold container;
