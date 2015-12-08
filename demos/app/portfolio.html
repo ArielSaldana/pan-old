@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Sandbox - Custom components</title>
+    <!-- <link rel="stylesheet" href="http://dev.unreal.io/test/snap/Carpenters%20Gallery%20-%20Nicolas%20Bussi%C3%A8re_files/style.min.css" media="screen" title="no title" charset="utf-8"> -->
+    <link rel="stylesheet" href="../src/css/stone.css" media="screen" title="no title" charset="utf-8">
+    <style>
+    body {
+      background-color: #f3f3f3;
+    }
+    .mouse {
+      width: 30px;
+      position: absolute;
+      height: 50px;
+      border-radius: 15px;
+      border: 2px solid #232323;
+      bottom: 70px;
+      left: 50%;
+      margin-left: -15px;
+      opacity: 0;
+      -webkit-backface-visibility: hidden;
+      -ms-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-perspective: 1000;
+      -ms-perspective: 1000;
+      perspective: 1000;
+  }
+
+  .mouse::after {
+    content: "Scroll Down";
+        text-transform: uppercase;
+        color: #232323;
+        font-size: 11px;
+        font-weight: 600;
+        width: 160px;
+        position: absolute;
+        margin-left: -99%;
+        margin-top: 150%;
+        -webkit-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-perspective: 1000;
+        -ms-perspective: 1000;
+        perspective: 1000;
+  }
+
+  .scroll {
+      display: block;
+      margin: 6px auto;
+      width: 3px;
+      height: 6px;
+      border-radius: 4px;
+      background: #232323;
+      -webkit-animation-duration: 1.4s;
+      animation-duration: 1.4s;
+      -webkit-animation-iteration-count: infinite;
+      animation-iteration-count: infinite;
+      -webkit-animation-name: scroll;
+      animation-name: scroll;
+      -webkit-backface-visibility: hidden;
+      -ms-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-perspective: 1000;
+      -ms-perspective: 1000;
+      perspective: 1000;
+  }
+
+  @keyframes scroll {
+      0% {
+          opacity: 1;
+      }
+      100% {
+          opacity: 0;
+          -webkit-transform: translateY(10px);
+          -ms-transform: translateY(10px);
+          transform: translateY(10px);
+      }
+  }
+
+  @-webkit-keyframes scroll {
+      0% {
+          opacity: 1;
+      }
+      100% {
+          opacity: 0;
+          -webkit-transform: translateY(10px);
+          transform: translateY(10px);
+      }
+  }
+    </style>
+</head>
+<body class="chrome CH" style="touch-action: pan-x pan-y; -webkit-user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+
+  <div class="body-background"></div>
+
+  <nav>
+      <a data-direction="from-left" href="#" class="ajax main-title">
+         <h1>Ariel Saldana</h1> 
+ 
+      </a>
+       <a class="toggle-header" href="#"><span class="icon"></span> <span>menu</span></a> 
+  </nav>
+
+   <header>
+
+      <span class="background"></span>
+
+      <div class="menu">
+          <nav>
+              <a data-direction="from-left" href="http://nicolas-bussiere.fr/" class="ajax main-title"><h1>Ariel Saldana</h1></a><a class="toggle-header" href="#"><span class="icon"></span> <span>close menu</span></a>
+          </nav>
+          <nav class="internal">
+              <a href="#" class="contact active">contact</a>
+              <a href="#" class="projects">projects</a>
+          </nav>
+      </div>
+
+      <div class="left">
+          <div class="description">
+              <p>
+                  Hello,
+                  <br>
+                  <br>I'm a young <strong>designer</strong> 
+                  <br>based in <strong>New York</strong>, formed <a class="underline" target="_blank" href="https://unreal.io">@unrealcorp</a>
+                  <br>&amp; currently working <a class="underline" target="_blank" href="urban FT">@urbanFT</a>
+              </p>
+
+              <p>
+                  I'm <strong>available</strong> for <strong>freelancing</strong>
+              </p>
+
+              <p>
+                  <strong>I can help you with</strong>
+                  <br>
+                  <br>App design
+                  <br>Responsive design
+                  <br>Webdesign
+                  <br>Print
+                  <br>Branding
+                  <br>Icon design
+                  <br>Graphic design
+              </p>
+
+              <p>
+                  <strong>Contact me</strong>
+                  <br>
+                  <br><a class="mail underline" href="mailto:contact@ahhriel.com">contact@ahhriel.com</a>
+              </p>
+          </div>
+
+          <div class="links">
+              <p>
+                  <strong>you can find me on</strong>
+              </p>
+              <a href="https://dribbble.com/nicolasbussiere" class="dribbble" target="_blank"></a><a href="https://twitter.com/nicolasbussiere" class="twitter" target="_blank"></a>
+          </div>
+
+          <div class="developer">
+              This website was developed by <a class="underline" target="_blank" href="http://bruno-simon.com/">Ariel Saldana</a>
+          </div>
+      </div>
+      <div class="right hidden scroll-active">
+          <div class="scrollbar disable" style="height: 0px;"><div class="track" style="height: 0px;"><div class="thumb"><div class="end"></div></div></div></div>
+          <div class="viewport">
+              <!--<div class="overview" style="top: 0px;">
+                  <p class="title">projects made @AgenceUzik</p>
+                                                                                          <a data-direction="from-right" href="./Carpenters Gallery - Nicolas Bussière_files/Carpenters Gallery - Nicolas Bussière.html" class="project even">
+                              <span class="illustration"><span class="image to-load loaded" style="background-color:" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/preview.jpg);"></span></span></span>
+                              <span class="name">Carpenters<br>Gallery</span>
+                          </a>
+                                                                                                                                                                                                                                                                              <a data-direction="from-right" href="http://nicolas-bussiere.fr/projects/chateau-d-yquem" class="project odd">
+                              <span class="illustration"><span class="image to-load loaded" style="background-color:" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/yquem/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/yquem/preview.jpg);"></span></span></span>
+                              <span class="name">Château<br>d'Yquem</span>
+                          </a>
+                                                                                              <a data-direction="from-right" href="http://nicolas-bussiere.fr/projects/bnp-paribas-lbc" class="project even">
+                              <span class="illustration"><span class="image to-load loaded" style="background-color:" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/bnp/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/bnp/preview.jpg);"></span></span></span>
+                              <span class="name">BNP Paribas<br>Les bons comptes</span>
+                          </a>
+                                                                                              <a data-direction="from-right" href="http://nicolas-bussiere.fr/projects/hermes-sur-mesure" class="project odd">
+                              <span class="illustration"><span class="image to-load loaded" style="background-color:" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/hermes/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/hermes/preview.jpg);"></span></span></span>
+                              <span class="name">Hermès<br>Sur mesure</span>
+                          </a>
+                                                                                                                                                                                                                                                                              <a data-direction="from-right" href="http://nicolas-bussiere.fr/projects/paco-rabanne-black-xs" class="project even">
+                              <span class="illustration"><span class="image to-load loaded" style="background-color:" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/black-xs/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/black-xs/preview.jpg);"></span></span></span>
+                              <span class="name">Paco<br>Rabanne<br>Black XS</span>
+                          </a>
+                                                                                                                                                                                      <a data-direction="from-right" href="http://nicolas-bussiere.fr/projects/albin-michel" class="project odd">
+                              <span class="illustration"><span class="image to-load loaded" style="background-color:" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/albin-michel/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/albin-michel/preview.jpg);"></span></span></span>
+                              <span class="name">Albin Michel<br>3D audio<br>experience</span>
+                          </a>
+                                                                                                      </div>-->
+          </div>
+      </div>
+  </header> 
+
+  <!-- PASSWORD -->
+  <div class="password">
+  <a href="http://nicolas-bussiere.fr/projects/carpenters-gallery#" class="close"></a>
+  <div class="container">
+      <div class="content">
+          <p class="title">This project is password protected</p>
+          <p>Due to client confidentiality agreements, this project is not publicly viewable at this time.</p>
+          <p>Please <a class="underline" href="mailto:contact@nicolas-bussiere.fr">contact me</a> to request a password</p>
+
+          <form action="http://nicolas-bussiere.fr/projects/carpenters-gallery#" method="POST">
+              <input type="password" name="password" placeholder="password">
+              <input type="submit" value="">
+          </form>
+      </div>
+  </div>
+</div>
+
+  <!-- COLUMNS -->
+  <div class="columns">
+
+      <div class="column">
+<div class="page project">
+
+  <form action="http://nicolas-bussiere.fr/projects/carpenters-gallery#" class="hidden">
+      <input type="text" class="page" value="project">
+      <input type="text" class="title" value="Stonewater">
+  </form>
+
+  <div class="links">
+      <a class="close ajax" data-direction="from-left" href=""></a>
+      <a class="to-top hidden" href="#"></a>
+          </div>
+
+            <!-- <div class="line line-to-screen-size current going-down" style="display: block; height:2000px;">
+            </div> -->
+
+  
+
+
+
+  <div class="line line-to-screen-size current going-down" style="display: block;">
+      <div class="intro">
+          <div class="left center">
+              <div class="container">
+                  <div class="content">
+                      <h1 style="text-align:center">La Foret Illustrations</h1>
+                      <p class="description" style="text-align:center;">Art Direction, Character Design, Game Design</p>
+                      <p class="comment" style="text-align:center;">scroll Down</p>
+                      <a href="#" class="arrow"><span></span></a>
+                  </div>
+              </div>
+          </div>
+
+
+      </div>
+  </div>
+
+
+
+
+
+                  <!--<div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+                    <div class="element split">
+                      <div class="element" style=";">
+                        <div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-1.jpg">
+                          <span style="background-image: url(../src/images/vince-1.jpg);"></span>
+                          <div style="position:absolute; left:20px;bottom:20px; max-width:400px; width:400px; height:200px;background-color: rgba(255,255,255,0.8);padding:20px;">
+                            <h2>Mid Century Modern</h2>
+                            <p style="margin-top:10px;">Newly Constructed</p>
+                            <p style="margin-top:15px;font-size:12px;font-family: 'Source Serif Pro', serif;padding-left:16px;">Bacon ipsum dolor amet corned beef boudin chicken cupim filet mignon shank swine turkey t-bone. Corned beef beef flank tenderloin strip steak turkey beef ribs. Ham brisket shoulder tail, frankfurter pancetta landjaeger chuck ribeye. Ground round leberkas tail ham hock, turducken drumstick hamburger ham tongue. Flank shoulder spare ribs doner beef ribs boudin picanha porchetta meatball. Fatback pastrami ball tip, sausage chuck venison frankfurter cupim kevin pancetta flank tri-tip jerky strip steak turkey. Chuck prosciutto andouille fatback alcatra.</p>
+
+                          </div>
+                        </div>
+   
+                      </div>
+                        <div class="element split">
+                          <div class="element">
+                            <div class="illustration illustration-1 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-2-1.jpg">
+                              <span style="background-image: url(../src/images/vince-2.jpg);"></span>
+                            </div>
+                          </div>
+                          <div class="element">
+                            <div class="illustration illustration-2 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-2-2.jpg">
+                              <span style="background-image: url(../src/images/vince-4.jpg);"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+                    <div class="element split">
+                      <div class="element" style=";">
+                        <div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-1.jpg">
+                          <span style="background-image: url(../src/images/CICCONE-RESIZED1.jpg);"></span>
+                          <div style="position:absolute; left:20px;bottom:20px; max-width:400px; width:400px; height:200px;background-color: rgba(255,255,255,0.8);padding:20px;">
+                            <h2>Mid Century Modern</h2>
+                            <p style="margin-top:10px;">Newly Constructed</p>
+                            <p style="margin-top:15px;font-size:12px;font-family: 'Source Serif Pro', serif;padding-left:16px;">Bacon ipsum dolor amet corned beef boudin chicken cupim filet mignon shank swine turkey t-bone. Corned beef beef flank tenderloin strip steak turkey beef ribs. Ham brisket shoulder tail, frankfurter pancetta landjaeger chuck ribeye. Ground round leberkas tail ham hock, turducken drumstick hamburger ham tongue. Flank shoulder spare ribs doner beef ribs boudin picanha porchetta meatball. Fatback pastrami ball tip, sausage chuck venison frankfurter cupim kevin pancetta flank tri-tip jerky strip steak turkey. Chuck prosciutto andouille fatback alcatra.</p>
+
+                          </div>
+                        </div>
+                      </div>
+                        <div class="element split">
+                          <div class="element">
+                            <div class="illustration illustration-1 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-2-1.jpg">
+                              <span style="background-image: url(../src/images/CICCONE-RESIZED2.jpg);"></span>
+                            </div>
+                          </div>
+                          <div class="element">
+                            <div class="illustration illustration-2 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-2-2.jpg">
+                              <span style="background-image: url(../src/images/CICCONE-RESIZED3.jpg);"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+                    <div class="element split">
+                      <div class="element" style=";">
+                        <div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-1.jpg">
+                          <span style="background-image: url(../src/images/GARDNER-RESIZED1.jpg);"></span>
+                          <div style="position:absolute; left:20px;bottom:20px; max-width:400px; width:400px; height:200px;background-color: rgba(255,255,255,0.8);padding:20px;">
+                            <h2>Mid Century Modern</h2>
+                            <p style="margin-top:10px;">Newly Constructed</p>
+                            <p style="margin-top:15px;font-size:12px;font-family: 'Source Serif Pro', serif;padding-left:16px;">Bacon ipsum dolor amet corned beef boudin chicken cupim filet mignon shank swine turkey t-bone. Corned beef beef flank tenderloin strip steak turkey beef ribs. Ham brisket shoulder tail, frankfurter pancetta landjaeger chuck ribeye. Ground round leberkas tail ham hock, turducken drumstick hamburger ham tongue. Flank shoulder spare ribs doner beef ribs boudin picanha porchetta meatball. Fatback pastrami ball tip, sausage chuck venison frankfurter cupim kevin pancetta flank tri-tip jerky strip steak turkey. Chuck prosciutto andouille fatback alcatra.</p>
+
+                          </div>
+                        </div>
+                      </div>
+                        <div class="element split">
+                          <div class="element">
+                            <div class="illustration illustration-1 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-2-1.jpg">
+                              <span style="background-image: url(../src/images/GARDNER-RESIZED2.jpg);"></span>
+                            </div>
+                          </div>
+                          <div class="element">
+                            <div class="illustration illustration-2 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-2-2.jpg">
+                              <span style="background-image: url(../src/images/GARDNER-RESIZED3.jpg);"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+
+
+
+
+
+
+          <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+  <div class="element split">
+    <div class="element">
+      <div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7;position:relative" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-4.jpg">
+        <span style="height:55%;background-image: url(../src/images/GARDNER-RESIZED2.jpg);"></span>
+        <div style="height:45%;position:absolute;bottom:0;left:0;width:100%;">
+          <div style="margin:20px;color: rgba(0,0,0,0.8);">
+            <p style="font-size:13px;max-width:400px;margin:0 auto;padding-top:15px;line-height:1.5;font-family: 'Source Serif Pro', serif;">"What we love about Mike is that he gets it; Sure he cares about his design approach, but more importantly he works with his clients to undertand what they want. He then creates a design aesthetic that trascends any particular style. He's smart, well-schooled architect who creatively over delivers on what he designs  we can't recommend him highly enoigh."</p>
+            <div style="margin-top:20px;">
+              <p style="font-size:13px;max-width:400px;margin:0 auto;color: rgba(0,0,0,0.9);">Charles Anastaciou</p>
+              <p style="font-size:13px;max-width:400px;margin:5px auto;font-family: 'Source Serif Pro', serif;">Managing Director, Investments; Wells Fargo Advisors, LLC New York</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="element"><div class="illustration illustration-1 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-5.jpg">
+      <span style="height:55%;background-image: url(../src/images/CICCONE-RESIZED3.jpg);"></span>
+      <div style="height:45%;position:absolute;bottom:0;left:0;width:100%;">
+        <div style="margin:20px;color: rgba(0,0,0,0.8);">
+          <p style="font-size:13px;max-width:400px;margin:0 auto;padding-top:15px;line-height:1.5;font-family: 'Source Serif Pro', serif;">"What we love about Mike is that he gets it; Sure he cares about his design approach, but more importantly he works with his clients to undertand what they want. He then creates a design aesthetic that trascends any particular style. He's smart, well-schooled architect who creatively over delivers on what he designs  we can't recommend him highly enoigh."</p>
+          <div style="margin-top:30px;">
+            <p style="font-size:13px;max-width:400px;margin:0 auto;color: rgba(0,0,0,0.9);">Charles Anastaciou</p>
+            <p style="font-size:13px;max-width:400px;margin:5px auto;font-family: 'Source Serif Pro', serif;">Managing Director, Investments; Wells Fargo Advisors, LLC New York</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ </div>-->
+
+                   <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/11984819338867.562e0f40d92aa.png);"></span></div></div>        </div>
+		  
+                   <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/453c3719338867.562e0f40cc714.png);"></span></div></div>        </div>
+		  
+
+                   <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/483c4719338867.562e0f4115dc7.png);"></span></div></div>        </div>
+    
+    <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/87996319338867.562e0f40e2158.png);"></span></div></div>        </div>
+    
+    <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/9eabe519338867.562e0f40f2c1d.png);"></span></div></div>        </div>
+    
+    <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/a23d4819338867.562e0f40c4db4.png);"></span></div></div>        </div>
+    
+        <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/bf925919338867.562e0f410a6d5.jpg);"></span></div></div>        </div>
+    
+        <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/c570d919338867.562e0f40d85ce.png);"></span></div></div>        </div>
+    
+        <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/cdd7f719338867.5631a2ba4f070.png);"></span></div></div>        </div>
+    
+            <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/da051f19338867.562e0f4104d0d.jpg);"></span></div></div>        </div>
+    
+        <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-size: contain;
+    background-repeat: no-repeat;background-image: url(../src/images/ecabe019338867.5631a2ba4389c.jpg);"></span></div></div>        </div>
+		  
+
+
+
+
+
+
+
+                  <!-- <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="../src/images/ecabe019338867.5631a2ba4389c.jpg"><span style="background-image: url(../src/images/ecabe019338867.5631a2ba4389c.jpg);"></span></div></div>        </div>
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-2.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-2.jpg);"></span></div></div>        </div>
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-3.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-3.jpg);"></span></div></div>        </div>
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-4.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-4.jpg);"></span></div></div>        </div>
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-5.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-5.jpg);"></span></div></div>        </div>
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element split"><div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-2.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-2.jpg);"></span></div></div><div class="element"><div class="illustration illustration-1 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-3.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-3.jpg);"></span></div></div></div>        </div>
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-6.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-6.jpg);"></span></div></div>        </div>
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-7.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-1-1-7.jpg);"></span></div></div>        </div>
+                  <div class="line after going-down" style="height: 100%; top: 0px; margin-top: 0px; display: none;">
+          <div class="element split"><div class="element"><div class="illustration illustration-0 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-4.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-4.jpg);"></span></div></div><div class="element"><div class="illustration illustration-1 to-load loaded" style="background-color:#f7f7f7" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-5.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/carpenters/image-2-1-5.jpg);"></span></div></div></div>        </div>
+
+
+  <div class="line line-to-screen-size after going-down" style="display: none;">
+      <div class="outro">
+          <div class="container">
+              <div class="content">
+                  <p class="title">Other projects made @AgenceUzik</p>
+                  <div class="projects">
+                                                                                                                                                                                                                                                                                                                          <a class="ajax project" data-direction="from-right" href="http://nicolas-bussiere.fr/projects/chateau-d-yquem">
+                                  <span class="outro-illustration"><span class="image to-load loaded" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/yquem/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/yquem/preview.jpg);"></span></span></span>
+                                  <span class="name">Château<br>d'Yquem</span>
+                              </a>
+                                                                                                              <a class="ajax project" data-direction="from-right" href="http://nicolas-bussiere.fr/projects/bnp-paribas-lbc">
+                                  <span class="outro-illustration"><span class="image to-load loaded" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/bnp/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/bnp/preview.jpg);"></span></span></span>
+                                  <span class="name">BNP Paribas<br>Les bons comptes</span>
+                              </a>
+                                                                                                              <a class="ajax project" data-direction="from-right" href="http://nicolas-bussiere.fr/projects/hermes-sur-mesure">
+                                  <span class="outro-illustration"><span class="image to-load loaded" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/hermes/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/hermes/preview.jpg);"></span></span></span>
+                                  <span class="name">Hermès<br>Sur mesure</span>
+                              </a>
+                                                                                                                                                                                                                                                                                                                              <a class="ajax project" data-direction="from-right" href="http://nicolas-bussiere.fr/projects/paco-rabanne-black-xs">
+                                  <span class="outro-illustration"><span class="image to-load loaded" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/black-xs/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/black-xs/preview.jpg);"></span></span></span>
+                                  <span class="name">Paco<br>Rabanne<br>Black XS</span>
+                              </a>
+                                                                                                                                                                                                                      <a class="ajax project" data-direction="from-right" href="http://nicolas-bussiere.fr/projects/albin-michel">
+                                  <span class="outro-illustration"><span class="image to-load loaded" data-image-url="http://nicolas-bussiere.fr/src/medias/projects/albin-michel/preview.jpg"><span style="background-image: url(http://nicolas-bussiere.fr/src/medias/projects/albin-michel/preview.jpg);"></span></span></span>
+                                  <span class="name">Albin Michel<br>3D audio<br>experience</span>
+                              </a>
+                                                                                                                                                                              </div>
+                  <p class="available">
+                      <strong>I'm available for freelancing</strong> feel free to <strong>contact me</strong>
+                  </p>
+                  <p class="list list-1">
+                      <strong>Email</strong>
+                      <br>
+                      <br><a class="underline mail" href="mailto:contact@nicolas-bussiere.fr">contact@</a>
+                  </p>
+                  <p class="list list-2">
+                      <strong>Location</strong>
+                      <br>
+                      <br>Paris, France
+                  </p>
+              </div>
+          </div>
+      </div>
+  </div> -->
+</div>
+      </div>
+  </div>
+
+
+
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js" charset="utf-8"></script>
+
+    <script src="../../builds/pan-0.3.js"></script>
+    <script src="../../src/components/project.class.js" charset="utf-8"></script>
+
+
+    <!-- Your classes -->
+    <script>
+
+        // Create a class wrapping the all application
+        Pan.Core.App = Pan.Core.Abstract.extend(
+        {
+            // No default options
+            options : {
+              // page : 'home'
+              page : "project"
+
+            },
+
+            construct : function( options )
+            {
+                this._super( options );
+                this.page = null,
+                this.ticker = new Pan.Tools.Ticker,
+                this.browser = new Pan.Tools.Browser({
+                  initial_triggers : ['resize']
+                }),
+                this.css = new Pan.Tools.Css,
+                this.mouse = new Pan.Tools.Mouse,
+                this.keyboard = new Pan.Tools.Keyboard,
+                this.$.title = $("head title"),
+
+                this.init_page(this.options.page),
+
+                this.init_lines(),
+                this.init_keyboard(),
+                this.init_hammer()
+
+
+            },
+
+            start : function(){
+              this.browser.start(), this.ticker.start(!0)
+            },
+            init_page : function(page){
+              var that = this,
+                  n = null;
+              switch(page) {
+                case "home":
+                  n = new Pan.Components.Home;
+                  break;
+                case "project":
+                  n = new Pan.Components.Project;
+                  break;
+              }
+
+            },
+
+            init_hammer : function () {
+              var that = this,
+              e = new Hammer(document.body);
+              e.on("swipe", function(e) {
+                  console.log('SWIPE EVENT');
+                    var n = t.index;
+                    "home" === t.page.type ? (0 === window.orientation || 180 === window.orientation) && e.direction === Hammer.DIRECTION_RIGHT || (-90 === window.orientation || 90 === window.orientation) && e.direction === Hammer.DIRECTION_DOWN ? t.go_to_line(n - 1) : ((0 === window.orientation || 180 === window.orientation) && e.direction === Hammer.DIRECTION_LEFT || (-90 === window.orientation || 90 === window.orientation) && e.direction === Hammer.DIRECTION_UP) && t.go_to_line(n + 1) : "project" === t.page.type && (e.direction === Hammer.DIRECTION_UP ? t.go_to_line(n + 1) : e.direction === Hammer.DIRECTION_DOWN && t.go_to_line(n - 1))
+                }), this.browser.on("breakpoint", function(t) {
+                    e.get("swipe").set("small" === t.name ? {
+                        direction: Hammer.DIRECTION_ALL,
+                        enable: !1
+                    } : {
+                        direction: Hammer.DIRECTION_ALL
+                    })
+                })
+            },
+            init_keyboard: function() {
+                var that = this;
+                this.keyboard.on("down", function(e, n) {
+                    switch (n) {
+                        case "down":
+                        case "j":
+                            console.log('IN KEYBOARD DOWN');
+                            that.go_to_line(that.index + 1);
+                            break;
+                        case "esc":
+                            that.header.active ? that.header.deactivate() : "project" === that.page.type && that.page.$.main.find("a.close").first().trigger("click");
+                            break;
+                        case "up":
+                        case "k":
+                            that.go_to_line(that.index - 1);
+                            break;
+                        case "space":
+                        case "enter":
+                        case "right":
+                            if (that.can_navigate && "home" === that.page.type && !that.password.active) {
+                                var i = that.$.lines.filter(".current");
+                                i.length && i.hasClass("project") && i.find("a").first().trigger("click")
+                            }
+                            break;
+                        case "left":
+                            that.can_navigate && "project" === that.page.type && that.page.$.main.find("a.close").first().trigger("click")
+                    }
+                    return -1 !== ["down", "j", "esc", "up", "k", "space", "right", "left"].indexOf(n) || "enter" === n && !that.password.active ? !1 : void 0
+                })
+            },
+
+            init_lines : function(){
+              var that = this;
+
+                if (this.can_scroll = !0, this.$.lines = $(".line"), this.index = 0, window.location.hash) {
+                    var e = this.$.lines.filter(".line-" + window.location.hash.replace("#", ""));
+                    e.length && (this.index = e.index(), window.location.hash = "")
+                }
+                this.go_to_line(this.index, 30),
+                this.mouse.on("wheel", function(e) {
+                    var n = that.index + (0 > e.delta ? 1 : -1);
+
+                    that.go_to_line(n)
+
+                })
+            },
+
+            go_to_line: function(t, e) {
+              console.log(t)
+              console.log(e)
+              console.log('IN GO TO LINE');
+              console.log(this.can_scroll);
+                if (e = e || 1060, !(!this.can_scroll || 0 > t || t > this.$.lines.length - 1)) {
+                    var n = this,
+                        i = n.index < t ? "down" : "up";
+                        console.log(i);
+                    this.can_scroll = !1, this.$.lines.show(), window.setTimeout(function() {
+                      console.log('Removing lines');
+                        n.$.lines.removeClass("before current after going-down going-up");
+                        var r = 0;
+                        n.$.lines.each(function() {
+                            var e = $(this),
+                                n = null;
+                            t > r ? n = "before" : r > t ? n = "after" : (n = "current", e.hasClass("dark") ? $("body").addClass("dark") : $("body").removeClass("dark")), n += "down" === i ? " going-up" : " going-down", e.addClass(n), r++
+                        }), window.setTimeout(function() {
+                            n.$.lines.filter(":not(.current)").hide(), n.can_scroll = !0
+                        }, e), n.page && n.page.active && n.page.update_line(t, n.$.lines.length, i), n.index = t
+                    }, 60)
+                }
+            }
+        } );
+
+    </script>
+
+    <!-- Your script -->
+    <script>
+
+        // Let's rock
+        var App = new Pan.Core.App({});
+
+    </script>
+
+
+</body>
+</html>

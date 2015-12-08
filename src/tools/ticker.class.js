@@ -38,10 +38,12 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
     /**
      * Reset the ticker by setting time infos to 0
      * @param  {boolean} run Start the ticker
+     * @param  {ticker}  reset a ticker completely, by default reseting keeps the next interval date.
      * @return {object}      Context
      */
-    reset : function( run )
+    reset : function( run , interval )
     {
+        var that = this;
         this.reseted = true;
 
         this.time.start   = + ( new Date() );
@@ -51,6 +53,12 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
 
         if( run )
             this.run();
+
+        if (interval) {
+          that.destroy_interval(interval);
+          that.create_interval(interval);
+        }
+
 
         return this;
     },

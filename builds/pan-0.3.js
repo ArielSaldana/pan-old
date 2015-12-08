@@ -5,7 +5,7 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Mon Nov 23 2015 12:41:06 GMT-0500 (Eastern Standard Time)
+ * Date: Tue Dec 08 2015 13:21:04 GMT-0500 (Eastern Standard Time)
  */
 
 var Pan = P = ( function( window, document, undefined )
@@ -3760,10 +3760,12 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
     /**
      * Reset the ticker by setting time infos to 0
      * @param  {boolean} run Start the ticker
+     * @param  {ticker}  reset a ticker completely, by default reseting keeps the next interval date.
      * @return {object}      Context
      */
-    reset : function( run )
+    reset : function( run , interval )
     {
+        var that = this;
         this.reseted = true;
 
         this.time.start   = + ( new Date() );
@@ -3773,6 +3775,12 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
 
         if( run )
             this.run();
+
+        if (interval) {
+          that.destroy_interval(interval);
+          that.create_interval(interval);
+        }
+
 
         return this;
     },
