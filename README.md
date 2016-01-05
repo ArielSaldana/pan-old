@@ -1054,6 +1054,7 @@ new Pan.Tools.Class();
 
 ## Todo
 
+- [x] UMD
 - [ ] NPM
 - [ ] :warning: Loop error bug
 - [x] Unit testing
