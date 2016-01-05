@@ -5,10 +5,10 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Tue Dec 08 2015 13:21:04 GMT-0500 (Eastern Standard Time)
+ * Date: Tue Jan 05 2016 10:24:26 GMT-0500 (Eastern Standard Time)
  */
 
-var Pan = P = ( function( window, document, undefined )
+( function( window, document, undefined )
 {
     'use strict';
 /*
@@ -4269,7 +4269,7 @@ P.Tools.Queue = P.Core.Event_Emitter.extend({
             remaining = 0,
             popping,
             error,
-            await = this.noop,
+            wait = this.noop,
             all;
 
         var that = this;
@@ -4304,9 +4304,9 @@ P.Tools.Queue = P.Core.Event_Emitter.extend({
         }
 
         this.notify = function() {
-            if (error != null) await (error);
-            else if (all) await (error, tasks);
-            else await.apply(null, [error].concat(tasks));
+            if (error != null) wait (error);
+            else if (all) wait (error, tasks);
+            else wait.apply(null, [error].concat(tasks));
         }
 
 
@@ -4319,14 +4319,14 @@ P.Tools.Queue = P.Core.Event_Emitter.extend({
                 }
                 return q;
             },
-            await: function(f) {
-                await = f;
+            wait: function(f) {
+                wait = f;
                 all = false;
                 if (!remaining) notify();
                 return q;
             },
             awaitAll: function(f) {
-                await = f;
+                wait = f;
                 all = true;
                 if (!remaining) notify();
                 return q;
@@ -4397,5 +4397,12 @@ P.Tools.Queue = P.Core.Event_Emitter.extend({
 
 });
 
-return P;
+// UMD support
+if( typeof define === 'function' && define.amd )
+    define( function() { return P; } );
+else if( typeof module === 'object' && module.exports )
+    module.exports = P;
+else
+    window.Pan = window.P = P;
+
 } )( window, document );

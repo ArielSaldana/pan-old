@@ -35,16 +35,35 @@ gulp.task( 'js', function()
         '\n',
     ].join( '' );
 
-    var before = [
+    /*var before = [
         //'\nvar pan = { Core : {}, Tools : {}, Components : {} };',
         '\nvar Pan = P = ( function( window, document, undefined )',
+        '\n{',
+        '\n    \'use strict\';',
+        '\n',
+    ].join( '' );*/
+    
+    
+    var before = [
+        '\n( function( window, document, undefined )',
         '\n{',
         '\n    \'use strict\';',
         '\n',
     ].join( '' );
 
     var after = [
-        '\nreturn P;',
+        //'\nreturn P;',
+        //'\n} )( window, document );',
+        //'\n'
+        
+        '\n// UMD support',
+        '\nif( typeof define === \'function\' && define.amd )',
+        '\n    define( function() { return P; } );',
+        '\nelse if( typeof module === \'object\' && module.exports )',
+        '\n    module.exports = P;',
+        '\nelse',
+        '\n    window.Pan = window.P = P;',
+        '\n',
         '\n} )( window, document );',
         '\n'
     ].join( '' );

@@ -5,10 +5,10 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Tue Dec 08 2015 13:21:04 GMT-0500 (Eastern Standard Time)
+ * Date: Tue Jan 05 2016 10:24:26 GMT-0500 (Eastern Standard Time)
  */
 
-var Pan = P = ( function( window, document, undefined )
+( function( window, document, undefined )
 {
     'use strict';
 // Simple structure
@@ -554,7 +554,7 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
  * @info     methods of convering html data into objects or bytes for transport.
  */
 P.Components.Tooltip = P.Core.Abstract.extend({
-    static: 'html_serializer',
+    static: 'tooltip',
     options: {
 
     },
@@ -581,13 +581,13 @@ P.Components.Tooltip = P.Core.Abstract.extend({
             this.tooltipArray,
             function(e) {
                 e.addEventListener('mouseover', function() {
-                        that.mouseEnter(e)
+                        that.mouseEnter(e);
                     }, false),
                     e.addEventListener('mouseout', function() {
-                        that.mouseLeave(e)
-                    }, false)
+                        that.mouseLeave(e);
+                    }, false);
             }
-        )
+        );
         return this;
     },
 
@@ -633,7 +633,6 @@ P.Components.Tooltip = P.Core.Abstract.extend({
      * @return tooltip context
      */
     createTooltipElement: function(id, parentElement) {
-        var that = this;
 
         var innerText = parentElement.getAttribute('data-content');
         var tooltip = document.createElement('div');
@@ -659,7 +658,6 @@ P.Components.Tooltip = P.Core.Abstract.extend({
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
         var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
             halfToolTip = widthOfTooltip / 2;
 
@@ -684,14 +682,12 @@ P.Components.Tooltip = P.Core.Abstract.extend({
      */
 
     showLeft: function(e, id) {
-        var that = this;
 
         var tooltip = this.createTooltipElement(id, e);
 
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var leftOfParent = (parentInfo.left);
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
         var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
             halfToolTip = widthOfTooltip;
 
@@ -718,16 +714,12 @@ P.Components.Tooltip = P.Core.Abstract.extend({
      */
 
     showRight: function(e, id) {
-        var that = this;
 
         var tooltip = this.createTooltipElement(id, e);
 
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var rightOfParent = (parentInfo.right);
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
-        var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
-            halfToolTip = widthOfTooltip;
 
         tooltip.style.left = rightOfParent + 16 + 'px';
 
@@ -752,21 +744,18 @@ P.Components.Tooltip = P.Core.Abstract.extend({
      */
 
     showBottom: function(e, id) {
-        var that = this;
 
         var tooltip = this.createTooltipElement(id, e);
 
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
         var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
             halfToolTip = widthOfTooltip / 2;
 
         tooltip.style.left = middleOfParent - halfToolTip + 'px';
 
         // calculate top
-        var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
         tooltip.style.top = parentInfo.bottom + 16 + 'px';
 
         tooltip.className = 'pan-tooltip bottom pan-tooltip-load';
@@ -792,7 +781,6 @@ P.Components.Tooltip = P.Core.Abstract.extend({
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
         var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
             halfToolTip = widthOfTooltip / 2;
 
@@ -807,7 +795,8 @@ P.Components.Tooltip = P.Core.Abstract.extend({
         window.setTimeout(function() {
             tooltip.style.top = parentInfo.top + (that.tooltipTopOffset + heightOfTooltip) + 'px';
         }, 10);
-        return this;
+        
+        return that;
     },
 
     generateId: function() {
@@ -3241,7 +3230,7 @@ P.Tools.Queue = P.Core.Event_Emitter.extend({
             remaining = 0,
             popping,
             error,
-            await = this.noop,
+            wait = this.noop,
             all;
 
         var that = this;
@@ -3276,9 +3265,9 @@ P.Tools.Queue = P.Core.Event_Emitter.extend({
         }
 
         this.notify = function() {
-            if (error != null) await (error);
-            else if (all) await (error, tasks);
-            else await.apply(null, [error].concat(tasks));
+            if (error != null) wait (error);
+            else if (all) wait (error, tasks);
+            else wait.apply(null, [error].concat(tasks));
         }
 
 
@@ -3291,14 +3280,14 @@ P.Tools.Queue = P.Core.Event_Emitter.extend({
                 }
                 return q;
             },
-            await: function(f) {
-                await = f;
+            wait: function(f) {
+                wait = f;
                 all = false;
                 if (!remaining) notify();
                 return q;
             },
             awaitAll: function(f) {
-                await = f;
+                wait = f;
                 all = true;
                 if (!remaining) notify();
                 return q;
@@ -3369,5 +3358,12 @@ P.Tools.Queue = P.Core.Event_Emitter.extend({
 
 });
 
-return P;
+// UMD support
+if( typeof define === 'function' && define.amd )
+    define( function() { return P; } );
+else if( typeof module === 'object' && module.exports )
+    module.exports = P;
+else
+    window.Pan = window.P = P;
+
 } )( window, document );
