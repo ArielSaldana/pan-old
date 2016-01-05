@@ -3,14 +3,14 @@ Pan.js
 
 #### Yet another JS framework ####
 
-Pan.js (or **Pan.js**) is a light (< 40ko) and simple **JS framework** made to help you develop well structured web applications quickly.
+Pan.js (or **P.js**) is a light (< 40ko) and simple **JS framework** made to help you develop well structured web applications quickly.
 
 You can organize your web application into **Components** and **Tools**. It comes with some useful premade stuff.
-Simply include the JS files in your HTML and start using it. Pan.js is still in development, don't hesitate if you have any advice.
+Simply include the JS files in your HTML and start using it. P.js is still in development, don't hesitate if you have any advice.
 
 **Table of contents**
 
-* [Compatibility](#compatibility
+* [Compatibility](#compatibility)
 * [Usage](#usage)
     * [As a library](#as-a-library-the-easy-way)
     * [As a framework](#as-a-framework-the-powerful-way)
@@ -37,7 +37,7 @@ Simply include the JS files in your HTML and start using it. Pan.js is still in 
 
 ## Compatibility
 
-Pan.js has no dependencies (no, you don't need jQuery).
+P.js has no dependencies (no, you don't need jQuery).
 It's compatible with all modern browsers down to IE8.<br>
 Depending on the browsers and classes you are using, you may need polyfills which are included in the [src/polyfills](src/polyfills) folder.<br>
 The default build includes all needed polyfills but you can use the `no-compatibility` version.
@@ -45,8 +45,8 @@ The default build includes all needed polyfills but you can use the `no-compatib
 
 ## Usage
 
-There are two ways of using Pan.js.<br>
-You can use it as a simple library by instantiating the tools or you can use it as a Framework by extending Pan.js to create your own tools and components.
+There are two ways of using P.js.<br>
+You can use it as a simple library by instantiating the tools or you can use it as a Framework by extending P.js to create your own tools and components.
 
 #### As a library (the easy way)
 
@@ -60,7 +60,7 @@ You can use it as a simple library by instantiating the tools or you can use it 
 * Start using them
 
 ```javascript
-var viewport = new Pan.Tools.Viewport();
+var viewport = new P.Tools.Viewport();
 
 viewport.on( 'resize', function( width, height )
 {
@@ -71,9 +71,9 @@ viewport.on( 'resize', function( width, height )
 
 #### As a framework (the powerful way)
 
-Create your own tools and components based on Pan.js classes. You can put your components inside `Pan.Components` object or you can create your own namespace like `Foo.Bar.My_Class`.<br/>
+Create your own tools and components based on P.js classes. You can put your components inside `P.Components` object or you can create your own namespace like `Foo.Bar.My_Class`.<br/>
 Inheritance is based on the [John Resig code](http://ejohn.org/blog/simple-javascript-inheritance/) with some improvements like deep property merging, singleton, defualt options, etc.<br>
-Pan.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode). Do as you whish and feel free to share your custom tools and components.
+P.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode). Do as you whish and feel free to share your custom tools and components.
 
 * Include the build in your HTML
 
@@ -81,22 +81,22 @@ Pan.js is developed in [strict mode](https://developer.mozilla.org/en-US/docs/We
 <script src="../../builds/pan-0.3.min.js"></script>
 ```
 
-* Create your own tools and components based on Pan.js **Abstract** or **Event Emitter** classes (you may want to put each class in a different file)
+* Create your own tools and components based on P.js **Abstract** or **Event Emitter** classes (you may want to put each class in a different file)
 
 ```javascript
 // Create a class wrapping the all application
-Pan.Components.My_App = Pan.Core.Abstract.extend(
+P.Components.My_App = P.Core.Abstract.extend(
 {
     construct : function()
     {
         // Instantiate a sidebar and header
-        this.sidebar = new Pan.Components.My_Sidebar( { color : 'blue' } );
-        this.header  = new Pan.Components.My_Header();
+        this.sidebar = new P.Components.My_Sidebar( { color : 'blue' } );
+        this.header  = new P.Components.My_Header();
     }
 } );
 
 // Create a class for the sidebar
-Pan.Components.My_Sidebar = Pan.Core.Abstract.extend(
+P.Components.My_Sidebar = P.Core.Abstract.extend(
 {
     // Default options
     options :
@@ -115,7 +115,7 @@ Pan.Components.My_Sidebar = Pan.Core.Abstract.extend(
 } );
 
 // Create a class for the header
-Pan.Components.My_Header = Pan.Core.Abstract.extend(
+P.Components.My_Header = P.Core.Abstract.extend(
 {
     construct : function()
     {
@@ -128,18 +128,18 @@ Pan.Components.My_Header = Pan.Core.Abstract.extend(
 * Launch :tada:
 ```javascript
 // Let's rock
-var my_app = new Pan.Components.My_App();
+var my_app = new P.Components.My_App();
 ```
 * Have a beer :beer:
 
 # Core classes
 
-Core classes are the foundations of Pan.js.<br>
+Core classes are the foundations of P.js.<br>
 Every tool or component inherit from one of those classes and your custom classes should too.
 
 ## Abstract Class
 
-`Pan.Core.Abstract` is the default class.
+`P.Core.Abstract` is the default class.
 
 * Can be extended
 * `construct` method will be called when instantiated
@@ -152,7 +152,7 @@ Every tool or component inherit from one of those classes and your custom classe
 
 ```javascript
 // Inherit from Abstract
-Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
+P.Components.Custom_Class = P.Core.Abstract.extend(
 {
     construct : function()
     {
@@ -160,13 +160,13 @@ Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
     }
 } );
 
-var custom_class = new Pan.Components.Custom_Class();
+var custom_class = new P.Components.Custom_Class();
 ```
 
 ###### Options (with deep merging)
 
 ```javascript
-Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
+P.Components.Custom_Class = P.Core.Abstract.extend(
 {
     // Options with random deep properties
     options :
@@ -189,7 +189,7 @@ Pan.Components.Custom_Class = Pan.Core.Abstract.extend(
 } );
 
 // Instantiate by passing different options
-var custom_class = new Pan.Components.Custom_Class( {
+var custom_class = new P.Components.Custom_Class( {
     test :
     {
         lorem : 'dolores'
@@ -202,7 +202,7 @@ var custom_class = new Pan.Components.Custom_Class( {
 ```javascript
 // Currently, static functionnality is only used for tools
 // It's just a matter of organization, do whatever you want.
-Pan.Tools.Custom_Class = Pan.Core.Event_Emitter.extend(
+P.Tools.Custom_Class = P.Core.Event_Emitter.extend(
 {
     // Chose a name never used
     static : 'custom_tool',
@@ -218,29 +218,29 @@ Pan.Tools.Custom_Class = Pan.Core.Event_Emitter.extend(
 
 // 'custom_class' and 'custom_class_again' will share the same instance
 // 'construct' will be called only the first time
-var custom_class       = new Pan.Tools.Custom_Class(),
-    custom_class_again = new Pan.Tools.Custom_Class();
+var custom_class       = new P.Tools.Custom_Class(),
+    custom_class_again = new P.Tools.Custom_Class();
 ```
 
 ###### Registring (with Registry tool)
 
 ```javascript
 // Create any class you'd like
-Pan.Components.Test_Class = Pan.Core.Abstract.extend( {} );
+P.Components.Test_Class = P.Core.Abstract.extend( {} );
 
 // Instantiate and specify the register property in options object
 // The value is the key you want to retrieve the instance later
-var test_class = new Pan.Components.Test_Class( { register : 'my_key' } );
+var test_class = new P.Components.Test_Class( { register : 'my_key' } );
 
 // Instantiate the registry tools and get the test_class using the register key
-var registry     = new Pan.Tools.Registry(),
+var registry     = new P.Tools.Registry(),
     test_class_2 = registry.get( 'my_key' );
 ```
 
 
 ## Event Emitter Class
 
-`Pan.Core.Event_Emitter` extends `Pan.Core.Abstract` with extra event methods.
+`P.Core.Event_Emitter` extends `P.Core.Abstract` with extra event methods.
 
 * `on`, `off` and `trigger` methods
 * Multiple events listening
@@ -252,7 +252,7 @@ var registry     = new Pan.Tools.Registry(),
 
 ```javascript
 // Create a custom component that extends Event_Emitter
-Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
+P.Components.Custom_Component = P.Core.Event_Emitter.extend(
 {
     construct : function()
     {
@@ -270,7 +270,7 @@ Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
     }
 } );
 
-var custom_component = new Pan.Components.Custom_Component();
+var custom_component = new P.Components.Custom_Component();
 
 // Listen to 'event-text'
 custom_component.on( 'event-test', function( value )
@@ -284,7 +284,7 @@ custom_component.on( 'event-test', function( value )
 
 ```javascript
 // Create a custom component that extends Event_Emitter
-Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
+P.Components.Custom_Component = P.Core.Event_Emitter.extend(
 {
     construct : function()
     {
@@ -306,7 +306,7 @@ Pan.Components.Custom_Component = Pan.Core.Event_Emitter.extend(
 } );
 
 // Try to instantiate twice but get a common object each time
-var custom_component = new Pan.Components.Custom_Component();
+var custom_component = new P.Components.Custom_Component();
 
 // Listen two events
 custom_component.on( 'event-1 event-2', function( value )
@@ -332,7 +332,7 @@ custom_component.off( '.bar' );
 
 # Tools
 
-Pan.js comes with some premade tools. Each one is a singleton (static). You can instantiate it multiple times, you will always get the first instance.
+P.js comes with some premade tools. Each one is a singleton (static). You can instantiate it multiple times, you will always get the first instance.
 
 You can extend those tools if you want.
 
@@ -981,7 +981,7 @@ Can disable hover on scroll for performance improvement
 **bc** : Pan Class
 
 ```javascript
-Pan.Components.Class = Pan.Core.Abstract.extend(
+P.Components.Class = P.Core.Abstract.extend(
 {
     static  : 'class',
     options : {},
@@ -1002,7 +1002,7 @@ Pan.Components.Class = Pan.Core.Abstract.extend(
 {
     'use strict';
 
-    Pan.Components.Class = Pan.Core.Abstract.extend(
+    P.Components.Class = P.Core.Abstract.extend(
     {
         static  : 'class',
         options : {},
@@ -1054,8 +1054,25 @@ new Pan.Tools.Class();
 
 ## Todo
 
-- [ ] Loop error bug
-- [ ] Unit testing
+- [x] UMD
+- [ ] NPM
+- [ ] :warning: Loop error bug
+- [x] Unit testing
+    - [x] Core
+    - [x] Breakpoints
+    - [x] Colors
+    - [x] Css
+    - [x] Detector
+    - [x] GA Tags
+    - [x] Keyboard
+    - [x] Konami Code
+    - [x] Mouse
+    - [x] Registry
+    - [x] Resizer
+    - [x] Strings
+    - [x] Ticker
+    - [x] Viewport
+- [x] camelCase / PascalCase aliases
 - [ ] Classes (create)
     - [ ] Touch
     - [ ] Storyline
@@ -1072,10 +1089,15 @@ new Pan.Tools.Class();
         - [ ] Formater (custom formats (sprinf like))
         - [ ] Local
 - [ ] Classes (update)
+    - [ ] Detector
+        - [ ] :warning: `add_detector` method
     - [ ] Breakpoints
-        - [ ] Add classes to elements/selectors in options
+        - [ ] :warning: Add classes to elements/selectors in options
+    - [ ] Resizer
+        - [ ] :warning: Add `none` in rounding
     - [ ] Keyboard
-        - [ ] Event listening for specified key
+        - [ ] :warning: Event listening for specified key
+        - [ ] :warning: Character to keycode
     - [ ] Event_Emitter
         - [ ] Deferred trigger (can specify event)
     - [ ] Better Match media
@@ -1104,7 +1126,7 @@ new Pan.Tools.Class();
 
 - Replace `init` by `construct`
 - Add `$` property on Abstract
-- Add `b-` to default classes
+- Add `p-` to default classes
 - Fix `null` option bug
 - Add license
 - Add no polyfills builds
@@ -1128,3 +1150,5 @@ new Pan.Tools.Class();
 #### 0.1.0 (2015-03-10)
 
 Init
+
+

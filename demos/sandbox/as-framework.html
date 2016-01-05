@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pan.js - Sandbox - As Framework</title>
+    <title>P.js - Sandbox - As Framework</title>
 </head>
 <body>
 
@@ -15,25 +15,25 @@
         </header>
     </section>
 
-    <!-- Pan.js -->
-    <script src="../../builds/pan-0.3.js"></script>
+    <!-- P.js -->
+    <script src="../../builds/pan-0.3.min.js"></script>
 
     <!-- Your classes -->
     <script>
 
         // Create a class wrapping the all application
-        Pan.Components.My_App = Pan.Core.Abstract.extend(
+        P.Components.My_App = P.Core.Abstract.extend(
         {
             construct : function()
             {
                 // Instantiate a sidebar and header
-                this.sidebar = new Pan.Components.My_Sidebar( { color : 'blue' } );
-                this.header  = new Pan.Components.My_Header();
+                this.sidebar = new P.Components.My_Sidebar( { color : 'blue' } );
+                this.header  = new P.Components.My_Header();
             }
         } );
 
         // Create a class for the sidebar
-        Pan.Components.My_Sidebar = Pan.Core.Abstract.extend(
+        P.Components.My_Sidebar = P.Core.Abstract.extend(
         {
             // Default options
             options :
@@ -52,7 +52,7 @@
         } );
 
         // Create a class for the header
-        Pan.Components.My_Header = Pan.Core.Abstract.extend(
+        P.Components.My_Header = P.Core.Abstract.extend(
         {
             construct : function()
             {
@@ -68,7 +68,7 @@
     <script>
 
         // Let's rock
-        var my_app = new Pan.Components.My_App();
+        var my_app = new P.Components.My_App();
 
     </script>
 

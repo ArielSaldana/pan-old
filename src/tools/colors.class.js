@@ -2,7 +2,7 @@
  * @class    Colors
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Colors = Pan.Core.Abstract.extend(
+P.Tools.Colors = P.Core.Abstract.extend(
 {
     static  : 'colors',
     options :

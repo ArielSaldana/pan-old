@@ -2,7 +2,7 @@
  * @class    queue
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
+P.Tools.Queue = P.Core.Event_Emitter.extend({
     static: 'queue',
     slice: [].slice,
 
@@ -29,7 +29,7 @@ Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
             remaining = 0,
             popping,
             error,
-            await = this.noop,
+            wait = this.noop,
             all;
 
         var that = this;
@@ -64,9 +64,9 @@ Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
         }
 
         this.notify = function() {
-            if (error != null) await (error);
-            else if (all) await (error, tasks);
-            else await.apply(null, [error].concat(tasks));
+            if (error != null) wait (error);
+            else if (all) wait (error, tasks);
+            else wait.apply(null, [error].concat(tasks));
         }
 
 
@@ -79,14 +79,14 @@ Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
                 }
                 return q;
             },
-            await: function(f) {
-                await = f;
+            wait: function(f) {
+                wait = f;
                 all = false;
                 if (!remaining) notify();
                 return q;
             },
             awaitAll: function(f) {
-                await = f;
+                wait = f;
                 all = true;
                 if (!remaining) notify();
                 return q;

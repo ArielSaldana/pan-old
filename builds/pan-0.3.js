@@ -5,10 +5,10 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Thu Nov 12 2015 21:53:07 GMT-0500 (Eastern Standard Time)
+ * Date: Tue Jan 05 2016 10:24:26 GMT-0500 (Eastern Standard Time)
  */
 
-var P = Pan = ( function( window, document, undefined )
+( function( window, document, undefined )
 {
     'use strict';
 /*
@@ -331,6 +331,9 @@ if (!window.getComputedStyle) {
     }
 }
 
+if( !window.HTMLElement )
+    window.HTMLElement = window.Element;
+
 // Production steps of ECMA-262, Edition 5, 15.4.4.14
 // Reference: http://es5.github.io/#x15.4.4.14
 if (!Array.prototype.indexOf) {
@@ -397,6 +400,25 @@ if (!Array.prototype.indexOf) {
   };
 }
 
+// From MDN - https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object/create
+if (typeof Object.create != 'function') {
+  Object.create = (function() {
+    var Temp = function() {};
+    return function (prototype) {
+      if (arguments.length > 1) {
+        throw Error('Cette prothèse ne supporte pas le second argument');
+      }
+      if (typeof prototype != 'object') {
+        throw TypeError('L\'argument doit être un objet');
+      }
+      Temp.prototype = prototype;
+      var result = new Temp();
+      Temp.prototype = null;
+      return result;
+    };
+  })();
+}
+
 // From MDN - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
 if (!Object.keys) {
   Object.keys = (function () {
@@ -439,25 +461,6 @@ if (!Object.keys) {
   }());
 }
 
-// From MDN - https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object/create
-if (typeof Object.create != 'function') {
-  Object.create = (function() {
-    var Temp = function() {};
-    return function (prototype) {
-      if (arguments.length > 1) {
-        throw Error('Cette prothèse ne supporte pas le second argument');
-      }
-      if (typeof prototype != 'object') {
-        throw TypeError('L\'argument doit être un objet');
-      }
-      Temp.prototype = prototype;
-      var result = new Temp();
-      Temp.prototype = null;
-      return result;
-    };
-  })();
-}
-
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
@@ -488,7 +491,7 @@ if (typeof Object.create != 'function') {
 }());
 
 // Simple structure
-var Pan =
+var P =
 {
     Core       : {},
     Tools      : {},
@@ -501,7 +504,7 @@ var Pan =
  * MIT Licensed.
  * Inspired by base2 and Prototype
  */
-Pan.copy = function( object )
+P.copy = function( object )
 {
     var c = null;
 
@@ -514,7 +517,7 @@ Pan.copy = function( object )
         c = {};
 
         for( var key in object )
-            c[ key ] = Pan.copy( object[ key ] );
+            c[ key ] = P.copy( object[ key ] );
 
         return c;
     }
@@ -525,7 +528,7 @@ Pan.copy = function( object )
         c = [];
 
         for( var i = 0, l = object.length; i < l; i++ )
-            c[ i ] = Pan.copy( object[ i ] );
+            c[ i ] = P.copy( object[ i ] );
 
         return c;
     }
@@ -537,7 +540,7 @@ Pan.copy = function( object )
     }
 };
 
-Pan.merge = function( original, extended )
+P.merge = function( original, extended )
 {
     for( var key in extended )
     {
@@ -550,7 +553,7 @@ Pan.merge = function( original, extended )
 
             // ext = Object.create( ext );
 
-            original[ key ] = Pan.merge( original[ key ], ext );
+            original[ key ] = P.merge( original[ key ], ext );
         }
         else
         {
@@ -567,7 +570,7 @@ var initializing = false,
         xyz;
     } ) ? /\b_super\b/ : /.*/;
 
-Pan.Class = function(){};
+P.Class = function(){};
 
 var inject = function( prop )
 {
@@ -599,7 +602,7 @@ var inject = function( prop )
     }
 };
 
-Pan.Class.extend = function( prop )
+P.Class.extend = function( prop )
 {
     var _super    = this.prototype;
     initializing  = true;
@@ -630,10 +633,10 @@ Pan.Class.extend = function( prop )
                 if( typeof prototype[ name ] === 'undefined' )
                     prototype[ name ] = {};
 
-                var prototype_copy = Pan.copy( prototype[ name ] ),
-                    prop_copy      = Pan.copy( prop[ name ] );
+                var prototype_copy = P.copy( prototype[ name ] ),
+                    prop_copy      = P.copy( prop[ name ] );
 
-                prototype[ name ] = Pan.merge( prototype_copy, prop_copy );
+                prototype[ name ] = P.merge( prototype_copy, prop_copy );
             }
             else
             {
@@ -657,7 +660,7 @@ Pan.Class.extend = function( prop )
             {
                 if( typeof this[ p ] === 'object' )
                 {
-                    this[ p ] = Pan.copy( this[ p ] );
+                    this[ p ] = P.copy( this[ p ] );
                 }
             }
 
@@ -675,7 +678,7 @@ Pan.Class.extend = function( prop )
 
     Class.prototype             = prototype;
     Class.prototype.constructor = Class;
-    Class.extend                = Pan.Class.extend;
+    Class.extend                = P.Class.extend;
     Class.inject                = inject;
 
     return Class;
@@ -685,7 +688,7 @@ Pan.Class.extend = function( prop )
  * @class  Abstract
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Core.Abstract = Pan.Class.extend(
+P.Core.Abstract = P.Class.extend(
 {
     options : {},
     static  : false,
@@ -700,18 +703,18 @@ Pan.Core.Abstract = Pan.Class.extend(
         if( typeof options === 'undefined' )
             options = {};
 
-        Pan.merge( this.options, options );
+        P.merge( this.options, options );
 
         this.$ = {};
 
         // Create statics container
-        if( typeof Pan.Statics !== 'object' )
-            Pan.Statics = {};
+        if( typeof P.Statics !== 'object' )
+            P.Statics = {};
 
         // Register
         if( options.register && typeof options.register === 'string' )
         {
-            var registry = new Pan.Tools.Registry();
+            var registry = new P.Tools.Registry();
             registry.set( options.register, this );
         }
 
@@ -719,7 +722,7 @@ Pan.Core.Abstract = Pan.Class.extend(
         if( this.static && typeof this.static === 'string' )
         {
             // Add instance to statics
-            Pan.Statics[ this.static ] = this;
+            P.Statics[ this.static ] = this;
         }
     },
 
@@ -729,8 +732,8 @@ Pan.Core.Abstract = Pan.Class.extend(
      */
     static_instantiate : function()
     {
-        if( Pan.Statics && Pan.Statics[ this.static ] )
-            return Pan.Statics[ this.static ];
+        if( P.Statics && P.Statics[ this.static ] )
+            return P.Statics[ this.static ];
         else
             return null;
     },
@@ -748,7 +751,7 @@ Pan.Core.Abstract = Pan.Class.extend(
  * @class  Event Emmiter
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Core.Event_Emitter = Pan.Core.Abstract.extend(
+P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
 {
     static  : false,
     options : {},
@@ -1025,301 +1028,13 @@ Pan.Core.Event_Emitter = Pan.Core.Abstract.extend(
 } );
 
 /**
- * @class    Tooltip
- * @author   Ariel Saldana / http://ahhriel.com
- * @info     methods of convering html data into objects or bytes for transport.
- */
-Pan.Components.Tooltip = Pan.Core.Abstract.extend({
-    static: 'html_serializer',
-    options: {
-
-    },
-
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct: function(options) {
-        this._super(options);
-        this.tooltipArray = document.querySelectorAll('[data-toggle]');
-        this.tooltipTopOffset = 8;
-
-        this.listen_to_events();
-    },
-    /**
-     * setup listeners
-     * @return object context
-     */
-    listen_to_events: function() {
-        var that = this;
-        [].forEach.call(
-            this.tooltipArray,
-            function(e) {
-                e.addEventListener('mouseover', function() {
-                        that.mouseEnter(e)
-                    }, false),
-                    e.addEventListener('mouseout', function() {
-                        that.mouseLeave(e)
-                    }, false)
-            }
-        )
-        return this;
-    },
-
-    /**
-     * handle the mouseover event
-     */
-    mouseEnter: function(e) {
-
-        var dataPlacement = e.getAttribute('data-placement');
-        var id = this.generateId();
-
-        e.setAttribute('aria-describedby', id);
-
-        if (dataPlacement === 'top') {
-            this.showTop(e, id);
-        } else if (dataPlacement === 'bottom') {
-            this.showBottom(e, id);
-        } else if (dataPlacement === 'left') {
-            this.showLeft(e, id);
-        } else if (dataPlacement === 'right') {
-            this.showRight(e, id);
-        }
-    },
-
-    /**
-     * handle the mouseout event
-     */
-    mouseLeave: function(e) {
-        var idToRemove = e.getAttribute('aria-describedby');
-        Element.prototype.remove = function() {
-                this.parentElement.removeChild(this);
-            },
-            document.getElementById(idToRemove).remove();
-
-        e.removeAttribute('aria-describedby');
-
-        return this;
-        //console.log('Left');
-    },
-
-    /**
-     * create a tooltip element on the dom
-     * @return tooltip context
-     */
-    createTooltipElement: function(id, parentElement) {
-        var that = this;
-
-        var innerText = parentElement.getAttribute('data-content');
-        var tooltip = document.createElement('div');
-        tooltip.innerHTML = innerText;
-        tooltip.className = "pan-tooltip pan-tooltip-initial";
-        tooltip.id = id;
-        document.body.appendChild(tooltip);
-
-        return tooltip;
-        //return this;
-    },
-
-    /**
-     * create tooltip placement top
-     * @return object context
-     */
-
-    showTop: function(e, id) {
-        var that = this;
-
-        var tooltip = this.createTooltipElement(id, e);
-
-        var toolTipInfo = tooltip.getBoundingClientRect();
-        var parentInfo = e.getBoundingClientRect();
-        var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
-        var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
-            halfToolTip = widthOfTooltip / 2;
-
-        tooltip.style.left = middleOfParent - halfToolTip + 'px';
-
-        // calculate top
-        var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
-        tooltip.style.top = parentInfo.top - (this.tooltipTopOffset + 8 + heightOfTooltip) + 'px';
-
-        tooltip.className = 'pan-tooltip top pan-tooltip-load';
-
-        window.setTimeout(function() {
-            tooltip.style.top = parentInfo.top - (that.tooltipTopOffset + heightOfTooltip) + 'px';
-        }, 10);
-
-        return this;
-    },
-
-    /**
-     * create tooltip placement left
-     * @return object context
-     */
-
-    showLeft: function(e, id) {
-        var that = this;
-
-        var tooltip = this.createTooltipElement(id, e);
-
-        var toolTipInfo = tooltip.getBoundingClientRect();
-        var parentInfo = e.getBoundingClientRect();
-        var leftOfParent = (parentInfo.left);
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
-        var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
-            halfToolTip = widthOfTooltip;
-
-        tooltip.style.left = leftOfParent - halfToolTip - 16 + 'px';
-
-        // calculate top
-        var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
-        var HeightOfParent = (parentInfo.bottom + parentInfo.top) / 2;
-
-        // tooltip.style.top = parentInfo.top - (this.tooltipTopOffset+8+heightOfTooltip) + 'px';
-        tooltip.style.top = HeightOfParent - (heightOfTooltip / 2) + 'px';
-        tooltip.className = 'pan-tooltip left pan-tooltip-load';
-
-        window.setTimeout(function() {
-            tooltip.style.left = leftOfParent - halfToolTip - 9 + 'px';
-        }, 10);
-
-        return this;
-    },
-
-    /**
-     * create tooltip placement right
-     * @return object context
-     */
-
-    showRight: function(e, id) {
-        var that = this;
-
-        var tooltip = this.createTooltipElement(id, e);
-
-        var toolTipInfo = tooltip.getBoundingClientRect();
-        var parentInfo = e.getBoundingClientRect();
-        var rightOfParent = (parentInfo.right);
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
-        var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
-            halfToolTip = widthOfTooltip;
-
-        tooltip.style.left = rightOfParent + 16 + 'px';
-
-        // calculate top
-        var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
-        var HeightOfParent = (parentInfo.bottom + parentInfo.top) / 2;
-
-        // tooltip.style.top = parentInfo.top - (this.tooltipTopOffset+8+heightOfTooltip) + 'px';
-        tooltip.style.top = HeightOfParent - (heightOfTooltip / 2) + 'px';
-        tooltip.className = 'pan-tooltip right pan-tooltip-load';
-
-        window.setTimeout(function() {
-            tooltip.style.left = rightOfParent + 9 + 'px';
-        }, 10);
-
-        return this;
-    },
-
-    /**
-     * create tooltip placement bottom
-     * @return object context
-     */
-
-    showBottom: function(e, id) {
-        var that = this;
-
-        var tooltip = this.createTooltipElement(id, e);
-
-        var toolTipInfo = tooltip.getBoundingClientRect();
-        var parentInfo = e.getBoundingClientRect();
-        var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
-        var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
-            halfToolTip = widthOfTooltip / 2;
-
-        tooltip.style.left = middleOfParent - halfToolTip + 'px';
-
-        // calculate top
-        var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
-        tooltip.style.top = parentInfo.bottom + 16 + 'px';
-
-        tooltip.className = 'pan-tooltip bottom pan-tooltip-load';
-
-        window.setTimeout(function() {
-            tooltip.style.top = parentInfo.bottom + 9 + 'px';
-        }, 10);
-
-        return this;
-    },
-
-    /**
-     * TODO: bug when you hover on the tooltip in the center causes it to disappear and reappear.
-     * create tooltip placement center
-     * @return object context
-     */
-
-    showCenter: function(e, id) {
-        var that = this;
-
-        var tooltip = this.createTooltipElement(id, e);
-
-        var toolTipInfo = tooltip.getBoundingClientRect();
-        var parentInfo = e.getBoundingClientRect();
-        var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
-        var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
-            halfToolTip = widthOfTooltip / 2;
-
-        tooltip.style.left = middleOfParent - halfToolTip + 'px';
-
-        // calculate top
-        var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
-        tooltip.style.top = parentInfo.top + (this.tooltipTopOffset + 8 + heightOfTooltip) + 'px';
-
-        tooltip.className = 'pan-tooltip bottom pan-tooltip-load';
-
-        window.setTimeout(function() {
-            tooltip.style.top = parentInfo.top + (that.tooltipTopOffset + heightOfTooltip) + 'px';
-        }, 10);
-        return this;
-    },
-
-    generateId: function() {
-        var id = 'tooltip' + (Math.floor(Math.random() * 90000) + 10000);
-        return id;
-    },
-
-    /**
-     * get the cumulativeOffset
-     * @return x / y coordinate of top left corner
-     */
-
-    cumulativeOffset: function(element) {
-        var top = 0,
-            left = 0;
-        do {
-            top += element.offsetTop || 0;
-            left += element.offsetLeft || 0;
-            element = element.offsetParent;
-        } while (element);
-
-        return {
-            top: top,
-            left: left
-        };
-    }
-});
-
-/**
  * @class    Breakpoints
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    update
  * @fires    change
- * @requires Pan.Tools.Viewport
+ * @requires P.Tools.Viewport
  */
-Pan.Tools.Breakpoints = Pan.Core.Event_Emitter.extend(
+P.Tools.Breakpoints = P.Core.Event_Emitter.extend(
 {
     static  : 'breakpoints',
     options :
@@ -1337,7 +1052,7 @@ Pan.Tools.Breakpoints = Pan.Core.Event_Emitter.extend(
         this._super( options );
 
         // Set up
-        this.viewport   = new Pan.Tools.Viewport();
+        this.viewport   = new P.Tools.Viewport();
         this.all        = {};
         this.actives    = {};
         this.first_test = true;
@@ -1620,782 +1335,10 @@ Pan.Tools.Breakpoints = Pan.Core.Event_Emitter.extend(
 } );
 
 /**
- * @class    Browser
- * @author   Ariel Saldana / http://ahhriel.com
- * @fires    resize
- * @fires    scroll
- * @fires    breakpoint
- * @requires Pan.Tools.Ticker
- */
-Pan.Tools.Browser = Pan.Core.Event_Emitter.extend(
-{
-    static  : 'browser',
-    options :
-    {
-        disable_hover_on_scroll : false,
-        initial_trigger         : true,
-        add_classes_to          : [ 'html' ],
-        breakpoints             : []
-    },
-
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
-    {
-        this._super( options );
-
-        this.ticker = new Pan.Tools.Ticker();
-
-        this.viewport             = {};
-        this.viewport.top         = 0;
-        this.viewport.left        = 0;
-        this.viewport.y           = 0;
-        this.viewport.x           = 0;
-        this.viewport.delta       = {};
-        this.viewport.delta.top   = 0;
-        this.viewport.delta.left  = 0;
-        this.viewport.delta.y     = 0;
-        this.viewport.delta.x     = 0;
-        this.viewport.direction   = {};
-        this.viewport.direction.x = null;
-        this.viewport.direction.y = null;
-        this.viewport.width       = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
-        this.viewport.height      = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-        this.pixel_ratio = window.devicePixelRatio || 1;
-
-        this.init_detection();
-        this.init_breakpoints();
-        this.init_disable_hover_on_scroll();
-        this.listen_to_events();
-
-        this.add_detection_classes();
-        this.trigger_initial_events();
-    },
-
-    /**
-     * Listen to events
-     * @return {object} Context
-     */
-    listen_to_events : function()
-    {
-        var that = this;
-
-        // Callbacks
-        function resize_callback()
-        {
-            that.resize_handler();
-        }
-        function scroll_callback()
-        {
-            that.scroll_handler();
-        }
-
-        // Listeing to events
-        if( window.addEventListener )
-        {
-            window.addEventListener( 'resize', resize_callback );
-            window.addEventListener( 'scroll', scroll_callback );
-        }
-        else
-        {
-            window.attachEvent( 'onresize', resize_callback );
-            window.attachEvent( 'onscroll', scroll_callback );
-        }
-
-        return this;
-    },
-
-    /**
-     * Handle the resize event
-     * @return {object} Context
-     */
-    resize_handler : function()
-    {
-        this.viewport.width  = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
-        this.viewport.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-        this.test_breakpoints();
-
-        this.trigger( 'resize', [ this.viewport ] );
-
-        return this;
-    },
-
-    /**
-     * Handle the scroll event
-     * @return {object} Context
-     */
-    scroll_handler : function()
-    {
-        var direction_y = null,
-            direction_x = null,
-            top         = null,
-            left        = null;
-
-        if( this.detect.browser.ie && document.compatMode === 'CSS1Compat' )
-        {
-            direction_y = window.document.documentElement.scrollTop  > this.viewport.top  ? 'down'  : 'up';
-            direction_x = window.document.documentElement.scrollLeft > this.viewport.left ? 'right' : 'left';
-            top         = window.document.documentElement.scrollTop;
-            left        = window.document.documentElement.scrollLeft;
-        }
-        else
-        {
-            direction_y = window.pageYOffset > this.viewport.top  ? 'down'  : 'up';
-            direction_x = window.pageXOffset > this.viewport.left ? 'right' : 'left';
-            top         = window.pageYOffset;
-            left        = window.pageXOffset;
-        }
-
-        this.viewport.direction.y = direction_y;
-        this.viewport.direction.x = direction_x;
-        this.viewport.delta.top   = top  - this.viewport.top;
-        this.viewport.delta.left  = left - this.viewport.left;
-        this.viewport.delta.y     = this.viewport.delta.top;
-        this.viewport.delta.x     = this.viewport.delta.left;
-        this.viewport.top         = top;
-        this.viewport.left        = left;
-        this.viewport.y           = this.viewport.top;
-        this.viewport.x           = this.viewport.left;
-
-        this.trigger( 'scroll', [ this.viewport ] );
-
-        return this;
-    },
-
-    /**
-     * Trigger initial events on next frame
-     * @return {object} Context
-     */
-    trigger_initial_events : function()
-    {
-        var that = this;
-
-        if( this.options.initial_trigger )
-        {
-            // Do next frame
-            this.ticker.wait( 1, function()
-            {
-                // Trigger scroll and resize
-                that.scroll_handler();
-                that.resize_handler();
-            } );
-        }
-
-        return this;
-    },
-
-    /**
-     * Initialise breakpoints
-     * @return {object} Context
-     */
-    init_breakpoints : function()
-    {
-        this.breakpoints                = {};
-        this.breakpoints.all            = [];
-        this.breakpoints.currents       = [];
-        this.breakpoints.currents_names = [];
-
-        this.add_breakpoints( this.options.breakpoints );
-
-        return this;
-    },
-
-    /**
-     * Add one breakpoint
-     * @param {object} breakpoint Breakpoint informations
-     * @return {object}           Context
-     * @example
-     *
-     *     add_breakpoint( {
-     *         name     : 'large',
-     *         limits   :
-     *         {
-     *             width :
-     *             {
-     *                 value    : 960,
-     *                 extreme  : 'min',
-     *                 included : false
-     *             }
-     *         }
-     *     } )
-     *
-     */
-    add_breakpoint : function( breakpoint )
-    {
-        this.breakpoints.all.push( breakpoint );
-
-        return this;
-    },
-
-    /**
-     * Add multiple breakpoint
-     * @param {array} breakpoints Array of breakpoints
-     * @return {object}           Context
-     * @example
-     *
-     *     add_breakpoints( [
-     *         {
-     *             name     : 'large',
-     *             limits   :
-     *             {
-     *                 width :
-     *                 {
-     *                     value    : 960,
-     *                     extreme  : 'min',
-     *                     included : false
-     *                 }
-     *             }
-     *         },
-     *         {
-     *             name     : 'medium',
-     *             limits   :
-     *             {
-     *                 width :
-     *                 {
-     *                     value    : 960,
-     *                     extreme  : 'max',
-     *                     included : true
-     *                 }
-     *             }
-     *         },
-     *         {
-     *             name     : 'small',
-     *             limits   :
-     *             {
-     *                 width :
-     *                 {
-     *                     value    : 500,
-     *                     extreme  : 'max',
-     *                     included : true
-     *                 }
-     *             }
-     *         }
-     *     ] )
-     *
-     */
-    add_breakpoints : function( breakpoints )
-    {
-        for( var i = 0; i < breakpoints.length; i++ )
-        {
-            this.add_breakpoint( breakpoints[ i ] );
-        }
-
-        return this;
-    },
-
-    /**
-     * Remove one breakpoint
-     * @param  {string} breakpoint Breakpoint name (can be the breakpoint object itself)
-     * @return {object}            Context
-     */
-    remove_breakpoint : function( breakpoint )
-    {
-        var name = null;
-
-        // String
-        if( typeof breakpoint === 'string' )
-            name = breakpoint;
-
-        // Object
-        else if( typeof breakpoint === 'object' && typeof breakpoint.name === 'string' )
-            name = breakpoint.name;
-
-        // Each breakpoint
-        for( var i = 0, len = this.breakpoints.all.length; i < len; i++ )
-        {
-            var item = this.breakpoints.all[ i ];
-
-            // Breakpoint name match
-            if( item.name === name )
-            {
-                this.breakpoints.all.splice( i--, 1 );
-                len--;
-                i--;
-            }
-        }
-
-        // Test breakpoints
-        this.test_breakpoints();
-
-        return this;
-    },
-
-    /**
-     * Test every breakpoint and trigger 'breakpoint' event if current breakpoint changed
-     * @return {object} Context
-     */
-    test_breakpoints : function()
-    {
-        var breakpoints = [];
-
-        // Each breakpoint
-        for( var i = 0, len = this.breakpoints.all.length; i < len; i++ )
-        {
-            var breakpoint = this.breakpoints.all[ i ],
-                width      = !breakpoint.limits.width,
-                height     = !breakpoint.limits.height;
-
-            // Width must be tested
-            if( !width )
-            {
-                // Min
-                if( breakpoint.limits.width.extreme === 'min' )
-                {
-                    if(
-                        // Included
-                        ( breakpoint.limits.width.included && this.viewport.width >= breakpoint.limits.width.value ) ||
-
-                        // Not included
-                        ( !breakpoint.limits.width.included && this.viewport.width > breakpoint.limits.width.value )
-                    )
-                        width = true;
-                }
-
-                // Max
-                else
-                {
-                    if(
-                        // Included
-                        ( breakpoint.limits.width.included && this.viewport.width <= breakpoint.limits.width.value ) ||
-
-                        // Not included
-                        ( !breakpoint.limits.width.included && this.viewport.width < breakpoint.limits.width.value )
-                    )
-                        width = true;
-                }
-            }
-
-            // Height must be tested
-            if( !height )
-            {
-                // Min
-                if( breakpoint.limits.height.extreme === 'min' )
-                {
-                    if(
-                        // Included
-                        ( breakpoint.limits.height.included && this.viewport.height >= breakpoint.limits.height.value ) ||
-
-                        // Not included
-                        ( !breakpoint.limits.height.included && this.viewport.height > breakpoint.limits.height.value )
-                    )
-                        height = true;
-                }
-
-                // Max
-                else
-                {
-                    if(
-                        // Included
-                        ( breakpoint.limits.height.included && this.viewport.height <= breakpoint.limits.height.value ) ||
-
-                        // Not included
-                        ( !breakpoint.limits.height.included && this.viewport.height < breakpoint.limits.height.value )
-                    )
-                        height = true;
-                }
-            }
-
-            if( width && height )
-            {
-                breakpoints.push( breakpoint );
-            }
-        }
-
-
-        var current_names = this.get_breakpoints_names( breakpoints ),
-            old_names     = this.get_breakpoints_names( this.breakpoints.currents ),
-            difference    = this.get_arrays_differences( current_names, old_names );
-
-        if( difference.length )
-        {
-            this.breakpoints.currents       = breakpoints;
-            this.breakpoints.currents_names = current_names;
-            this.trigger( 'breakpoint', [ this.breakpoints.currents, this.breakpoints.currents_names ] );
-        }
-
-        return this;
-    },
-
-    /**
-     * Get differences between two arrays
-     * @param  {array} a First array
-     * @param  {array} b Second array
-     * @return {array}   Items in one but not in the other
-     */
-    get_arrays_differences : function( a, b )
-    {
-        var a_new = [],
-            diff  = [];
-
-        for( var i = 0; i < a.length; i++ )
-            a_new[ a[ i ] ] = true;
-
-        for( i = 0; i < Pan.length; i++ )
-        {
-            if( a_new[ b[ i ] ] )
-                delete a_new[ b[ i ] ];
-            else
-                a_new[ b[ i ] ] = true;
-        }
-
-        for( var k in a_new )
-            diff.push( k );
-
-        return diff;
-    },
-
-    /**
-     * Retrieve breakpoints names
-     * @param {object} breakpoints Array of breakpoints well formated
-     * @return {array}             Array of breakpoints names
-     */
-    get_breakpoints_names : function( breakpoints )
-    {
-        var names = [];
-
-        for( var i = 0, len = breakpoints.length; i < len; i++ )
-            names.push( breakpoints[ i ].name );
-
-        return names;
-    },
-
-    /**
-     * Disable pointer events on body when scrolling for performance
-     * @return {object} Context
-     */
-    init_disable_hover_on_scroll : function()
-    {
-        if( !this.options.disable_hover_on_scroll )
-            return;
-
-        var that    = this,
-            timeout = null,
-            active  = false;
-
-        function disable()
-        {
-            // Clear timeout if exist
-            if( timeout )
-                window.clearTimeout( timeout );
-
-            // Not active
-            if( !active )
-            {
-                // Activate
-                active = true;
-                document.body.style.pointerEvents = 'none';
-            }
-
-            timeout = window.setTimeout( function()
-            {
-                // Deactivate
-                active = false;
-                document.body.style.pointerEvents = 'auto';
-            }, 60 );
-        }
-
-        this.on( 'scroll', disable );
-
-        return this;
-    },
-
-    /**
-     * Detect engine, browser, system and feature in a specified list and store in 'detect' property
-     * @return {object} Context
-     */
-    init_detection : function()
-    {
-        var detect = {};
-
-        // Prepare
-        var engine     = {};
-        engine.ie      = 0;
-        engine.gecko   = 0;
-        engine.webkit  = 0;
-        engine.khtml   = 0;
-        engine.opera   = 0;
-        engine.version = 0;
-
-        var browser = {};
-        browser.ie      = 0;
-        browser.firefox = 0;
-        browser.safari  = 0;
-        browser.konq    = 0;
-        browser.opera   = 0;
-        browser.chrome  = 0;
-        browser.safari  = 0;
-        browser.version = 0;
-
-        var system            = {};
-        system.windows        = false;
-        system.mac            = false;
-        system.osx            = false;
-        system.iphone         = false;
-        system.ipod           = false;
-        system.ipad           = false;
-        system.ios            = false;
-        system.blackberry     = false;
-        system.android        = false;
-        system.opera_mini     = false;
-        system.windows_mobile = false;
-        system.wii            = false;
-        system.ps             = false;
-
-        var features   = {};
-        features.touch = false;
-
-        // Detect
-        var user_agent = navigator.userAgent;
-        if( window.opera )
-        {
-            engine.version = browser.version = window.opera.version();
-            engine.opera   = browser.opera   = parseInt( engine.version );
-        }
-        else if( /AppleWebKit\/(\S+)/.test( user_agent ) || /AppleWebkit\/(\S+)/.test( user_agent ) )
-        {
-            engine.version = RegExp.$1;
-            engine.webkit  = parseInt( engine.version );
-
-            // figure out if it's Chrome or Safari
-            if( /Chrome\/(\S+)/.test( user_agent ) )
-            {
-                browser.version = RegExp.$1;
-                browser.chrome  = parseInt( browser.version );
-            }
-            else if( /Version\/(\S+)/.test( user_agent ) )
-            {
-                browser.version = RegExp.$1;
-                browser.safari  = parseInt( browser.version );
-            }
-            else
-            {
-                // Approximate version
-                var safariVersion = 1;
-
-                if( engine.webkit < 100 )
-                    safariVersion = 1;
-                else if( engine.webkit < 312 )
-                    safariVersion = 1.2;
-                else if( engine.webkit < 412 )
-                    safariVersion = 1.3;
-                else
-                    safariVersion = 2;
-
-                browser.safari = browser.version = safariVersion;
-            }
-        }
-        else if( /KHTML\/(\S+)/.test( user_agent ) || /Konqueror\/([^;]+)/.test( user_agent ) )
-        {
-            engine.version = browser.version = RegExp.$1;
-            engine.khtml   = browser.konq    = parseInt( engine.version );
-        }
-        else if( /rv:([^\)]+)\) Gecko\/\d{8}/.test( user_agent ) )
-        {
-            engine.version = RegExp.$1;
-            engine.gecko   = parseInt( engine.version );
-
-            // Determine if it's Firefox
-            if ( /Firefox\/(\S+)/.test( user_agent ) )
-            {
-                browser.version = RegExp.$1;
-                browser.firefox = parseInt( browser.version );
-            }
-        }
-        else if( /MSIE ([^;]+)/.test( user_agent ) )
-        {
-            engine.version = browser.version = RegExp.$1;
-            engine.ie      = browser.ie      = parseInt( engine.version );
-        }
-        else if( /Trident.*rv[ :]*(11[\.\d]+)/.test( user_agent ) )
-        {
-            engine.version = browser.version = RegExp.$1;
-            engine.ie      = browser.ie      = parseInt( engine.version );
-        }
-
-        // Detect browsers
-        browser.ie    = engine.ie;
-        browser.opera = engine.opera;
-
-        // Detect platform (using navigator.plateform)
-        var plateform  = navigator.platform;
-        // system.windows = plateform.indexOf( 'Win' ) === 0;
-        // system.mac     = plateform.indexOf( 'Mac' ) === 0;
-        // system.x11     = ( plateform === 'X11' ) || ( plateform.indexOf( 'Linux' ) === 0);
-
-        // Detect platform (using navigator.userAgent)
-        system.windows = !!user_agent.match( /Win/ );
-        system.mac     = !!user_agent.match( /Mac/ );
-        // system.x11     = ( plateform === 'X11' ) || ( plateform.indexOf( 'Linux' ) === 0);
-
-        // Detect windows operating systems
-        if( system.windows )
-        {
-            if( /Win(?:dows )?([^do]{2})\s?(\d+\.\d+)?/.test( user_agent ) )
-            {
-                if( RegExp.$1 === 'NT' )
-                {
-                    switch( RegExp.$2 )
-                    {
-                        case '5.0':
-                            system.windows = '2000';
-                            break;
-
-                        case '5.1':
-                            system.windows = 'XP';
-                            break;
-
-                        case '6.0':
-                            system.windows = 'Vista';
-                            break;
-
-                        default:
-                            system.windows = 'NT';
-                            break;
-                    }
-                }
-                else if( RegExp.$1 === '9x' )
-                {
-                    system.windows = 'ME';
-                }
-                else
-                {
-                    system.windows = RegExp.$1;
-                }
-            }
-        }
-
-        // Detect mobile (mix between OS and device)
-        system.nokia          = !!user_agent.match( /Nokia/i );
-        system.kindle_fire    = !!user_agent.match( /Silk/ );
-        system.iphone         = !!user_agent.match( /iPhone/ );
-        system.ipod           = !!user_agent.match( /iPod/ );
-        system.ipad           = !!user_agent.match( /iPad/ );
-        system.blackberry     = !!user_agent.match( /BlackBerry/ ) || !!user_agent.match( /BB[0-9]+/ ) || !!user_agent.match( /PlayBook/ );
-        system.android        = !!user_agent.match( /Android/ );
-        system.opera_mini     = !!user_agent.match( /Opera Mini/i );
-        system.windows_mobile = !!user_agent.match( /IEMobile/i );
-
-        // iOS / OS X exception
-        system.ios = system.iphone || system.ipod || system.ipad;
-        system.osx = !system.ios && !!user_agent.match( /OS X/ );
-
-        // Detect gaming systems
-        system.wii         = user_agent.indexOf( 'Wii' ) > -1;
-        system.playstation = /playstation/i.test( user_agent );
-
-        //Detect features (Not as reliable as Modernizr)
-        features.touch       = !!( ( 'ontouchstart' in window ) || window.DocumentTouch && document instanceof DocumentTouch );
-        features.media_query = !!( window.matchMedia || window.msMatchMedia );
-
-        this.user_agent      = user_agent;
-        this.plateform       = plateform;
-        this.detect          = {};
-        this.detect.browser  = browser;
-        this.detect.engine   = engine;
-        this.detect.system   = system;
-        this.detect.features = features;
-    },
-
-    /**
-     * Add detected informations to the DOM (on <html> by default)
-     * @return {object} Context
-     */
-    add_detection_classes : function()
-    {
-        var targets  = null,
-            selector = null;
-
-        // Each element that need to add classes
-        for( var i = 0, len = this.options.add_classes_to.length; i < len; i++ )
-        {
-            // Selector
-            selector = this.options.add_classes_to[ i ];
-
-            // Target
-            switch( selector )
-            {
-                case 'html' :
-                    targets = [ document.documentElement ];
-                    break;
-
-                case 'body' :
-                    targets = [ document.body ];
-                    break;
-
-                default :
-                    targets = document.querySelectorAll( selector );
-                    break;
-            }
-
-            // Targets found
-            if( targets.length )
-            {
-                this.classes = [];
-
-                // Each category
-                for( var category in this.detect )
-                {
-                    // Each property in category
-                    for( var property in this.detect[ category ] )
-                    {
-                        var value = this.detect[ category ][ property ];
-
-                        // Ignore version
-                        if( property !== 'version' )
-                        {
-                            // Feature
-                            if( category === 'features' )
-                            {
-                                this.classes.push( category + '-' + ( value ? '' : 'no-' ) + property );
-                            }
-
-                            // Not feature
-                            else
-                            {
-                                if( value )
-                                {
-                                    this.classes.push( category + '-' + property );
-                                    if( category === 'browser'  )
-                                        this.classes.push( category + '-' + property + '-' + value );
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Add classes
-                for( var j = 0; j < targets.length; j++ )
-                    targets[ j ].classList.add.apply( targets[ j ].classList, this.classes );
-            }
-        }
-
-        return this;
-    },
-
-    /**
-     * Test media and return false if not compatible
-     * @param  {string} condition Condition to test
-     * @return {boolean}          Match
-     */
-    match_media : function( condition )
-    {
-        if( this.detect.features.media_query || typeof condition !== 'string' || condition === '' )
-            return false;
-
-        return !!window.matchMedia( condition ).matches;
-    }
-} );
-
-/**
  * @class    Colors
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Colors = Pan.Core.Abstract.extend(
+P.Tools.Colors = P.Core.Abstract.extend(
 {
     static  : 'colors',
     options :
@@ -2861,9 +1804,9 @@ Pan.Tools.Colors = Pan.Core.Abstract.extend(
 /**
  * @class    Css
  * @author   Ariel Saldana / http://ahhriel.com
- * @requires Pan.Tools.Detector
+ * @requires P.Tools.Detector
  */
- Pan.Tools.Css = Pan.Core.Abstract.extend(
+ P.Tools.Css = P.Core.Abstract.extend(
  {
      static  : 'css',
      options :
@@ -2880,8 +1823,8 @@ Pan.Tools.Colors = Pan.Core.Abstract.extend(
      {
          this._super( options );
 
-         this.detector = new Pan.Tools.Detector();
-         this.strings  = new Pan.Tools.Strings();
+         this.detector = new P.Tools.Detector();
+         this.strings  = new P.Tools.Strings();
      },
 
      /**
@@ -3012,12 +1955,12 @@ Pan.Tools.Colors = Pan.Core.Abstract.extend(
  * @class  Detector
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
+P.Tools.Detector = P.Core.Event_Emitter.extend(
 {
     static  : 'detector',
     options :
     {
-        classes_targets : [ 'html' ]
+        targets : [ 'html' ]
     },
 
     /**
@@ -3241,7 +2184,7 @@ Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
     init_classes : function()
     {
         // Don't add
-        if( !this.options.classes_targets || this.options.classes_targets.length === 0 )
+        if( !this.options.targets || this.options.targets.length === 0 )
             return false;
 
         // Set up
@@ -3249,10 +2192,10 @@ Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
             target  = null;
 
         // Each element that need to add classes
-        for( var i = 0, len = this.options.classes_targets.length; i < len; i++ )
+        for( var i = 0, len = this.options.targets.length; i < len; i++ )
         {
             // Target
-            target = this.options.classes_targets[ i ];
+            target = this.options.targets[ i ];
 
             // String
             if( typeof target === 'string' )
@@ -3282,8 +2225,6 @@ Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
             {
                 targets.push( target );
             }
-
-            console.log(targets);
 
             // Targets found
             if( targets.length )
@@ -3332,19 +2273,6 @@ Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
         }
 
         return this;
-    },
-
-    /**
-     * Test media and return false if not compatible
-     * @param  {string} condition Condition to test
-     * @return {boolean}          Match
-     */
-    match_media : function( condition )
-    {
-        if( this.features.media_query || typeof condition !== 'string' || condition === '' )
-            return false;
-
-        return !!window.matchMedia( condition ).matches;
     }
 } );
 
@@ -3353,19 +2281,20 @@ Pan.Tools.Detector = Pan.Core.Event_Emitter.extend(
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    send
  */
-Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
+P.Tools.GATags = P.Tools.GA_Tags = P.Core.Event_Emitter.extend(
 {
     static  : 'ga_tags',
     options :
     {
+        testing            : false,
         send               : true,
         parse              : true,
         true_link_duration : 300,
         target  : document.body,
         classes :
         {
-            to_tag : 'b-tag',
-            tagged : 'b-tagged'
+            to_tag : 'pan-tag',
+            tagged : 'pan-tagged'
         },
         logs :
         {
@@ -3491,7 +2420,8 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
      */
     send : function( datas )
     {
-        var send = [];
+        var send = [],
+            sent = false;
 
         // Error
         if( typeof datas !== 'object' )
@@ -3516,8 +2446,6 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
         // Send
         if( this.options.send )
         {
-            var sent = false;
-
             // Category
             if( typeof datas.category !== 'undefined' )
             {
@@ -3554,6 +2482,12 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
                     {
                         ga.apply( ga, [ 'send', 'event' ].concat( send ) );
 
+                        sent = true;
+                    }
+
+                    // Testing
+                    else if( this.options.testing )
+                    {
                         sent = true;
                     }
 
@@ -3603,7 +2537,7 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
  * @fires  down
  * @fires  up
  */
-Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
+P.Tools.Keyboard = P.Core.Event_Emitter.extend(
 {
     static        : 'keyboard',
     options       : {},
@@ -3634,8 +2568,10 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.downs   = [];
+        // Set up
+        this.downs = [];
 
+        // Init
         this.listen_to_events();
     },
 
@@ -3648,7 +2584,7 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
         var that = this;
 
         // Down
-        function keydown_handle(e)
+        function keydown_handle( e )
         {
             var character = that.keycode_to_character( e.keyCode );
 
@@ -3747,7 +2683,7 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
  * @class    Strings
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
+P.Tools.KonamiCode = P.Tools.Konami_Code = P.Core.Event_Emitter.extend(
 {
     static  : 'konami_code',
     options :
@@ -3764,7 +2700,7 @@ Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
             'left',
             'right',
             'b',
-            'a',
+            'a'
         ]
     },
 
@@ -3777,10 +2713,12 @@ Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
+        // Set up
         this.index    = 0;
         this.timeout  = null;
-        this.keyboard = new Pan.Tools.Keyboard();
+        this.keyboard = new P.Tools.Keyboard();
 
+        // Init
         this.listen_to_events();
     },
 
@@ -3841,6 +2779,7 @@ Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
     }
 } );
 
+
 /**
  * @class    Mouse
  * @author   Ariel Saldana / http://ahhriel.com
@@ -3848,9 +2787,9 @@ Pan.Tools.Konami_Code = Pan.Core.Event_Emitter.extend(
  * @fires    up
  * @fires    move
  * @fires    wheel
- * @requires Pan.Tools.Viewport
+ * @requires P.Tools.Viewport
  */
-Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
+P.Tools.Mouse = P.Core.Event_Emitter.extend(
 {
     static  : 'mouse',
     options : {},
@@ -3864,7 +2803,7 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.viewport         = new Pan.Tools.Viewport();
+        this.viewport         = new P.Tools.Viewport();
         this.down             = false;
         this.position         = {};
         this.position.x       = 0;
@@ -3957,7 +2896,7 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
  * @fires    offline
  * @fires    change
  */
-Pan.Tools.Offline = Pan.Core.Event_Emitter.extend(
+P.Tools.Offline = P.Core.Event_Emitter.extend(
 {
     static  : 'offline',
     options :
@@ -4054,7 +2993,7 @@ Pan.Tools.Offline = Pan.Core.Event_Emitter.extend(
  * @class    Registry
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Registry = Pan.Core.Event_Emitter.extend(
+P.Tools.Registry = P.Core.Event_Emitter.extend(
 {
     static  : 'registry',
     options : {},
@@ -4110,9 +3049,9 @@ Pan.Tools.Registry = Pan.Core.Event_Emitter.extend(
 /**
  * @class    Resizer
  * @author   Ariel Saldana / http://ahhriel.com
- * @requires Pan.Tools.Browser
+ * @requires P.Tools.Browser
  */
-Pan.Tools.Resizer = Pan.Core.Abstract.extend(
+P.Tools.Resizer = P.Core.Abstract.extend(
 {
     static  : 'resizer',
     options :
@@ -4158,7 +3097,7 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
         var that = this;
 
         // Set up
-        this.viewport = new Pan.Tools.Viewport();
+        this.viewport = new P.Tools.Viewport();
 
         // Viewport resize event
         this.viewport.on( 'resize', function()
@@ -4188,7 +3127,6 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
         // Each element
         for( var i = 0, len = containers.length; i < len; i++ )
         {
-
             var container = containers[ i ],
                 content   = container.querySelector( '.' + this.options.classes.content );
 
@@ -4474,7 +3412,7 @@ Pan.Tools.Resizer = Pan.Core.Abstract.extend(
  * @class    Strings
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Strings = Pan.Core.Abstract.extend(
+P.Tools.Strings = P.Core.Abstract.extend(
 {
     static  : 'strings',
     options : {},
@@ -4786,7 +3724,7 @@ Pan.Tools.Strings = Pan.Core.Abstract.extend(
  * @class    Resizer
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Ticker = Pan.Core.Event_Emitter.extend(
+P.Tools.Ticker = P.Core.Event_Emitter.extend(
 {
     static  : 'ticker',
     options :
@@ -4822,10 +3760,12 @@ Pan.Tools.Ticker = Pan.Core.Event_Emitter.extend(
     /**
      * Reset the ticker by setting time infos to 0
      * @param  {boolean} run Start the ticker
+     * @param  {ticker}  reset a ticker completely, by default reseting keeps the next interval date.
      * @return {object}      Context
      */
-    reset : function( run )
+    reset : function( run , interval )
     {
+        var that = this;
         this.reseted = true;
 
         this.time.start   = + ( new Date() );
@@ -4835,6 +3775,12 @@ Pan.Tools.Ticker = Pan.Core.Event_Emitter.extend(
 
         if( run )
             this.run();
+
+        if (interval) {
+          that.destroy_interval(interval);
+          that.create_interval(interval);
+        }
+
 
         return this;
     },
@@ -5092,9 +4038,9 @@ Pan.Tools.Ticker = Pan.Core.Event_Emitter.extend(
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    resize
  * @fires    scroll
- * @requires Pan.Tools.Ticker
+ * @requires P.Tools.Ticker
  */
-Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
+P.Tools.Viewport = P.Core.Event_Emitter.extend(
 {
     static  : 'viewport',
     options :
@@ -5113,7 +4059,8 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
         this._super( options );
 
         // Set up
-        this.ticker             = new Pan.Tools.Ticker();
+        this.ticker             = new P.Tools.Ticker();
+        this.detector           = new P.Tools.Detector();
         this.top                = 0;
         this.left               = 0;
         this.y                  = 0;
@@ -5284,7 +4231,7 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
      */
     match_media : function( condition )
     {
-        if( this.detect.features.media_query || typeof condition !== 'string' || condition === '' )
+        if( !this.detector.features.media_query || typeof condition !== 'string' || condition === '' )
             return false;
 
         return !!window.matchMedia( condition ).matches;
@@ -5295,9 +4242,14 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
  * @class    queue
  * @author   Ariel Saldana / http://ahhriel.com
  */
-Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
+P.Tools.Queue = P.Core.Event_Emitter.extend({
     static: 'queue',
     slice: [].slice,
+
+
+    options : {
+
+    },
 
 
     /**
@@ -5317,7 +4269,7 @@ Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
             remaining = 0,
             popping,
             error,
-            await = this.noop,
+            wait = this.noop,
             all;
 
         var that = this;
@@ -5352,9 +4304,9 @@ Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
         }
 
         this.notify = function() {
-            if (error != null) await (error);
-            else if (all) await (error, tasks);
-            else await.apply(null, [error].concat(tasks));
+            if (error != null) wait (error);
+            else if (all) wait (error, tasks);
+            else wait.apply(null, [error].concat(tasks));
         }
 
 
@@ -5367,14 +4319,14 @@ Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
                 }
                 return q;
             },
-            await: function(f) {
-                await = f;
+            wait: function(f) {
+                wait = f;
                 all = false;
                 if (!remaining) notify();
                 return q;
             },
             awaitAll: function(f) {
-                await = f;
+                wait = f;
                 all = true;
                 if (!remaining) notify();
                 return q;
@@ -5445,153 +4397,12 @@ Pan.Tools.Queue = Pan.Core.Event_Emitter.extend({
 
 });
 
-/**
- * @class    html_serializer
- * @author   Ariel Saldana / http://ahhriel.com
- * @info     methods of convering html data into objects or bytes for transport.
- */
-Pan.Tools.HTML_Serializer = Pan.Core.Abstract.extend({
-    static: 'html_serializer',
-    options: {
+// UMD support
+if( typeof define === 'function' && define.amd )
+    define( function() { return P; } );
+else if( typeof module === 'object' && module.exports )
+    module.exports = P;
+else
+    window.Pan = window.P = P;
 
-    },
-
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct: function(options) {
-        this._super(options);
-        this.paragraphs = [];
-    },
-
-
-    /**
-     * Apply css on target and add every prefixes
-     * @param  {HTMLElement} target   HTML element that need to be applied
-     * @return {string}      serialized element content to json
-     */
-    applyJson: function(target) {
-        var elementChildren = document.getElementById(target).children;
-
-        for (var i = 0; i < elementChildren.length; i++) {
-            if (elementChildren[i].nodeName === 'P') {
-                var paragraph = {};
-                // var paragraphText = elementChildren[i].innerText;
-                paragraph.text = elementChildren[i].innerText;
-                paragraph.type = 1;
-                var markup = [];
-                // var markupInfo = {};
-                var strlen = 0;
-                var index = 0;
-                var end = 0;
-                for (var x = 0; x < elementChildren[i].childNodes.length; x++) {
-                    if (elementChildren[i].childNodes[x].nodeType === 3) {
-                        end += elementChildren[i].childNodes[x].wholeText.length;
-                    } else {
-                        var markupInfo = {};
-                        end += elementChildren[i].childNodes[x].innerText.length;;
-                        markupInfo.start = index;
-                        markupInfo.end = end;
-
-                        if (elementChildren[i].childNodes[x].nodeName === 'B') {
-                            markupInfo.type = 2
-                        } else if (elementChildren[i].childNodes[x].nodeName === 'I') {
-                            markupInfo.type = 3
-                        } else if (elementChildren[i].childNodes[x].nodeName === 'U') {
-                            markupInfo.type = 4
-                        } else if (elementChildren[i].childNodes[x].nodeName === 'A') {
-                            markupInfo.type = 5
-                        }
-                        markup.push(markupInfo);
-                        // markupInfo.end = end;
-                    }
-                    index += end;
-                }
-                //console.log(markup);
-                paragraph.markup = markup
-                this.paragraphs.push(paragraph);
-                // console.log(paragraph);
-            } else if (elementChildren[i].nodeName === 'FIGURE') {
-                var paragraph = {};
-                paragraph.type = 2;
-                paragraph.text = "";
-                paragraph.layout = 1;
-                for (var x = 0; x < elementChildren[i].childNodes.length; x++) {
-
-                }
-                // dont push this yet...
-                //this.paragraphs.push(paragraph);
-            }
-        }
-        return this.paragraphs;
-    }
-});
-
-/**
- * @class    Fit.js
- * @author   Ariel Saldana / http://ahhriel.com
- * TODO:     Add support to add options to he ajax request. (Headers)
- */
-Pan.Tools.Ajax = Pan.Core.Abstract.extend({
-    static: 'ajax',
-    options: {
-
-    },
-
-    construct: function(options) {
-        this._super(options);
-
-    },
-
-    /**
-     * Remove get json data over ajax
-     * @param  {string}   url        url
-     * @param  {function} callback   error and data callback
-     * @return {object}              object context
-     */
-
-    getJson: function(url, callback) {
-        var that = this;
-        var request = new XMLHttpRequest();
-        request.open('GET', url, true);
-
-        request.onreadystatechange = function() {
-
-            if (this.readyState === 4) {
-                if (this.status >= 200 && this.status < 400) {
-                    // Success!
-                    var data = JSON.parse(this.responseText);
-                    callback(false, this.responseText);
-                    return that;
-
-                } else {
-                    // Error :(
-                    callback(true);
-                    return that;
-                }
-            }
-        };
-
-        request.send();
-        request = null;
-    },
-
-    /**
-     * Remove get json data over ajax
-     * @param  {string}   url        url
-     * @return {object}              object context
-     */
-
-    postJson: function(url) {
-        this.request.open('POST', url, true);
-        this.request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        this.request.send(data);
-
-        return this;
-    }
-});
-
-return Pan;
 } )( window, document );

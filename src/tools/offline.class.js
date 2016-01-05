@@ -5,7 +5,7 @@
  * @fires    offline
  * @fires    change
  */
-Pan.Tools.Offline = Pan.Core.Event_Emitter.extend(
+P.Tools.Offline = P.Core.Event_Emitter.extend(
 {
     static  : 'offline',
     options :

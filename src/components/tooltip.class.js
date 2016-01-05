@@ -3,8 +3,8 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * @info     methods of convering html data into objects or bytes for transport.
  */
-Pan.Components.Tooltip = Pan.Core.Abstract.extend({
-    static: 'html_serializer',
+P.Components.Tooltip = P.Core.Abstract.extend({
+    static: 'tooltip',
     options: {
 
     },
@@ -31,13 +31,13 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
             this.tooltipArray,
             function(e) {
                 e.addEventListener('mouseover', function() {
-                        that.mouseEnter(e)
+                        that.mouseEnter(e);
                     }, false),
                     e.addEventListener('mouseout', function() {
-                        that.mouseLeave(e)
-                    }, false)
+                        that.mouseLeave(e);
+                    }, false);
             }
-        )
+        );
         return this;
     },
 
@@ -83,7 +83,6 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
      * @return tooltip context
      */
     createTooltipElement: function(id, parentElement) {
-        var that = this;
 
         var innerText = parentElement.getAttribute('data-content');
         var tooltip = document.createElement('div');
@@ -109,7 +108,6 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
         var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
             halfToolTip = widthOfTooltip / 2;
 
@@ -134,14 +132,12 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
      */
 
     showLeft: function(e, id) {
-        var that = this;
 
         var tooltip = this.createTooltipElement(id, e);
 
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var leftOfParent = (parentInfo.left);
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
         var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
             halfToolTip = widthOfTooltip;
 
@@ -168,16 +164,12 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
      */
 
     showRight: function(e, id) {
-        var that = this;
 
         var tooltip = this.createTooltipElement(id, e);
 
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var rightOfParent = (parentInfo.right);
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
-        var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
-            halfToolTip = widthOfTooltip;
 
         tooltip.style.left = rightOfParent + 16 + 'px';
 
@@ -202,21 +194,18 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
      */
 
     showBottom: function(e, id) {
-        var that = this;
 
         var tooltip = this.createTooltipElement(id, e);
 
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
         var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
             halfToolTip = widthOfTooltip / 2;
 
         tooltip.style.left = middleOfParent - halfToolTip + 'px';
 
         // calculate top
-        var heightOfTooltip = toolTipInfo.bottom - toolTipInfo.top;
         tooltip.style.top = parentInfo.bottom + 16 + 'px';
 
         tooltip.className = 'pan-tooltip bottom pan-tooltip-load';
@@ -242,7 +231,6 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
         var toolTipInfo = tooltip.getBoundingClientRect();
         var parentInfo = e.getBoundingClientRect();
         var middleOfParent = (parentInfo.left + parentInfo.right) / 2;
-        var middleOfTooltip = (toolTipInfo.left + toolTipInfo.right) / 2;
         var widthOfTooltip = (toolTipInfo.right - toolTipInfo.left),
             halfToolTip = widthOfTooltip / 2;
 
@@ -257,7 +245,8 @@ Pan.Components.Tooltip = Pan.Core.Abstract.extend({
         window.setTimeout(function() {
             tooltip.style.top = parentInfo.top + (that.tooltipTopOffset + heightOfTooltip) + 'px';
         }, 10);
-        return this;
+        
+        return that;
     },
 
     generateId: function() {

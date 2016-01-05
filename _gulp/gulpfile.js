@@ -35,38 +35,88 @@ gulp.task( 'js', function()
         '\n',
     ].join( '' );
 
+    /*var before = [
+        //'\nvar pan = { Core : {}, Tools : {}, Components : {} };',
+        '\nvar Pan = P = ( function( window, document, undefined )',
+        '\n{',
+        '\n    \'use strict\';',
+        '\n',
+    ].join( '' );*/
+    
+    
     var before = [
-        //'\nvar B = { Core : {}, Tools : {}, Components : {} };',
-        '\nvar P = Pan = ( function( window, document, undefined )',
+        '\n( function( window, document, undefined )',
         '\n{',
         '\n    \'use strict\';',
         '\n',
     ].join( '' );
 
     var after = [
-        '\nreturn Pan;',
+        //'\nreturn P;',
+        //'\n} )( window, document );',
+        //'\n'
+        
+        '\n// UMD support',
+        '\nif( typeof define === \'function\' && define.amd )',
+        '\n    define( function() { return P; } );',
+        '\nelse if( typeof module === \'object\' && module.exports )',
+        '\n    module.exports = P;',
+        '\nelse',
+        '\n    window.Pan = window.P = P;',
+        '\n',
         '\n} )( window, document );',
         '\n'
     ].join( '' );
 
     // With polyfill
+    // gulp.src( [
+    //     options.paths.sources + 'polyfills/classlist.js',
+    //     options.paths.sources + 'polyfills/foreach.js',
+    //     options.paths.sources + 'polyfills/getcomputedstyle.js',
+    //     options.paths.sources + 'polyfills/indexof.js',
+    //     options.paths.sources + 'polyfills/object-keys.js',
+    //     options.paths.sources + 'polyfills/object-create.js',
+    //     options.paths.sources + 'polyfills/requestanimationframe.js',
+
+    //     options.paths.sources + 'core/pan.class.js',
+    //     options.paths.sources + 'core/abstract.class.js',
+    //     options.paths.sources + 'core/event_emitter.class.js',
+
+    //     options.paths.sources + 'components/tooltip.class.js',
+
+    //     options.paths.sources + 'tools/breakpoints.class.js',
+    //     options.paths.sources + 'tools/browser.class.js',
+    //     options.paths.sources + 'tools/colors.class.js',
+    //     options.paths.sources + 'tools/css.class.js',
+    //     options.paths.sources + 'tools/detector.class.js',
+    //     options.paths.sources + 'tools/ga_tags.class.js',
+    //     options.paths.sources + 'tools/keyboard.class.js',
+    //     options.paths.sources + 'tools/konami_code.class.js',
+    //     options.paths.sources + 'tools/mouse.class.js',
+    //     options.paths.sources + 'tools/offline.class.js',
+    //     options.paths.sources + 'tools/registry.class.js',
+    //     options.paths.sources + 'tools/resizer.class.js',
+    //     options.paths.sources + 'tools/strings.class.js',
+    //     options.paths.sources + 'tools/ticker.class.js',
+    //     options.paths.sources + 'tools/viewport.class.js',
+    //     options.paths.sources + 'tools/queue.class.js',
+    //     options.paths.sources + 'tools/html_serializer.class.js',
+    //     options.paths.sources + 'tools/ajax.class.js',
     gulp.src( [
         options.paths.sources + 'polyfills/classlist.js',
         options.paths.sources + 'polyfills/foreach.js',
         options.paths.sources + 'polyfills/getcomputedstyle.js',
+        options.paths.sources + 'polyfills/htmlelement.js',
         options.paths.sources + 'polyfills/indexof.js',
-        options.paths.sources + 'polyfills/object-keys.js',
         options.paths.sources + 'polyfills/object-create.js',
+        options.paths.sources + 'polyfills/object-keys.js',
         options.paths.sources + 'polyfills/requestanimationframe.js',
 
         options.paths.sources + 'core/pan.class.js',
         options.paths.sources + 'core/abstract.class.js',
         options.paths.sources + 'core/event_emitter.class.js',
 
-        options.paths.sources + 'components/tooltip.class.js',
-
         options.paths.sources + 'tools/breakpoints.class.js',
-        options.paths.sources + 'tools/browser.class.js',
         options.paths.sources + 'tools/colors.class.js',
         options.paths.sources + 'tools/css.class.js',
         options.paths.sources + 'tools/detector.class.js',
@@ -81,8 +131,6 @@ gulp.task( 'js', function()
         options.paths.sources + 'tools/ticker.class.js',
         options.paths.sources + 'tools/viewport.class.js',
         options.paths.sources + 'tools/queue.class.js',
-        options.paths.sources + 'tools/html_serializer.class.js',
-        options.paths.sources + 'tools/ajax.class.js',
     ] )
     .pipe( concat( 'pan-' + options.version + '.js' ) )
     .pipe( concat.header( before ) )
@@ -95,14 +143,35 @@ gulp.task( 'js', function()
     .pipe( gulp.dest( options.paths.destination ) );
 
     // Without polyfill
+    // gulp.src( [
+    //     options.paths.sources + 'core/pan.class.js',
+    //     options.paths.sources + 'core/abstract.class.js',
+    //     options.paths.sources + 'core/event_emitter.class.js',
+
+    //     options.paths.sources + 'components/tooltip.class.js',
+
+    //     options.paths.sources + 'tools/browser.class.js',
+    //     options.paths.sources + 'tools/colors.class.js',
+    //     options.paths.sources + 'tools/css.class.js',
+    //     options.paths.sources + 'tools/ga_tags.class.js',
+    //     options.paths.sources + 'tools/keyboard.class.js',
+    //     options.paths.sources + 'tools/konami_code.class.js',
+    //     options.paths.sources + 'tools/mouse.class.js',
+    //     options.paths.sources + 'tools/offline.class.js',
+    //     options.paths.sources + 'tools/registry.class.js',
+    //     options.paths.sources + 'tools/resizer.class.js',
+    //     options.paths.sources + 'tools/strings.class.js',
+    //     options.paths.sources + 'tools/ticker.class.js',
+    //     options.paths.sources + 'tools/queue.class.js',
+    // ] )
     gulp.src( [
         options.paths.sources + 'core/pan.class.js',
         options.paths.sources + 'core/abstract.class.js',
         options.paths.sources + 'core/event_emitter.class.js',
-
+        
         options.paths.sources + 'components/tooltip.class.js',
 
-        options.paths.sources + 'tools/browser.class.js',
+        // options.paths.sources + 'tools/browser.class.js',
         options.paths.sources + 'tools/colors.class.js',
         options.paths.sources + 'tools/css.class.js',
         options.paths.sources + 'tools/ga_tags.class.js',

@@ -3,7 +3,7 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * @info     methods of convering html data into objects or bytes for transport.
  */
-Pan.Tools.HTML_Serializer = Pan.Core.Abstract.extend({
+P.Tools.HTML_Serializer = P.Core.Abstract.extend({
     static: 'html_serializer',
     options: {
 
@@ -36,7 +36,7 @@ Pan.Tools.HTML_Serializer = Pan.Core.Abstract.extend({
                 paragraph.type = 1;
                 var markup = [];
                 // var markupInfo = {};
-                var strlen = 0;
+                //var strlen = 0;
                 var index = 0;
                 var end = 0;
                 for (var x = 0; x < elementChildren[i].childNodes.length; x++) {
@@ -67,7 +67,6 @@ Pan.Tools.HTML_Serializer = Pan.Core.Abstract.extend({
                 this.paragraphs.push(paragraph);
                 // console.log(paragraph);
             } else if (elementChildren[i].nodeName === 'FIGURE') {
-                var paragraph = {};
                 paragraph.type = 2;
                 paragraph.text = "";
                 paragraph.layout = 1;

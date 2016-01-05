@@ -3,9 +3,9 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    resize
  * @fires    scroll
- * @requires Pan.Tools.Ticker
+ * @requires P.Tools.Ticker
  */
-Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
+P.Tools.Viewport = P.Core.Event_Emitter.extend(
 {
     static  : 'viewport',
     options :
@@ -24,7 +24,8 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
         this._super( options );
 
         // Set up
-        this.ticker             = new Pan.Tools.Ticker();
+        this.ticker             = new P.Tools.Ticker();
+        this.detector           = new P.Tools.Detector();
         this.top                = 0;
         this.left               = 0;
         this.y                  = 0;
@@ -195,7 +196,7 @@ Pan.Tools.Viewport = Pan.Core.Event_Emitter.extend(
      */
     match_media : function( condition )
     {
-        if( this.detect.features.media_query || typeof condition !== 'string' || condition === '' )
+        if( !this.detector.features.media_query || typeof condition !== 'string' || condition === '' )
             return false;
 
         return !!window.matchMedia( condition ).matches;

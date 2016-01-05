@@ -84,6 +84,9 @@
         document.querySelector( 'button' ).onclick = function( e )
         {
             ticker.reset();
+
+            // reset the ticker so that it doesn't keep the old next_interval variable after reset
+            // ticker.reset(false, 500);
         };
 
         // Wait

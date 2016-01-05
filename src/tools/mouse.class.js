@@ -5,9 +5,9 @@
  * @fires    up
  * @fires    move
  * @fires    wheel
- * @requires Pan.Tools.Viewport
+ * @requires P.Tools.Viewport
  */
-Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
+P.Tools.Mouse = P.Core.Event_Emitter.extend(
 {
     static  : 'mouse',
     options : {},
@@ -21,7 +21,7 @@ Pan.Tools.Mouse = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.viewport         = new Pan.Tools.Viewport();
+        this.viewport         = new P.Tools.Viewport();
         this.down             = false;
         this.position         = {};
         this.position.x       = 0;

@@ -1,5 +1,5 @@
 // Simple structure
-var Pan =
+var P =
 {
     Core       : {},
     Tools      : {},
@@ -12,7 +12,7 @@ var Pan =
  * MIT Licensed.
  * Inspired by base2 and Prototype
  */
-Pan.copy = function( object )
+P.copy = function( object )
 {
     var c = null;
 
@@ -25,7 +25,7 @@ Pan.copy = function( object )
         c = {};
 
         for( var key in object )
-            c[ key ] = Pan.copy( object[ key ] );
+            c[ key ] = P.copy( object[ key ] );
 
         return c;
     }
@@ -36,7 +36,7 @@ Pan.copy = function( object )
         c = [];
 
         for( var i = 0, l = object.length; i < l; i++ )
-            c[ i ] = Pan.copy( object[ i ] );
+            c[ i ] = P.copy( object[ i ] );
 
         return c;
     }
@@ -48,7 +48,7 @@ Pan.copy = function( object )
     }
 };
 
-Pan.merge = function( original, extended )
+P.merge = function( original, extended )
 {
     for( var key in extended )
     {
@@ -61,7 +61,7 @@ Pan.merge = function( original, extended )
 
             // ext = Object.create( ext );
 
-            original[ key ] = Pan.merge( original[ key ], ext );
+            original[ key ] = P.merge( original[ key ], ext );
         }
         else
         {
@@ -78,7 +78,7 @@ var initializing = false,
         xyz;
     } ) ? /\b_super\b/ : /.*/;
 
-Pan.Class = function(){};
+P.Class = function(){};
 
 var inject = function( prop )
 {
@@ -110,7 +110,7 @@ var inject = function( prop )
     }
 };
 
-Pan.Class.extend = function( prop )
+P.Class.extend = function( prop )
 {
     var _super    = this.prototype;
     initializing  = true;
@@ -141,10 +141,10 @@ Pan.Class.extend = function( prop )
                 if( typeof prototype[ name ] === 'undefined' )
                     prototype[ name ] = {};
 
-                var prototype_copy = Pan.copy( prototype[ name ] ),
-                    prop_copy      = Pan.copy( prop[ name ] );
+                var prototype_copy = P.copy( prototype[ name ] ),
+                    prop_copy      = P.copy( prop[ name ] );
 
-                prototype[ name ] = Pan.merge( prototype_copy, prop_copy );
+                prototype[ name ] = P.merge( prototype_copy, prop_copy );
             }
             else
             {
@@ -168,7 +168,7 @@ Pan.Class.extend = function( prop )
             {
                 if( typeof this[ p ] === 'object' )
                 {
-                    this[ p ] = Pan.copy( this[ p ] );
+                    this[ p ] = P.copy( this[ p ] );
                 }
             }
 
@@ -186,7 +186,7 @@ Pan.Class.extend = function( prop )
 
     Class.prototype             = prototype;
     Class.prototype.constructor = Class;
-    Class.extend                = Pan.Class.extend;
+    Class.extend                = P.Class.extend;
     Class.inject                = inject;
 
     return Class;

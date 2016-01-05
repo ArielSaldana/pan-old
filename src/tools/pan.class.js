@@ -7,7 +7,7 @@
 {
     'use strict';
 
-    Pan.Tools.Pan = Pan.Core.Event_Emitter.extend(
+    P.Tools.Pan = P.Core.Event_Emitter.extend(
     {
         static  : 'pan',
 
@@ -87,11 +87,11 @@
 
     } );
 
-    var pan = new Pan.Tools.Pan();
+    var pan = new P.Tools.Pan();
 
     // return pan;
     return (window.pan = window._ = pan)
-    // return (Pan.tools.Pan)
+    // return (P.tools.Pan)
 
 
 } )(this);

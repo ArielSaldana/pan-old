@@ -3,7 +3,7 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * TODO:     Add support to add options to he ajax request. (Headers)
  */
-Pan.Tools.Ajax = Pan.Core.Abstract.extend({
+P.Tools.Ajax = P.Core.Abstract.extend({
     static: 'ajax',
     options: {
 

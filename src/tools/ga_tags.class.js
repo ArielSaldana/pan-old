@@ -3,19 +3,20 @@
  * @author   Ariel Saldana / http://ahhriel.com
  * @fires    send
  */
-Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
+P.Tools.GATags = P.Tools.GA_Tags = P.Core.Event_Emitter.extend(
 {
     static  : 'ga_tags',
     options :
     {
+        testing            : false,
         send               : true,
         parse              : true,
         true_link_duration : 300,
         target  : document.body,
         classes :
         {
-            to_tag : 'b-tag',
-            tagged : 'b-tagged'
+            to_tag : 'pan-tag',
+            tagged : 'pan-tagged'
         },
         logs :
         {
@@ -141,7 +142,8 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
      */
     send : function( datas )
     {
-        var send = [];
+        var send = [],
+            sent = false;
 
         // Error
         if( typeof datas !== 'object' )
@@ -166,8 +168,6 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
         // Send
         if( this.options.send )
         {
-            var sent = false;
-
             // Category
             if( typeof datas.category !== 'undefined' )
             {
@@ -204,6 +204,12 @@ Pan.Tools.GA_Tags = Pan.Core.Event_Emitter.extend(
                     {
                         ga.apply( ga, [ 'send', 'event' ].concat( send ) );
 
+                        sent = true;
+                    }
+
+                    // Testing
+                    else if( this.options.testing )
+                    {
                         sent = true;
                     }
 

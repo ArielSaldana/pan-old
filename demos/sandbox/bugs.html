@@ -12,11 +12,18 @@
     <!-- YOUR SCRIPT -->
     <script>
 
-        var browser = new Pan.Tools.Browser();
+        var viewport = new Pan.Tools.Viewport();
 
-        browser.on( 'resize', function( viewport )
+        viewport.on( 'resize', function( width )
         {
             console.log( dsdf );
+        } );
+
+        var mouse = new Pan.Tools.Mouse();
+
+        mouse.on( 'move', function()
+        {
+            console.log( sqdqsd );
         } );
 
 

@@ -4,7 +4,7 @@
  * @fires  down
  * @fires  up
  */
-Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
+P.Tools.Keyboard = P.Core.Event_Emitter.extend(
 {
     static        : 'keyboard',
     options       : {},
@@ -35,8 +35,10 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
     {
         this._super( options );
 
-        this.downs   = [];
+        // Set up
+        this.downs = [];
 
+        // Init
         this.listen_to_events();
     },
 
@@ -49,7 +51,7 @@ Pan.Tools.Keyboard = Pan.Core.Event_Emitter.extend(
         var that = this;
 
         // Down
-        function keydown_handle(e)
+        function keydown_handle( e )
         {
             var character = that.keycode_to_character( e.keyCode );
 

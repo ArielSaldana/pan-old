@@ -2,7 +2,7 @@
  * @class  Abstract
  * @author Ariel Saldana / http://ahhriel.com
  */
-Pan.Core.Abstract = Pan.Class.extend(
+P.Core.Abstract = P.Class.extend(
 {
     options : {},
     static  : false,
@@ -17,18 +17,18 @@ Pan.Core.Abstract = Pan.Class.extend(
         if( typeof options === 'undefined' )
             options = {};
 
-        Pan.merge( this.options, options );
+        P.merge( this.options, options );
 
         this.$ = {};
 
         // Create statics container
-        if( typeof Pan.Statics !== 'object' )
-            Pan.Statics = {};
+        if( typeof P.Statics !== 'object' )
+            P.Statics = {};
 
         // Register
         if( options.register && typeof options.register === 'string' )
         {
-            var registry = new Pan.Tools.Registry();
+            var registry = new P.Tools.Registry();
             registry.set( options.register, this );
         }
 
@@ -36,7 +36,7 @@ Pan.Core.Abstract = Pan.Class.extend(
         if( this.static && typeof this.static === 'string' )
         {
             // Add instance to statics
-            Pan.Statics[ this.static ] = this;
+            P.Statics[ this.static ] = this;
         }
     },
 
@@ -46,8 +46,8 @@ Pan.Core.Abstract = Pan.Class.extend(
      */
     static_instantiate : function()
     {
-        if( Pan.Statics && Pan.Statics[ this.static ] )
-            return Pan.Statics[ this.static ];
+        if( P.Statics && P.Statics[ this.static ] )
+            return P.Statics[ this.static ];
         else
             return null;
     },
