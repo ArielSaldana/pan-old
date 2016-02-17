@@ -1099,6 +1099,7 @@ new Pan.Tools.Class();
         - [ ] :warning: Event listening for specified key
         - [ ] :warning: Character to keycode
     - [ ] Event_Emitter
+        - [ ] Context parameter (alternative to bind and 'var that = this')
         - [ ] Deferred trigger (can specify event)
     - [ ] Better Match media
         - [ ] Multiple matches

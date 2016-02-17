@@ -257,7 +257,7 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
      * @param  {function} callback Function to apply if events are triggered
      * @return {object}            Context
      */
-    on : function( names, callback )
+    on : function( names, callback, context )
     {
         // Set up
         var that           = this,
@@ -278,7 +278,7 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
             }
         } );
 
-        return this._super( names, callback );
+        return this._super( names, callback, context );
     },
 
     /**

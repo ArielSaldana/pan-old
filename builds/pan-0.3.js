@@ -5,7 +5,7 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Tue Jan 05 2016 10:24:26 GMT-0500 (Eastern Standard Time)
+ * Date: Wed Feb 17 2016 11:04:59 GMT-0500 (Eastern Standard Time)
  */
 
 ( function( window, document, undefined )
@@ -781,7 +781,7 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
      *         console.log( 'fire !', value );
      *     } );
      */
-    on : function( names, callback )
+    on : function( names, callback, context )
     {
         var that  = this;
 
@@ -800,6 +800,11 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
 
         // Resolve names
         names = this.resolve_names( names );
+        
+        // Listener 
+        var listener = {};
+        listener.callback = callback;
+        listener.context = context || this;
 
         // Each name
         names.forEach( function( name )
@@ -816,7 +821,8 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
                 that.callbacks[ name.namespace ][ name.value ] = [];
 
             // Add callback
-            that.callbacks[ name.namespace ][ name.value ].push( callback );
+            //that.callbacks[ name.namespace ][ name.value ].push( callback );
+            that.callbacks[ name.namespace ][ name.value ].push( listener );
         });
 
         return this;
@@ -911,7 +917,7 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
             return false;
         }
 
-        var that         = this,
+        var that = this,
             final_result,
             result;
 
@@ -933,9 +939,11 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
             {
                 if( that.callbacks[ namespace ] instanceof Object && that.callbacks[ namespace ][ name.value ] instanceof Array )
                 {
-                    that.callbacks[ namespace ][ name.value ].forEach( function( callback )
+                    // that.callbacks[ namespace ][ name.value ].forEach( function( callback )
+                    that.callbacks [ namespace ][ name.value ].forEach( function( listener )
                     {
-                        result = callback.apply( that,args );
+                        // result = callback.apply( that,args );
+                        result = listener.callback.apply ( listener.context, args);
 
                         if( typeof final_result === 'undefined' )
                             final_result = result;
@@ -953,9 +961,11 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
                 return this;
             }
 
-            that.callbacks[ name.namespace ][ name.value ].forEach( function( callback )
+            // that.callbacks[ name.namespace ][ name.value ].forEach( function( callback )
+            that.callbacks [ name.namespace ][ name.value ].forEach( function( listener )
             {
-                result = callback.apply( that, args );
+                // result = callback.apply( that, args );
+                result = listener.callback.apply( listener.context, args);
 
                 if( typeof final_result === 'undefined' )
                     final_result = result;
@@ -3979,7 +3989,7 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
      * @param  {function} callback Function to apply if events are triggered
      * @return {object}            Context
      */
-    on : function( names, callback )
+    on : function( names, callback, context )
     {
         // Set up
         var that           = this,
@@ -4000,7 +4010,7 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
             }
         } );
 
-        return this._super( names, callback );
+        return this._super( names, callback, context );
     },
 
     /**
