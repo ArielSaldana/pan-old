@@ -5,7 +5,7 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Wed Feb 17 2016 11:04:59 GMT-0500 (Eastern Standard Time)
+ * Date: Wed Feb 17 2016 13:03:11 GMT-0500 (Eastern Standard Time)
  */
 
 ( function( window, document, undefined )
@@ -784,7 +784,7 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
     on : function( names, callback, context )
     {
         var that  = this;
-
+        
         // Errors
         if( typeof names === 'undefined' || names === '' )
         {
@@ -844,7 +844,7 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
     off : function( names )
     {
         var that = this;
-
+        
         // Errors
         if( typeof names === 'undefined' || names === '' )
         {
@@ -865,6 +865,7 @@ P.Core.EventEmitter = P.Core.Event_Emitter = P.Core.Abstract.extend(
             if( name.namespace !== 'base' && name.value === '' )
             {
                 delete that.callbacks[ name.namespace ];
+                // delete that.listener.callbacks[ name.namespace ];
             }
 
             // Remove specific callback in namespace

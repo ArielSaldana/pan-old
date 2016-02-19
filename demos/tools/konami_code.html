@@ -19,6 +19,9 @@
         konami.on( 'used', function()
         {
             document.querySelector( '.element .value' ).innerHTML = 'Hadouken!!!';
+            // konami.off('used');
+            // konami.off('wrong');
+            // konami.off('timeout');
         } );
 
         konami.on( 'wrong', function( index )
