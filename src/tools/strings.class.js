@@ -23,7 +23,7 @@ P.Tools.Strings = P.Core.Abstract.extend(
         lower          : [ 'lower' ],
         upper          : [ 'upper' ],
         studlycaps     : [ 'studlycaps' ],
-        burno          : [ 'burno', 'lol', 'yolo' ],
+        airel          : [ 'airel', 'lol', 'yolo' ],
     },
     negatives :
     [
@@ -225,9 +225,9 @@ P.Tools.Strings = P.Core.Abstract.extend(
                         new_value = new_value.substr( 0, i ) + new_value[ i ].toUpperCase() + new_value.substr( i + 1 );
                 }
                 break;
-            case 'burno' :
+            case 'airel' :
                 for( i = 0, len = parts.length; i < len; i++ )
-                    parts[ i ] = 'burno';
+                    parts[ i ] = 'airel';
                 new_value = parts.join( ' ' );
                 break;
         }

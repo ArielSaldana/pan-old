@@ -5,7 +5,7 @@
  * Released under the MIT license
  * https://github.com/arielsaldana/pan/blob/dev/LICENSE.txt
  *
- * Date: Wed Feb 17 2016 13:03:11 GMT-0500 (Eastern Standard Time)
+ * Date: Thu Mar 10 2016 14:11:10 GMT-0500 (Eastern Standard Time)
  */
 
 ( function( window, document, undefined )
