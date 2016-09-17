@@ -1,0 +1,31 @@
+{
+  "name": "pan",
+  "version": "1.0.0",
+  "description": "Pan.js\r ========",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-add-src":"0.2.0",
+    "gulp-concat-util":"0.5.5",
+    "gulp-rename":"1.2.2",
+    "gulp-uglify":"2.0.0",
+    "gulp-watch":"4.3.9"
+  },
+  "scripts": {
+    "build": "babel src -d src",
+    "compile": "node node_modules/gulp/bin/gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArielSaldana/pan.git"
+  },
+  "author": "Ariel Saldana",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArielSaldana/pan/issues"
+  },
+  "homepage": "https://github.com/ArielSaldana/pan#readme"
+}

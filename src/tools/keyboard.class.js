@@ -1,87 +1,76 @@
 /**
  * @class  Keyboard
- * @author Ariel Saldana / http://ahhriel.com
+ * @author Ariel Saldana / http://ariel.io
  * @fires  down
  * @fires  up
  */
-P.Tools.Keyboard = P.Core.Event_Emitter.extend(
-{
-    static        : 'keyboard',
-    options       : {},
-    keycode_names :
-    {
-        91 : 'cmd',
-        17 : 'ctrl',
-        32 : 'space',
-        16 : 'shift',
-        18 : 'alt',
-        20 : 'caps',
-        9  : 'tab',
-        13 : 'enter',
-        8  : 'backspace',
-        38 : 'up',
-        39 : 'right',
-        40 : 'down',
-        37 : 'left',
-        27 : 'esc'
-    },
+let keyboardInstance = null;
 
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
-    {
-        this._super( options );
-
-        // Set up
+class Keyboard extends EventEmitter {
+    constructor(options) {
+        super(options);
+        
+        if (!keyboardInstance) {
+            keyboardInstance = this;
+        }
+        
+        this.options = {};
+        this.keycode_names = {
+            91 : 'cmd',
+            17 : 'ctrl',
+            32 : 'space',
+            16 : 'shift',
+            18 : 'alt',
+            20 : 'caps',
+            9  : 'tab',
+            13 : 'enter',
+            8  : 'backspace',
+            38 : 'up',
+            39 : 'right',
+            40 : 'down',
+            37 : 'left',
+            27 : 'esc'
+        }
+        
         this.downs = [];
-
-        // Init
         this.listen_to_events();
-    },
-
+        
+        return keyboardInstance;
+    }
+    
     /**
      * Listen to events
      * @return {object} Context
      */
-    listen_to_events : function()
-    {
-        var that = this;
-
-        // Down
-        function keydown_handle( e )
-        {
-            var character = that.keycode_to_character( e.keyCode );
-
-            if( that.downs.indexOf( character ) === -1 )
-                that.downs.push( character );
-
-            // Trigger and prevend default if asked by return false on callback
-            if( that.trigger( 'down', [ e.keyCode, character ] ) === false )
+    listen_to_events () {
+        
+        //down
+        var keydown_handle = (e) => {
+            var character = this.keycode_to_character (e.keyCode);
+            
+            if (this.downs.indexOf( character) === -1)
+                this.downs.push(character);
+                
+            if (this.trigger('down', [e.keyCode, character]) === false)
             {
                 e = e || window.event;
-
-                if( e.preventDefault )
+                
+                if (e.preventDefault)
                     e.preventDefault();
                 else
                     e.returnValue = false;
             }
         }
-
-        // Up
-        function keyup_handle( e )
-        {
-            var character = that.keycode_to_character( e.keyCode );
-
-            if( that.downs.indexOf( character ) !== -1 )
-                that.downs.splice( that.downs.indexOf( character ), 1 );
-
-            that.trigger( 'up', [ e.keyCode, character ] );
+        
+        var keyup_handle = (e) => {
+           var character = this.keycode_to_character(e.character);
+           
+           if (this.downs.indexOf(character) !== -1)
+                this.downs.splice(this.downs.indexOf(character),1);
+                
+           this.trigger('up', [e.keyCode, character]);
         }
-
-
+        
         // Listen
         if (document.addEventListener)
         {
@@ -95,32 +84,29 @@ P.Tools.Keyboard = P.Core.Event_Emitter.extend(
         }
 
         return this;
-    },
-
+    }
+    
     /**
      * Convert a keycode to a char
      * @param  {integer} input Original keycode
      * @return {string}        Output
      */
-    keycode_to_character : function( input )
-    {
-        var output = this.keycode_names[ input ];
-
-        if( !output )
-            output = String.fromCharCode( input ).toLowerCase();
-
+    keycode_to_character (input) {
+        var output = this.keycode_names[input];
+        if (!output)
+            output = String.fromCharCode(input).toLowerCase();
+            
         return output;
-    },
-
+    }
+    
     /**
      * Test if keys are down
      * @param  {array} inputs Array of char to test as strings
      * @return {boolean}      True if every keys are down
      */
-    are_down : function( inputs )
-    {
+    are_down (inputs) {
         var down = true;
-
+        
         for( var i = 0; i < inputs.length; i++ )
         {
             var key = inputs[ i ];
@@ -133,15 +119,16 @@ P.Tools.Keyboard = P.Core.Event_Emitter.extend(
         }
 
         return down;
-    },
-
+        
+    }
+    
     /**
      * Test if key is down
      * @param  {string}  input Char as string
      * @return {boolean}       True if key is down
      */
-    is_down : function( input )
-    {
-        return this.are_down( [ input ] );
-    }
-} );
+     is_down () {
+         return this.are_down([input]);
+     }
+    
+}

@@ -1,24 +1,17 @@
 /**
- * @class    Resizer
- * @author   Ariel Saldana / http://ahhriel.com
+ * @class    Ticker
+ * @author   Ariel Saldana / http://ariel.io
  */
-P.Tools.Ticker = P.Core.Event_Emitter.extend(
-{
-    static  : 'ticker',
-    options :
-    {
-        auto_run : true
-    },
+let tickerInstance = null;
 
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
-    {
-        this._super( options );
-
+class Ticker extends EventEmitter {
+    constructor() {
+        super();
+        
+        if (!tickerInstance) {
+            tickerInstance = this;
+        }
+        
         this.reseted                = false;
         this.running                = false;
         this.time                   = {};
@@ -30,20 +23,22 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
         this.waits.before           = [];
         this.waits.after            = [];
         this.intervals              = {};
-
-        if( this.options.auto_run )
-            this.run();
-    },
-
+        
+        
+        this.run();
+        // this.initial_triggers = ['moo', 'scroll'];
+        
+        return tickerInstance;
+    }
+    
     /**
      * Reset the ticker by setting time infos to 0
      * @param  {boolean} run Start the ticker
      * @param  {ticker}  reset a ticker completely, by default reseting keeps the next interval date.
      * @return {object}      Context
      */
-    reset : function( run , interval )
-    {
-        var that = this;
+    
+    reset (run, interval) {
         this.reseted = true;
 
         this.time.start   = + ( new Date() );
@@ -58,69 +53,55 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
           that.destroy_interval(interval);
           that.create_interval(interval);
         }
-
-
+        
         return this;
-    },
-
-    /**
-     * Run the ticker
-     * @return {object} Context
-     */
-    run : function()
-    {
-        var that = this;
-
-        // Already running
-        if( this.running )
-            return;
-
+    }
+    
+    run () {
+        if (this.running)
+        return;
+        
         this.running = true;
-
-        var loop = function()
-        {
-            if(that.running)
-                window.requestAnimationFrame( loop );
-
-            that.tick();
-        };
-
+        
+        
+        var loop = () => {
+            if (this.running)
+                window.requestAnimationFrame(loop);
+                
+            this.tick();
+        }
+        
+        
         loop();
-
+        
         return this;
-    },
-
+    }
+    
     /**
      * Stop ticking
      * @return {object} Context
      */
-    stop : function()
-    {
+    stop () {
         this.running = false;
-
         return this;
-    },
-
+    }
+    
     /**
      * Tick (or is it tack ?)
      * @return {object} Context
      */
-    tick : function()
-    {
-        // Reset if needed
+    tick (){
         if( !this.reseted )
             this.reset();
-
-        // Set time infos
+            
         this.time.current = + ( new Date() );
         this.time.delta   = this.time.current - this.time.start - this.time.elapsed;
         this.time.elapsed = this.time.current - this.time.start;
-
+        
         var i    = 0,
             len  = this.waits.before.length,
             wait = null;
-
-        // Do next (before trigger)
+            
         for( ; i < len; i++ )
         {
             // Set up
@@ -140,13 +121,11 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
                 len--;
             }
         }
-
-        // Trigger
+        
         this.trigger( 'tick', [ this.time ] );
-
         // Trigger intervals
         this.trigger_intervals();
-
+        
         // Do next (after trigger)
         i   = 0;
         len = this.waits.after.length;
@@ -171,8 +150,8 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
         }
 
         return this;
-    },
-
+    }
+    
     /**
      * Apply function on X frames
      * @param  {number}   frames_count How many frames before applying the function
@@ -180,8 +159,7 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
      * @param  {boolean}  after        Should apply the function after the 'tick' event is triggered
      * @return {object}                Context
      */
-    wait : function( frames_count, action, after )
-    {
+    wait( frames_count, action, after ) {
         // Errors
         if( typeof action !== 'function' )
             return false;
@@ -195,15 +173,14 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
         } );
 
         return this;
-    },
-
+    }
+    
     /**
      * Create interval
      * @param  {integer} interval Milliseconds between each tick
      * @return {object}           Context
      */
-    create_interval : function( interval )
-    {
+    create_interval (interval ) {
         this.intervals[ interval ] = {
             interval     : interval,
             next_trigger : interval,
@@ -212,26 +189,23 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
         };
 
         return this;
-    },
-
+    }
+    
     /**
      * Destroy interval
      * @param  {integer} interval Milliseconds between each tick
      * @return {object}           Context
      */
-    destroy_interval : function( interval )
-    {
+    destroy_interval(interval ) {
         delete this.intervals[ interval ];
-
         return this;
-    },
-
+    }
+    
     /**
      * Trigger intervals
      * @return {object}           Context
      */
-    trigger_intervals : function()
-    {
+    trigger_intervals () {
         // Each interval
         for( var _key in this.intervals )
         {
@@ -247,24 +221,24 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
                 this.trigger( 'tick-' + interval.interval, [ this.time, interval ] );
             }
         }
-
+        
         return this;
-    },
-
+    }
+    
     /**
      * Start listening specified events
      * @param  {string}   names    Events names (can contain namespace)
      * @param  {function} callback Function to apply if events are triggered
      * @return {object}            Context
      */
-    on : function( names, callback )
-    {
-        // Set up
-        var that           = this,
-            resolved_names = this.resolve_names( names );
+    
+    on (names, callback) {
+        super.on(names, callback);
+        var resolved_names = this.resolve_names( names );
 
         // Each resolved name
-        resolved_names.forEach( function( name )
+        // resolved_names.forEach( function( name )
+        resolved_names.forEach(name =>
         {
             // Has interval interval
             if( name.match( /^tick([0-9]+)$/) )
@@ -274,26 +248,21 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
 
                 // Create interval
                 if( interval )
-                    that.create_interval( interval );
+                    this.create_interval( interval );
             }
         } );
 
-        return this._super( names, callback );
-    },
-
-    /**
-     * Stop listening specified events
-     * @param  {string}   names Events names (can contain namespace or be the namespace only)
-     * @return {object}         Context
-     */
-    off : function( names )
-    {
+        // return this._super( names, callback );
+    }
+    
+    off(names) {
+        super.off(names);
         // Set up
-        var that           = this,
-            resolved_names = this.resolve_names( names );
+        var resolved_names = this.resolve_names( names );
+        
 
         // Each resolved name
-        resolved_names.forEach( function( name )
+        resolved_names.forEach( name =>
         {
             // Has interval interval
             if( name.match( /^tick([0-9]+)$/) )
@@ -303,10 +272,11 @@ P.Tools.Ticker = P.Core.Event_Emitter.extend(
 
                 // Create interval
                 if( interval )
-                    that.destroy_interval( interval );
+                    this.destroy_interval( interval );
             }
         } );
 
-        return this._super( names );
-    },
-} );
+        // super();
+        // return this._super( names );
+    }
+}

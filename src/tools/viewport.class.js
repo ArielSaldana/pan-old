@@ -1,31 +1,26 @@
 /**
  * @class    Viewport
- * @author   Ariel Saldana / http://ahhriel.com
+ * @author   Ariel Saldana / http://ariel.io
  * @fires    resize
  * @fires    scroll
- * @requires P.Tools.Ticker
+ * @requires Ticker
  */
-P.Tools.Viewport = P.Core.Event_Emitter.extend(
-{
-    static  : 'viewport',
-    options :
-    {
-        disable_hover_on_scroll : false,
-        initial_triggers        : [ 'resize', 'scroll' ]
-    },
+let viewportInstance = null;
 
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
-    {
-        this._super( options );
-
-        // Set up
-        this.ticker             = new P.Tools.Ticker();
-        this.detector           = new P.Tools.Detector();
+class Viewport extends EventEmitter {
+    constructor(options) {
+        super(options);
+        
+        if (!viewportInstance) {
+            viewportInstance = this;
+        }
+        
+        this.options = {};
+        this.options.disable_hover_on_scroll = false;
+        this.options.initial_triggers = [ 'resize', 'scroll'];
+        
+        this.ticker             = new Ticker();
+        this.detector           = new Detector();
         this.top                = 0;
         this.left               = 0;
         this.y                  = 0;
@@ -42,90 +37,70 @@ P.Tools.Viewport = P.Core.Event_Emitter.extend(
         this.width              = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
         this.height             = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
         this.pixel_ratio        = window.devicePixelRatio || 1;
-
+        
         // Init
-        this.init_disabling_hover_on_scroll();
+        // this.init_disabling_hover_on_scroll();
         this.init_events();
-    },
-
-    /**
-     * Init events
-     * @return {object} Context
-     */
-    init_events : function()
-    {
-        var that = this;
-
-        // Callbacks
-        function resize_callback()
-        {
-            that.resize_handler();
+        
+        return viewportInstance;
+    }
+    
+    init_events() {
+        
+        var resize_callback = () => {
+            this.resize_handler();
         }
-        function scroll_callback()
-        {
-            that.scroll_handler();
+        
+        var scroll_callback = () => {
+            this.scroll_handler();
         }
-
-        // Listeing to events
-        if( window.addEventListener )
+        
+        window.addEventListener( 'resize', resize_callback );
+        window.addEventListener( 'scroll', scroll_callback);
+        
+        if ( this.options.initial_triggers.length )
         {
-            window.addEventListener( 'resize', resize_callback );
-            window.addEventListener( 'scroll', scroll_callback );
-        }
-        else
-        {
-            window.attachEvent( 'onresize', resize_callback );
-            window.attachEvent( 'onscroll', scroll_callback );
-        }
-
-        // Initial trigger
-        if( this.options.initial_triggers.length )
-        {
-            // Do next frame
-            this.ticker.wait( 1, function()
-            {
-                // Each initial trigger
-                for( var i = 0; i < that.options.initial_triggers.length; i++ )
+            
+            this.ticker.wait(1, () => {
+                for( var i = 0; i < this.options.initial_triggers.length; i++ )
                 {
                     // Set up
-                    var action = that.options.initial_triggers[ i ],
-                        method = that[ action + '_handler' ];
+                    var action = this.options.initial_triggers[ i ],
+                        method = this[ action + '_handler' ];
 
                     // Method exist
                     if( typeof method === 'function' )
                     {
                         // Trigger
-                        method.apply( that );
+                        method.apply( this );
                     }
                 }
-            } );
+            });
         }
-
+        
         return this;
-    },
-
+    }
+    
     /**
      * Handle the resize event
      * @return {object} Context
      */
-    resize_handler : function()
-    {
+    resize_handler () {
         // Set up
         this.width  = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
         this.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
+        
         // Trigger
         this.trigger( 'resize', [ this.width, this.height ] );
 
         return this;
-    },
-
+    }
+    
     /**
      * Handle the scroll event
      * @return {object} Context
      */
-    scroll_handler : function()
-    {
+    scroll_handler () {
         // Set up
         var top  = typeof window.pageYOffset !== 'undefined' ? window.pageYOffset : window.document.documentElement.scrollTop,
             left = typeof window.pageXOffset !== 'undefined' ? window.pageXOffset : window.document.documentElement.scrollLeft;
@@ -147,58 +122,48 @@ P.Tools.Viewport = P.Core.Event_Emitter.extend(
         this.trigger( 'scroll', [ this.top, this.left, this.scroll ] );
 
         return this;
-    },
-
+    }
+    
     /**
      * Disable pointer events on body when scrolling for performance
      * @return {object} Context
      */
-    init_disabling_hover_on_scroll : function()
-    {
-        // Set up
-        var that    = this,
-            timeout = null,
-            active  = false;
-
-        // Scroll event
-        this.on( 'scroll', function()
-        {
-            if( !that.options.disable_hover_on_scroll )
-                return;
-
-            // Clear timeout if exist
-            if( timeout )
-                window.clearTimeout( timeout );
-
-            // Not active
-            if( !active )
+    init_disabling_hover_on_scroll () {
+        
+        var timeout = null, active = false;
+        
+        this.on('scroll', () => {
+            if (!that.options.disable_hover_on_scroll )
+            return;
+            
+            if (timeout)
+                window.clearTimeout(timeout);
+                
+            if (!active)
             {
-                // Activate
                 active = true;
                 document.body.style.pointerEvents = 'none';
             }
-
+            
             timeout = window.setTimeout( function()
             {
-                // Deactivate
-                active = false;
-                document.body.style.pointerEvents = 'auto';
+               active = false;
+               document.body.style.pointerEvents = 'auto'; 
             }, 60 );
-        } );
-
+        });
         return this;
-    },
-
+    }
+    
     /**
      * Test media and return false if not compatible
      * @param  {string} condition Condition to test
      * @return {boolean}          Match
      */
-    match_media : function( condition )
+    match_media (condition)
     {
         if( !this.detector.features.media_query || typeof condition !== 'string' || condition === '' )
             return false;
 
         return !!window.matchMedia( condition ).matches;
     }
-} );
+}

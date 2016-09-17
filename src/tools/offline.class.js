@@ -1,99 +1,90 @@
 /**
- * @class    Offline
- * @author   Ariel Saldana / http://ahhriel.com
- * @fires    online
- * @fires    offline
- * @fires    change
+ * @class    ajax.class.js
+ * @author   Ariel Saldana / http://ariel.io
+ * TODO:     Add support to add options to he ajax request. (Headers)
  */
-P.Tools.Offline = P.Core.Event_Emitter.extend(
-{
-    static  : 'offline',
-    options :
-    {
-        classes :
-        {
-            active  : true,
-            target  : document.body,
-            offline : 'offline',
-            online  : 'online'
-        }
-    },
+offlineInstance = null;
 
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
-    {
-        this._super( options );
+class Offline extends EventEmitter {
+
+    constructor(options) {
+        super(options);
+
+        // super(options);
+
+        if (!offlineInstance)
+            offlineInstance = this;
+
+        this.options = {
+            classes: {
+                active: true,
+                target: document.body,
+                offline: 'offline',
+                online: 'online'
+            }
+        };
 
         this.status = null;
-
         this.listen_to_events();
-    },
 
-    /**
-     * Listen to events
-     * @return {object} Context
-     */
-    listen_to_events : function()
-    {
-        var that = this;
+        return offlineInstance;
+    }
 
-        function change()
-        {
-            // Online
-            if( navigator.onLine )
-            {
-                // Update classes
-                if( that.options.classes.active )
-                {
-                    that.options.classes.target.classList.remove( that.options.classes.offline );
-                    that.options.classes.target.classList.add( that.options.classes.online );
+    listen_to_events() {
+        // online
+        var change = () => {
+            console.log('change');
+            if (navigator.online) {
+                if (this.options.classes.active) {
+                    this.options.classes.target.classList.remove(this.options.classes.offline);
+                    this.options.classes.target.classList.add(this.options.classes.online);
                 }
 
-                // Update status
-                that.status = 'online';
+                // update status
+                this.status = 'online';
 
-                // Trigger
-                that.trigger( 'online' );
-                that.trigger( 'change', [ that.status ] );
+                // Trigger bang bang
+                this.trigger('online');
+                this.trigger('change', [this.status]);
             }
 
-            // Offline
-            else
-            {
-                // Update classes
-                if( that.options.classes.active )
-                {
-                    that.options.classes.target.classList.remove( that.options.classes.online );
-                    that.options.classes.target.classList.add( that.options.classes.offline );
+            else {
+                if (this.options.classes.active) {
+                    this.options.classes.target.classList.remove(this.options.classes.online);
+                    this.options.classes.target.classList.add(this.options.classes.offline);
                 }
 
-                // Update status
-                that.status = 'online';
+                // update status
+                this.status = 'online';
 
-                // Trigger
-                that.trigger( 'offline' );
-                that.trigger( 'change', [ that.status ] );
+                // trigger
+                this.trigger('offline');
+                this.trigger('change', [this.status]);
+
             }
         }
 
-        // Listen
-        if( window.addEventListener )
-        {
-            window.addEventListener( 'online',  change, false );
-            window.addEventListener( 'offline', change, false );
+        function test() {
+            console.log('shit');
         }
-        else
-        {
-            document.body.ononline  = change;
-            document.body.onoffline = change;
+
+        if (window.addEventListener) {
+            window.addEventListener('online', test, false);
+            window.addEventListener('offline', test, false);
         }
+
+        else {
+            document.body.ononline = change;
+            document.body.offline = change;
+        }
+
+        window.addEventListener('online', function(e) {
+            console.log('fuck');
+}, false);
 
         change();
 
         return this;
+
     }
-} );
+}

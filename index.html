@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+      <title>Bloom</title>
+
+    </head>
+    <body>      
+        <script src="src/core/event_emitter.class.js"></script>
+        <script src="src/tools/ticker.class.js"></script>
+        <script src="src/tools/detector.class.js"></script>
+        <script src="src/tools/viewport.class.js"></script>
+        <script src="src/tools/mouse.class.js"></script>
+        <script src="src/tools/keyboard.class.js"></script>
+        <script src="src/tools/offline.class.js"></script>
+        <script src="src/pan.class.js"></script>
+
+        <script>
+            Pan.offline = new Offline();
+
+            Pan.offline.on('change', function(status){
+                console.log(status);
+            });
+            // Pan.mouse.on('down', function(pos){
+            //     console.log(pos);
+            // })
+        </script>
+    </body>
+</html>

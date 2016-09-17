@@ -1,35 +1,27 @@
 /**
  * @class  Detector
- * @author Ariel Saldana / http://ahhriel.com
+ * @author Ariel Saldana / http://ariel.io
  */
-P.Tools.Detector = P.Core.Event_Emitter.extend(
-{
-    static  : 'detector',
-    options :
-    {
-        targets : [ 'html' ]
-    },
+let detectorInstance = null;
 
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
-    {
-        this._super( options );
-
+class Detector {
+    constructor (options) {
+        // super(options);
+        if (!detectorInstance) {
+            detectorInstance = this;
+        }
+        
+        this.options = {};
+        this.options.targets = ['html'];
+        
         // Init
         this.init_detection();
         this.init_classes();
-    },
-
-    /**
-     * Detect engine, browser, system and feature in a specified list and store in 'detect' property
-     * @return {object} Context
-     */
-    init_detection : function()
-    {
+        
+        return detectorInstance;
+    }
+    
+    init_detection () {
         // Prepare
         var engine = {
             ie      : 0,
@@ -70,14 +62,15 @@ P.Tools.Detector = P.Core.Event_Emitter.extend(
             touch       : false,
             media_query : false
         };
-
-        // Detect
+        
         var user_agent = navigator.userAgent;
-        if( window.opera )
+        
+        if (window.opera) 
         {
             engine.version = browser.version = window.opera.version();
             engine.opera   = browser.opera   = parseInt( engine.version );
         }
+        
         else if( /AppleWebKit\/(\S+)/.test( user_agent ) || /AppleWebkit\/(\S+)/.test( user_agent ) )
         {
             engine.version = RegExp.$1;
@@ -221,15 +214,10 @@ P.Tools.Detector = P.Core.Event_Emitter.extend(
         this.engine     = engine;
         this.system     = system;
         this.features   = features;
-        this.categories = [ 'engine', 'browser', 'system', 'features' ];
-    },
-
-    /**
-     * Add detected informations to the DOM (on <html> by default)
-     * @return {object} Context
-     */
-    init_classes : function()
-    {
+        this.categories = [ 'engine', 'browser', 'system', 'features' ]; 
+    }
+    
+    init_classes() {
         // Don't add
         if( !this.options.targets || this.options.targets.length === 0 )
             return false;
@@ -321,4 +309,4 @@ P.Tools.Detector = P.Core.Event_Emitter.extend(
 
         return this;
     }
-} );
+}

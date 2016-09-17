@@ -12,13 +12,13 @@
     <div class="element wheel"><strong>wheel</strong></div>
 
     <!-- Pan.js -->
-    <script src="../../builds/pan-0.3.js"></script>
+    <script src="../../builds/babel/pan.min.js"></script>
 
     <script>
 
-        var mouse = new Pan.Tools.Mouse();
+        Pan.enableMouse();
 
-        mouse.on( 'move', function( position, target )
+        Pan.mouse.on( 'move', function( position, target )
         {
             console.log( 'move', position );
 
@@ -72,9 +72,11 @@
             document.querySelector( '.element.move' ).innerHTML = text.join('');
         } );
 
-        mouse.on( 'down up', function( position, target )
+        Pan.mouse.on( 'down up', function( position, target )
         {
-            console.log( 'down up', this.down );
+            console.log( 'down up', Pan.mouse.down );
+            // console.log( position);
+
 
             var text = [];
 
@@ -89,7 +91,7 @@
             text.push( 'down' );
             text.push( '</td>' );
             text.push( '<td class="value">' );
-            text.push( this.down ? 'true' : 'false' );
+            text.push( Pan.mouse.down ? 'true' : 'false' );
             text.push( '</td>' );
             text.push( '</tr>' );
 
@@ -98,9 +100,9 @@
             // Add to DOM
             document.querySelector( '.element.down' ).innerHTML = text.join('');
         } );
-        mouse.trigger( 'down' );
+        Pan.mouse.trigger( 'down' );
 
-        mouse.on( 'wheel', function( wheel )
+        Pan.mouse.on( 'wheel', function( wheel )
         {
             var text = [];
 

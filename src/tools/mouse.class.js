@@ -1,27 +1,26 @@
 /**
  * @class    Mouse
- * @author   Ariel Saldana / http://ahhriel.com
+ * @author   Ariel Saldana / http://ariel.io
  * @fires    down
  * @fires    up
  * @fires    move
  * @fires    wheel
- * @requires P.Tools.Viewport
+ * @requires Viewport
  */
-P.Tools.Mouse = P.Core.Event_Emitter.extend(
-{
-    static  : 'mouse',
-    options : {},
+let mouseInstance = null;
 
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
-    construct : function( options )
+class Mouse extends EventEmitter {
+    constructor ( options )
     {
-        this._super( options );
-
-        this.viewport         = new P.Tools.Viewport();
+        super(options);
+        
+        if (!mouseInstance) {
+            mouseInstance = this;
+        }
+        
+        this.options = {};
+        
+        this.viewport         = new Viewport();
         this.down             = false;
         this.position         = {};
         this.position.x       = 0;
@@ -33,59 +32,46 @@ P.Tools.Mouse = P.Core.Event_Emitter.extend(
         this.wheel.delta      = 0;
 
         this.listen_to_events();
-    },
-
-    /**
-     * Listen to events
-     * @return {object} Context
-     */
-    listen_to_events : function()
-    {
-        var that = this;
-
-        // Down
-        function mouse_down_handle( e )
-        {
-            that.down = true;
-
-            if( that.trigger( 'down', [ that.position, e.target ] ) === false )
+        
+        return mouseInstance;
+    }
+    
+    listen_to_events() {
+        var mouse_down_handle = (e) => {
+            this.down = true;
+            
+            if (this.trigger('down',[this.position, e.target])=== false)
             {
                 e.preventDefault();
             }
         }
-
-        // Up
-        function mouse_up_handle( e )
-        {
-            that.down = false;
-
-            that.trigger( 'up', [ that.position, e.target ] );
+        
+        var mouse_up_handle = (e) => {
+            this.down = false;
+            
+            this.trigger('up', [this.position, e.target]);
         }
-
-        // Move
-        function mouse_move_handle( e )
-        {
-            that.position.x = e.clientX;
-            that.position.y = e.clientY;
-
-            that.position.ratio.x = that.position.x / that.viewport.width;
-            that.position.ratio.y = that.position.y / that.viewport.height;
-
-            that.trigger( 'move', [ that.position, e.target ] );
+        
+        var mouse_move_handle = (e) => {
+            this.position.x = e.clientX;
+            this.position.y = e.clientY;
+            
+            this.position.ratio.x = this.position.x / this.viewport.width;
+            this.position.ratio.y = this.position.y / this.viewport.height;
+            
+            this.trigger( 'move', [ this.position, e.target]);
         }
-
-        // Wheel
-        function mouse_wheel_handle( e )
-        {
-            that.wheel.delta = e.wheelDeltaY || e.wheelDelta || - e.detail;
-
-            if( that.trigger( 'wheel', [ that.wheel ] ) === false )
+        
+        var mouse_wheel_handle = (e) => {
+            this.wheel.delta = e.wheelDeltaY || e.wheelDelta || -e.detail;
+            
+            if (this.trigger ('wheel', [this.wheel]) === false)
             {
                 e.preventDefault();
                 return false;
             }
         }
-
+        
         // Listen
         if (document.addEventListener)
         {
@@ -104,5 +90,9 @@ P.Tools.Mouse = P.Core.Event_Emitter.extend(
         }
 
         return this;
+        
+        
+        
+        
     }
-} );
+}
