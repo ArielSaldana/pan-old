@@ -26,6 +26,7 @@ gulp.task('babel', () => {
         'src/tools/mouse.class.js',
         'src/tools/ticker.class.js',
         'src/tools/viewport.class.js',
+        'src/tools/offline.class.js',
         'src/pan.class.js'
     ])
         .pipe(babel({

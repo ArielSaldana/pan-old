@@ -686,7 +686,7 @@ class Keyboard extends EventEmitter {
      * @param  {string}  input Char as string
      * @return {boolean}       True if key is down
      */
-     is_down () {
+     is_down (input) {
          return this.are_down([input]);
      }
     

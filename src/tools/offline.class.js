@@ -1,9 +1,8 @@
 /**
- * @class    ajax.class.js
+ * @class    offline.class.js
  * @author   Ariel Saldana / http://ariel.io
- * TODO:     Add support to add options to he ajax request. (Headers)
  */
-offlineInstance = null;
+let offlineInstance = null;
 
 class Offline extends EventEmitter {
 
@@ -33,8 +32,8 @@ class Offline extends EventEmitter {
     listen_to_events() {
         // online
         var change = () => {
-            console.log('change');
-            if (navigator.online) {
+
+            if (navigator.onLine) {
                 if (this.options.classes.active) {
                     this.options.classes.target.classList.remove(this.options.classes.offline);
                     this.options.classes.target.classList.add(this.options.classes.online);
@@ -55,32 +54,24 @@ class Offline extends EventEmitter {
                 }
 
                 // update status
-                this.status = 'online';
+                this.status = 'offline';
 
                 // trigger
                 this.trigger('offline');
                 this.trigger('change', [this.status]);
-
             }
-        }
 
-        function test() {
-            console.log('shit');
         }
 
         if (window.addEventListener) {
-            window.addEventListener('online', test, false);
-            window.addEventListener('offline', test, false);
+            window.addEventListener('online', change, false);
+            window.addEventListener('offline', change, false);
         }
 
         else {
             document.body.ononline = change;
             document.body.offline = change;
         }
-
-        window.addEventListener('online', function(e) {
-            console.log('fuck');
-}, false);
 
         change();
 

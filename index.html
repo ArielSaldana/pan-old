@@ -19,11 +19,21 @@
         <script src="src/pan.class.js"></script>
 
         <script>
-            Pan.offline = new Offline();
+            var ticker = new Ticker();
 
-            Pan.offline.on('change', function(status){
-                console.log(status);
-            });
+            // ticker.on('tick', function(character,keycode){
+            //     console.log(character);
+            // });
+
+        //     ticker.on( 'tick-500', function( infos )
+        // {
+        //     console.log( infos.elapsed );
+        // } );
+
+        ticker.wait( 600, function()
+        {
+            console.log('triggered after 3 frames');
+        } );
             // Pan.mouse.on('down', function(pos){
             //     console.log(pos);
             // })

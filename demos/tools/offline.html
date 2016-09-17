@@ -1,36 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Pan.js - Demo - Offline</title>
     <link rel="stylesheet" href="../src/css/style.css">
     <style>
-
-        .witness {width:200px;height:200px;color:#fff;text-transform:uppercase;text-align:center;line-height:200px;font-family:Helvetica,Arial;font-size:12px;}
-        body.offline .witness {background:#DA4711;}
-        body.offline .witness:after {content:'offline';}
-        body.online .witness {background:#8DD522;}
-        body.online .witness:after {content:'online';}
-
+        .witness {
+            width: 200px;
+            height: 200px;
+            color: #fff;
+            text-transform: uppercase;
+            text-align: center;
+            line-height: 200px;
+            font-family: Helvetica, Arial;
+            font-size: 12px;
+        }
+        
+        body.offline .witness {
+            background: #DA4711;
+        }
+        
+        body.offline .witness:after {
+            content: 'offline';
+        }
+        
+        body.online .witness {
+            background: #8DD522;
+        }
+        
+        body.online .witness:after {
+            content: 'online';
+        }
     </style>
 </head>
+
 <body>
 
     <div class="witness"></div>
 
     <!-- Pan.js -->
-    <script src="../../builds/pan-0.3.js"></script>
+    <script src="../../builds/babel/pan.min.js"></script>
 
     <script>
-
-        var offline = new Pan.Tools.Offline();
+        var offline = new Offline();
 
         // Listen to change
         offline.on( 'change', function( status )
         {
             console.log( 'status : ' + status );
         } );
-
     </script>
 </body>
+
 </html>
