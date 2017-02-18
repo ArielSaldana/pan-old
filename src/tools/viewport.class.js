@@ -13,6 +13,12 @@ import { Detector } from './detector.class';
 let viewportInstance = null;
 
 export class Viewport extends EventEmitter {
+
+    /**
+     * Initialise and merge options
+     * @constructor
+     * @param {object} options Properties to merge with defaults
+     */
     constructor(options) {
         super(options);
         
@@ -23,6 +29,9 @@ export class Viewport extends EventEmitter {
         this.options = {};
         this.options.disable_hover_on_scroll = false;
         this.options.initial_triggers = [ 'resize', 'scroll'];
+
+        if (options)
+            Object.assign(this.options, options);
         
         this.ticker             = new Ticker();
         this.detector           = new Detector();
@@ -50,6 +59,10 @@ export class Viewport extends EventEmitter {
         return viewportInstance;
     }
     
+    /**
+     * Init events
+     * @return {object} Context
+     */
     init_events() {
         
         var resize_callback = () => {

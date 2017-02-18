@@ -1,6 +1,9 @@
 /**
  * @class    offline.class.js
  * @author   Ariel Saldana / http://ariel.io
+ * @fires    online
+ * @fires    offline
+ * @fires    change
  */
 
 import { EventEmitter } from '../core/event_emitter.class';
@@ -9,6 +12,11 @@ let offlineInstance = null;
 
 export class Offline extends EventEmitter {
 
+    /**
+     * Initialise and merge options
+     * @constructor
+     * @param {object} options Properties to merge with defaults
+     */
     constructor(options) {
         super(options);
 
@@ -32,6 +40,10 @@ export class Offline extends EventEmitter {
         return offlineInstance;
     }
 
+    /**
+     * Listen to events
+     * @return {object} Context
+     */
     listen_to_events() {
         // online
         var change = () => {
