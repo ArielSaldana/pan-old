@@ -87,6 +87,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
+	var _history = __webpack_require__(10);
+
+	Object.defineProperty(exports, 'History', {
+	  enumerable: true,
+	  get: function get() {
+	    return _history.History;
+	  }
+	});
+
 	var _keyboard = __webpack_require__(4);
 
 	Object.defineProperty(exports, 'Keyboard', {
@@ -1859,6 +1868,173 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.Tools = Tools;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.History = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _event_emitter = __webpack_require__(1);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @class    History
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @author   Ariel Saldana / http://ariel.io
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+	var historyInstance = null;
+
+	var History = exports.History = function (_EventEmitter) {
+	    _inherits(History, _EventEmitter);
+
+	    /**
+	     * Initialise 
+	     * @constructor
+	     */
+	    function History() {
+	        var _ret;
+
+	        _classCallCheck(this, History);
+
+	        var _this = _possibleConstructorReturn(this, (History.__proto__ || Object.getPrototypeOf(History)).call(this));
+
+	        _this.history = window.history;
+	        _this.baseUrl = window.location;
+
+	        _this.url = '';
+	        _this.data = '';
+
+	        if (!historyInstance) historyInstance = _this;
+
+	        return _ret = historyInstance, _possibleConstructorReturn(_this, _ret);
+	    }
+
+	    /**
+	     * Evit a URL changed event_emitter
+	     * @return {object} Context
+	     */
+
+
+	    _createClass(History, [{
+	        key: 'emitEvent',
+	        value: function emitEvent() {
+	            this.trigger('change', [this.url, this.data]);
+	            return this;
+	        }
+
+	        /**
+	         * Create a URL Object
+	         * @param {string} path URL path
+	         * @return {object} URL context 
+	         */
+
+	    }, {
+	        key: 'createUrl',
+	        value: function createUrl(path) {
+	            return new URL(path, this.baseUrl.href);
+	        }
+
+	        /** 
+	         * Move forward or backwards in history
+	         * @param {integer} amount The amount to go forward or backwards
+	         * @return {object} Context
+	         */
+
+	    }, {
+	        key: 'go',
+	        value: function go(amount) {
+	            if (!amount) throw new Error("missing ammount");
+	            this.history.go(amount);
+
+	            return this;
+	        }
+
+	        /**
+	         * Move backwards in History
+	         * @return {object} Context
+	         */
+
+	    }, {
+	        key: 'goBack',
+	        value: function goBack() {
+	            this.go(-1);
+	            return this;
+	        }
+
+	        /**
+	         * Move forward in History
+	         * @return {object} Context
+	         */
+
+	    }, {
+	        key: 'goFoward',
+	        value: function goFoward() {
+	            this.go(1);
+	            return this;
+	        }
+
+	        /**
+	         * Returns the number of entries in History
+	         * @return {integer} length
+	         */
+
+	    }, {
+	        key: 'getNumberOfEntries',
+	        value: function getNumberOfEntries() {
+	            return this.history.length;
+	        }
+
+	        /**
+	         * Push state to history, use this if you want to record the state to history.
+	         * @param {object} stateObj A State object
+	         * @param {string} title The title of the page
+	         * @param {string} url The url
+	         * @return {object} Context
+	         */
+
+	    }, {
+	        key: 'push',
+	        value: function push(stateObj, title, url) {
+
+	            // update page title
+	            if (title) document.title = title;
+
+	            this.history.pushState(stateObj, title, url);
+
+	            this.url = this.createUrl(url);
+	            this.emitEvent();
+
+	            return this;
+	        }
+
+	        /**
+	         * replace state to history, using this method wont record the url change in history.
+	         * @param {object} stateObj A State object
+	         * @param {string} title The title of the page
+	         * @param {string} url The url
+	         * @return {object} Context
+	         */
+
+	    }, {
+	        key: 'replace',
+	        value: function replace(stateObj, title, url) {
+	            return this;
+	        }
+	    }]);
+
+	    return History;
+	}(_event_emitter.EventEmitter);
 
 /***/ }
 /******/ ])

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Pan.js - Demo - Ajax</title>
+  <link rel="stylesheet" href="../src/css/style.css">
+
+</head>
+
+<body>
+  <button onClick="clicked()">Click me</button>
+  <!-- Pan.js -->
+  <script src="../../builds/pan.min.js"></script>
+  <script>
+
+    var clicked = function() {
+      hist.push(null, "hello", './history.html');
+    }
+
+    var hist = new Pan.History();
+
+
+    hist.on('change', function(url, data) {
+      console.log('hist change', url);
+    });
+
+  </script>
+</body>
+
+</html>
