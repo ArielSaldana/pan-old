@@ -10,12 +10,6 @@ import { EventEmitter } from '../core/event_emitter.class';
 let keyboardInstance = null;
 
 export class Keyboard extends EventEmitter {
-
-    /**
-     * Initialise and merge options
-     * @constructor
-     * @param {object} options Properties to merge with defaults
-     */
     constructor(options) {
         super(options);
         
@@ -24,11 +18,6 @@ export class Keyboard extends EventEmitter {
         }
         
         this.options = {};
-
-        if (options)
-            Object.assign(this.options, options);
-
-
         this.keycode_names = {
             91 : 'cmd',
             17 : 'ctrl',

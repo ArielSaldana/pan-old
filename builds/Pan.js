@@ -452,11 +452,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ajaxInstance = null;
 
 	var Ajax = exports.Ajax = function () {
-
-	    /**
-	     * Initialize
-	     * @constructor
-	     */
 	    function Ajax() {
 	        _classCallCheck(this, Ajax);
 
@@ -469,7 +464,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Get content
 	     * @return {promise} Context
 	     */
-
 
 	    _createClass(Ajax, [{
 	        key: 'get',
@@ -521,35 +515,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.Detector = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @class  Detector
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @author Ariel Saldana / http://ariel.io
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+	var _event_emitter = __webpack_require__(1);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @class  Detector
-	 * @author Ariel Saldana / http://ariel.io
-	 */
 
 	var detectorInstance = null;
 
 	var Detector = exports.Detector = function () {
-
-	    /**
-	     * Initialise and merge options
-	     * @constructor
-	     * @param {object} options Properties to merge with defaults
-	     */
 	    function Detector(options) {
 	        _classCallCheck(this, Detector);
 
+	        // super(options);
 	        if (!detectorInstance) {
 	            detectorInstance = this;
 	        }
@@ -557,20 +547,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.options = {};
 	        this.options.targets = ['html'];
 
-	        if (options) this.options = Object.assign(this.options, options);
-
 	        // Init
 	        this.init_detection();
 	        this.init_classes();
 
 	        return detectorInstance;
 	    }
-
-	    /**
-	     * Detect engine, browser, system and feature in a specified list and store in 'detect' property
-	     * @return {object} Context
-	     */
-
 
 	    _createClass(Detector, [{
 	        key: 'init_detection',
@@ -736,12 +718,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.features = features;
 	            this.categories = ['engine', 'browser', 'system', 'features'];
 	        }
-
-	        /**
-	         * Add detected informations to the DOM (on <html> by default)
-	         * @return {object} Context
-	         */
-
 	    }, {
 	        key: 'init_classes',
 	        value: function init_classes() {
@@ -858,11 +834,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Keyboard = exports.Keyboard = function (_EventEmitter) {
 	    _inherits(Keyboard, _EventEmitter);
 
-	    /**
-	     * Initialise and merge options
-	     * @constructor
-	     * @param {object} options Properties to merge with defaults
-	     */
 	    function Keyboard(options) {
 	        var _ret;
 
@@ -875,9 +846,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        _this.options = {};
-
-	        if (options) Object.assign(_this.options, options);
-
 	        _this.keycode_names = {
 	            91: 'cmd',
 	            17: 'ctrl',
@@ -1034,11 +1002,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Mouse = exports.Mouse = function (_EventEmitter) {
 	    _inherits(Mouse, _EventEmitter);
 
-	    /**
-	     * Initialise and merge options
-	     * @constructor
-	     * @param {object} options Properties to merge with defaults
-	     */
 	    function Mouse(options) {
 	        var _ret;
 
@@ -1051,8 +1014,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        _this.options = {};
-
-	        if (options) Object.assign(_this.options, options);
 
 	        _this.viewport = new _viewport.Viewport();
 	        _this.down = false;
@@ -1069,12 +1030,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        return _ret = mouseInstance, _possibleConstructorReturn(_this, _ret);
 	    }
-
-	    /**
-	     * Listen to events
-	     * @return {object} Context
-	     */
-
 
 	    _createClass(Mouse, [{
 	        key: 'listen_to_events',
@@ -1171,11 +1126,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Viewport = exports.Viewport = function (_EventEmitter) {
 	    _inherits(Viewport, _EventEmitter);
 
-	    /**
-	     * Initialise and merge options
-	     * @constructor
-	     * @param {object} options Properties to merge with defaults
-	     */
 	    function Viewport(options) {
 	        var _ret;
 
@@ -1190,8 +1140,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this.options = {};
 	        _this.options.disable_hover_on_scroll = false;
 	        _this.options.initial_triggers = ['resize', 'scroll'];
-
-	        if (options) Object.assign(_this.options, options);
 
 	        _this.ticker = new _ticker.Ticker();
 	        _this.detector = new _detector.Detector();
@@ -1218,12 +1166,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        return _ret = viewportInstance, _possibleConstructorReturn(_this, _ret);
 	    }
-
-	    /**
-	     * Init events
-	     * @return {object} Context
-	     */
-
 
 	    _createClass(Viewport, [{
 	        key: 'init_events',
@@ -1389,23 +1331,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Ticker = exports.Ticker = function (_EventEmitter) {
 	    _inherits(Ticker, _EventEmitter);
 
-	    /**
-	     * Initialise and merge options
-	     * @constructor
-	     * @param {object} options Properties to merge with defaults
-	     */
-	    function Ticker(options) {
+	    function Ticker() {
 	        var _ret;
 
 	        _classCallCheck(this, Ticker);
 
-	        var _this = _possibleConstructorReturn(this, (Ticker.__proto__ || Object.getPrototypeOf(Ticker)).call(this, options));
-
-	        _this.options = {
-	            auto_run: false
-	        };
-
-	        if (options) _this.options = Object.assign(_this.options, options);
+	        var _this = _possibleConstructorReturn(this, (Ticker.__proto__ || Object.getPrototypeOf(Ticker)).call(this));
 
 	        if (!tickerInstance) {
 	            tickerInstance = _this;
@@ -1423,21 +1354,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this.waits.after = [];
 	        _this.intervals = {};
 
-	        if (_this.options.auto_run = true) _this.run();
+	        _this.run();
 	        // this.initial_triggers = ['moo', 'scroll'];
 
 	        return _ret = tickerInstance, _possibleConstructorReturn(_this, _ret);
 	    }
 
-	    /**
-	     * Reset the ticker by setting time infos to 0
-	     * @param  {boolean} run Start the ticker
-	     * @param  {ticker}  reset a ticker completely, by default reseting keeps the next interval date.
-	     * @return {object}      Context
-	     */
-
-
 	    _createClass(Ticker, [{
+	        key: 'test',
+	        value: function test() {}
+
+	        /**
+	         * Reset the ticker by setting time infos to 0
+	         * @param  {boolean} run Start the ticker
+	         * @param  {ticker}  reset a ticker completely, by default reseting keeps the next interval date.
+	         * @return {object}      Context
+	         */
+
+	    }, {
 	        key: 'reset',
 	        value: function reset(run, interval) {
 	            this.reseted = true;
@@ -1456,12 +1390,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            return this;
 	        }
-
-	        /**
-	         * Run the ticker
-	         * @return {object} Context
-	         */
-
 	    }, {
 	        key: 'run',
 	        value: function run() {
@@ -1669,13 +1597,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // return this._super( names, callback );
 	        }
-
-	        /**
-	         * Stop listening specified events
-	         * @param  {string}   names Events names (can contain namespace or be the namespace only)
-	         * @return {object}         Context
-	         */
-
 	    }, {
 	        key: 'off',
 	        value: function off(names) {
@@ -1696,6 +1617,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    if (interval) _this4.destroy_interval(interval);
 	                }
 	            });
+
+	            // super();
+	            // return this._super( names );
 	        }
 	    }]);
 
@@ -1724,9 +1648,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @class    offline.class.js
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @author   Ariel Saldana / http://ariel.io
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @fires    online
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @fires    offline
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @fires    change
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
 	var offlineInstance = null;
@@ -1734,11 +1655,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Offline = exports.Offline = function (_EventEmitter) {
 	    _inherits(Offline, _EventEmitter);
 
-	    /**
-	     * Initialise and merge options
-	     * @constructor
-	     * @param {object} options Properties to merge with defaults
-	     */
 	    function Offline(options) {
 	        var _ret;
 
@@ -1764,12 +1680,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        return _ret = offlineInstance, _possibleConstructorReturn(_this, _ret);
 	    }
-
-	    /**
-	     * Listen to events
-	     * @return {object} Context
-	     */
-
 
 	    _createClass(Offline, [{
 	        key: 'listen_to_events',

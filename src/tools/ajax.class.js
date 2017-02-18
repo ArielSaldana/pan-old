@@ -10,10 +10,6 @@ let ajaxInstance = null;
 
 export class Ajax {
     
-    /**
-     * Initialize
-     * @constructor
-     */
     constructor () {
         
         if (!ajaxInstance)
@@ -26,6 +22,7 @@ export class Ajax {
      * Get content
      * @return {promise} Context
      */
+
     get(url) {
         return new Promise(
             function (resolve, reject) {
@@ -54,6 +51,7 @@ export class Ajax {
      * Get a JSON object
      * @return {promise} Context
      */
+
     getJson(url) {
         return new Promise(
             (resolve, reject) => {
@@ -68,5 +66,7 @@ export class Ajax {
                 )
             }
         )
+
     }
+    
 }
