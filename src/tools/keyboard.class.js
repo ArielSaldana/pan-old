@@ -4,9 +4,12 @@
  * @fires  down
  * @fires  up
  */
+
+import { EventEmitter } from '../core/event_emitter.class';
+
 let keyboardInstance = null;
 
-class Keyboard extends EventEmitter {
+export class Keyboard extends EventEmitter {
     constructor(options) {
         super(options);
         

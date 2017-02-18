@@ -2,9 +2,12 @@
  * @class    offline.class.js
  * @author   Ariel Saldana / http://ariel.io
  */
+
+import { EventEmitter } from '../core/event_emitter.class';
+
 let offlineInstance = null;
 
-class Offline extends EventEmitter {
+export class Offline extends EventEmitter {
 
     constructor(options) {
         super(options);

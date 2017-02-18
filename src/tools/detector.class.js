@@ -2,9 +2,12 @@
  * @class  Detector
  * @author Ariel Saldana / http://ariel.io
  */
+
+import { EventEmitter } from '../core/event_emitter.class';
+
 let detectorInstance = null;
 
-class Detector {
+export class Detector {
     constructor (options) {
         // super(options);
         if (!detectorInstance) {

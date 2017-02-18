@@ -3,7 +3,7 @@
  * @author Ariel Saldana / http://ahhriel.com
  */
 
-class EventEmitter {
+export class EventEmitter {
 
     /**
      * Initialise and merge options
@@ -11,8 +11,13 @@ class EventEmitter {
      * @param {object} options Properties to merge with defaults
      */
     constructor(options) {
+
+        // if (eventEmitterInstance != null)
+            // return eventEmitterInstance;
         this.callbacks = {};
         this.callbacks.base = {};
+
+        return this;
     }
 
     /**

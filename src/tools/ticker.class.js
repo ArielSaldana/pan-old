@@ -2,9 +2,12 @@
  * @class    Ticker
  * @author   Ariel Saldana / http://ariel.io
  */
+
+import { EventEmitter } from '../core/event_emitter.class';
+
 let tickerInstance = null;
 
-class Ticker extends EventEmitter {
+export class Ticker extends EventEmitter {
     constructor() {
         super();
         
@@ -23,12 +26,15 @@ class Ticker extends EventEmitter {
         this.waits.before           = [];
         this.waits.after            = [];
         this.intervals              = {};
-        
-        
+
         this.run();
         // this.initial_triggers = ['moo', 'scroll'];
         
         return tickerInstance;
+    }
+
+    test() {
+
     }
     
     /**

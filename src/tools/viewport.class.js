@@ -5,9 +5,14 @@
  * @fires    scroll
  * @requires Ticker
  */
+
+import { EventEmitter } from '../core/event_emitter.class';
+import { Ticker } from './ticker.class';
+import { Detector } from './detector.class';
+
 let viewportInstance = null;
 
-class Viewport extends EventEmitter {
+export class Viewport extends EventEmitter {
     constructor(options) {
         super(options);
         

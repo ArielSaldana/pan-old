@@ -2,28 +2,15 @@
  * @class    pan
  * @author   Ariel Saldana / http://ariel.io
  */
-var Pan = {};
 
-Pan.enableMouse = function(){
-    Pan.mouse = new Mouse();
-}
+export { EventEmitter } from './core/event_emitter.class';
 
-Pan.enableKeyboard = function(){
-    Pan.keyboard = new Keyboard();
-}
+export { Ajax } from './tools/ajax.class';
+export { Detector } from './tools/detector.class';
+export { Keyboard } from './tools/keyboard.class';
+export { Mouse } from './tools/mouse.class';
+export { Offline } from './tools/offline.class';
+export { Ticker } from './tools/ticker.class';
+export { Viewport } from './tools/viewport.class';
 
-Pan.enableViewport = function(){
-    Pan.viewport = new Viewport();
-}
-
-Pan.enableTicker = function(){
-    Pan.ticker = new Ticker();
-}
-
-
-Pan.enableTools = function() {
-    Pan.viewport = new Viewport();
-    Pan.keyboard = new Keyboard();
-    Pan.mouse = new Mouse();
-    Pan.ticker = new Ticker();
-}
+export { Tools } from './tools/tools.class';

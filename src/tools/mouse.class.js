@@ -7,9 +7,13 @@
  * @fires    wheel
  * @requires Viewport
  */
+
+import { EventEmitter } from '../core/event_emitter.class';
+import { Viewport } from './viewport.class';
+
 let mouseInstance = null;
 
-class Mouse extends EventEmitter {
+export class Mouse extends EventEmitter {
     constructor ( options )
     {
         super(options);

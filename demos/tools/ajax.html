@@ -1,37 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Pan.js - Demo - Ajax</title>
-    <link rel="stylesheet" href="../src/css/style.css">
-    <style>
+  <meta charset="UTF-8">
+  <title>Pan.js - Demo - Ajax</title>
+  <link rel="stylesheet" href="../src/css/style.css">
+  <style>
 
-    </style>
+  </style>
 </head>
+
 <body>
+  <!-- Pan.js -->
+  <script src="../../builds/pan.min.js"></script>
+  <script>
+    var ajax = new Pan.Ajax();
 
-    <!-- Pan.js -->
-    <script src="../../builds/babel/pan.min.js"></script>
-
-    <script>
-    var ajax = new Pan.Tools.Ajax();
-
-
-    ajax.getJson('http://jsonplaceholder.typicode.com/posts/1', function(err, callback){
-      if (!err) {
-        console.log(callback);
+    ajax.getJson('http://jsonplaceholder.typicode.com/posts/1').then(
+      (value) => {
+        console.log(value);
+      },
+      function (reason) {
+        console.error(reason);
       }
-    });
+    )
 
-    ajax.getJson('http://jsonplaceholder.typicode.com/comments?postId=1', function(err, callback){
-      if (!err) {
-        console.log(callback);
+    ajax.getJson('http://jsonplaceholder.typicode.com/comments?postId=1').then(
+      (value) => {
+        console.log(value);
+      },
+      function (reason) {
+        console.error(reason);
       }
-    });
-    // console.log(ajax.getJson('http://jsonplaceholder.typicode.com/posts/1').request)
-    // ajax.getJson('http://unreal.io/work');
-    // ajax.getJson('./browser.html');
-
-    </script>
+    )
+  </script>
 </body>
+
 </html>
