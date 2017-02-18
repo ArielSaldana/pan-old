@@ -14,6 +14,12 @@ import { Viewport } from './viewport.class';
 let mouseInstance = null;
 
 export class Mouse extends EventEmitter {
+
+    /**
+     * Initialise and merge options
+     * @constructor
+     * @param {object} options Properties to merge with defaults
+     */
     constructor ( options )
     {
         super(options);
@@ -23,6 +29,9 @@ export class Mouse extends EventEmitter {
         }
         
         this.options = {};
+
+        if (options) 
+            Object.assign(this.options, options);
         
         this.viewport         = new Viewport();
         this.down             = false;
@@ -40,6 +49,10 @@ export class Mouse extends EventEmitter {
         return mouseInstance;
     }
     
+    /**
+     * Listen to events
+     * @return {object} Context
+     */
     listen_to_events() {
         var mouse_down_handle = (e) => {
             this.down = true;

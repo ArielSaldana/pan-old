@@ -3,19 +3,25 @@
  * @author Ariel Saldana / http://ariel.io
  */
 
-import { EventEmitter } from '../core/event_emitter.class';
-
 let detectorInstance = null;
 
 export class Detector {
+
+    /**
+     * Initialise and merge options
+     * @constructor
+     * @param {object} options Properties to merge with defaults
+     */
     constructor (options) {
-        // super(options);
         if (!detectorInstance) {
             detectorInstance = this;
         }
         
         this.options = {};
         this.options.targets = ['html'];
+
+        if (options)
+            this.options = Object.assign(this.options, options);
         
         // Init
         this.init_detection();
@@ -24,6 +30,10 @@ export class Detector {
         return detectorInstance;
     }
     
+    /**
+     * Detect engine, browser, system and feature in a specified list and store in 'detect' property
+     * @return {object} Context
+     */
     init_detection () {
         // Prepare
         var engine = {
@@ -220,6 +230,10 @@ export class Detector {
         this.categories = [ 'engine', 'browser', 'system', 'features' ]; 
     }
     
+    /**
+     * Add detected informations to the DOM (on <html> by default)
+     * @return {object} Context
+     */
     init_classes() {
         // Don't add
         if( !this.options.targets || this.options.targets.length === 0 )
