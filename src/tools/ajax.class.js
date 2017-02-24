@@ -9,7 +9,7 @@ import { EventEmitter } from '../core/event_emitter.class';
 let ajaxInstance = null;
 
 export class Ajax {
-    
+
     /**
      * Initialize
      * @constructor
@@ -45,6 +45,7 @@ export class Ajax {
                     reject(new Error(
                         'XMLHttpRequest Error: ' + this.statusText));
                 };
+
                 request.open('GET', url);
                 request.send();
             });

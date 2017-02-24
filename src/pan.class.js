@@ -12,6 +12,7 @@ export { Keyboard } from './tools/keyboard.class';
 export { Mouse } from './tools/mouse.class';
 export { Offline } from './tools/offline.class';
 export { Ticker } from './tools/ticker.class';
+export { Router } from './tools/router.class';
 export { Viewport } from './tools/viewport.class';
 
 

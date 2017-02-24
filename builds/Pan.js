@@ -132,6 +132,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
+	var _router = __webpack_require__(11);
+
+	Object.defineProperty(exports, 'Router', {
+	  enumerable: true,
+	  get: function get() {
+	    return _router.Router;
+	  }
+	});
+
 	var _viewport = __webpack_require__(6);
 
 	Object.defineProperty(exports, 'Viewport', {
@@ -499,6 +508,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                request.onerror = function () {
 	                    reject(new Error('XMLHttpRequest Error: ' + this.statusText));
 	                };
+
 	                request.open('GET', url);
 	                request.send();
 	            });
@@ -1928,8 +1938,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _createClass(History, [{
 	        key: 'emitEvent',
-	        value: function emitEvent() {
-	            this.trigger('change', [this.url, this.data]);
+	        value: function emitEvent(obj) {
+	            this.trigger('change', [this.url, obj]);
 	            return this;
 	        }
 
@@ -2010,10 +2020,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // update page title
 	            if (title) document.title = title;
 
-	            this.history.pushState(stateObj, title, url);
+	            this.history.pushState(null, title, url);
 
 	            this.url = this.createUrl(url);
-	            this.emitEvent();
+	            this.emitEvent(stateObj);
 
 	            return this;
 	        }
@@ -2035,6 +2045,167 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return History;
 	}(_event_emitter.EventEmitter);
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.Router = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _history = __webpack_require__(10);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @class    Router
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @author   Ariel Saldana / http://ariel.io
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * TODO:     incrimentaldom example. in router.html on change!
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+	var routerInstance = null;
+
+	var Router = exports.Router = function (_History) {
+	    _inherits(Router, _History);
+
+	    /**
+	     * Initialize
+	     * @constructor
+	     */
+	    function Router(options) {
+	        var _ret;
+
+	        _classCallCheck(this, Router);
+
+	        var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this));
+
+	        if (!routerInstance) routerInstance = _this;
+
+	        _this.options = {
+	            routerLinks: {
+	                selector: "pan-link",
+	                preventDefault: true
+	            },
+
+	            routes: []
+	        };
+
+	        if (options) Object.assign(_this.options, options);
+
+	        _this.routes = {};
+
+	        _this.initLinks();
+	        _this.initRoutes();
+
+	        return _ret = routerInstance, _possibleConstructorReturn(_this, _ret);
+	    }
+
+	    // consider moving this to Pan.hash(), instead of in this class.
+
+
+	    _createClass(Router, [{
+	        key: 'hash',
+	        value: function hash(str) {
+	            var hash = 0,
+	                i,
+	                chr,
+	                len;
+	            if (str.length === 0) return hash;
+	            for (i = 0, len = str.length; i < len; i++) {
+	                chr = str.charCodeAt(i);
+	                hash = (hash << 5) - hash + chr;
+	                hash |= 0; // Convert to 32bit integer
+	            }
+	            return hash;
+	        }
+	    }, {
+	        key: 'initRoutes',
+	        value: function initRoutes() {
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+
+	            try {
+	                for (var _iterator = this.options.routes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var route = _step.value;
+
+	                    var URL = this.createUrl(route.path);
+	                    var hash = this.hash(URL.pathname);
+	                    this.routes[hash] = route;
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'initLinks',
+	        value: function initLinks() {
+	            var _this2 = this;
+
+	            var links = document.querySelectorAll('[pan-link]');
+
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
+
+	            try {
+	                for (var _iterator2 = links[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var link = _step2.value;
+
+	                    link.addEventListener('click', function (e) {
+	                        e.preventDefault();
+
+	                        _this2.route(e.srcElement.pathname);
+	                    });
+	                }
+	            } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'route',
+	        value: function route(path) {
+	            var hash = this.hash(path);
+	            var route = this.routes[hash];
+
+	            if (route == undefined) console.warn("That is not a defined route.");else {
+	                this.push(route, route.title, route.path);
+	            }
+	        }
+	    }]);
+
+	    return Router;
+	}(_history.History);
 
 /***/ }
 /******/ ])

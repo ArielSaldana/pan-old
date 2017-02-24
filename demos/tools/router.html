@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Demo - Ajax</title>
+    <link rel="stylesheet" href="../src/css/style.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div>
+        <ul>
+            <li><a pan-link href="/tools/router.html">Home</a></li>
+            <li><a pan-link href="/about">About</a></li>
+            <li><a pan-link href="/settings">Settings</a></li>
+        </ul>
+        <div id="someId"></div>
+    </div>
+    <!-- Pan.js -->
+    <script src="../../builds/pan.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/incrementaldom/0.5.1/incremental-dom-min.js"></script>
+    <script>
+        class testElem {
+            constructor() {
+                this.selector = document.getElementById('someId');
+                this._patch = IncrementalDOM.patch,
+                    this.elementOpen = IncrementalDOM.elementOpen,
+                    this.elementVoid = IncrementalDOM.elementVoid,
+                    this.elementClose = IncrementalDOM.elementClose,
+                    this.text = IncrementalDOM.text;
+
+                this.data = {
+                    text: 'Testing',
+                    someCondition: true
+                };
+
+                this.ajax = new Pan.Ajax();
+
+                this.onInit();
+
+            }
+
+            updateData(obj) {
+                if (typeof(obj) === "object" || typeof(obj) === Object ) {
+                    for (var key in obj) {
+                        if (obj.hasOwnProperty(key)) {
+                            this.data[key] = obj[key];
+                        }
+                    }
+                }
+                this.patch();
+            }
+
+            onInit() {
+                this.ajax.getJson('/src/data/test.json').then(
+                    (value) => {
+                        this.data = value;
+                    },
+                    function (reason) {
+                        console.error(reason);
+                    }
+                )
+
+            }
+
+            render(data) {
+                this.elementOpen('div');
+                this.text("You are : " + data.firstname + " " + data.lastname + ", age : " + data.age);
+                this.elementClose('div');
+            }
+
+            patch() {
+                this._patch(this.selector, () => {
+                    this.render(this.data);
+                });
+            }
+        }
+    </script>
+    <script>
+        var te = new testElem();
+
+        var router = new Pan.Router({
+            routes: [{
+                    path: "/tools/router.html",
+                    title: "Home page",
+                    component: te
+                },
+                {
+                    path: "/about",
+                    title: "About Page",
+                    component: null
+                }
+            ]
+        });
+
+        router.on('change', (one, routerObj) => {
+            routerObj.component.patch();
+            routerObj.component.updateData({age : 22});
+        })
+    </script>
+</body>
+
+</html>

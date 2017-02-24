@@ -32,8 +32,8 @@ export class History extends EventEmitter {
      * Evit a URL changed event_emitter
      * @return {object} Context
      */
-    emitEvent() {
-        this.trigger('change', [this.url, this.data]);
+    emitEvent(obj) {
+        this.trigger('change', [this.url, obj]);
         return this;
     }
 
@@ -98,10 +98,10 @@ export class History extends EventEmitter {
         if (title)
             document.title = title;
 
-        this.history.pushState(stateObj, title, url);
+        this.history.pushState(null, title, url);
 
         this.url = this.createUrl(url);
-        this.emitEvent();
+        this.emitEvent(stateObj);
 
         return this;
     }

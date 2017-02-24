@@ -16,6 +16,17 @@
   <script>
     var ajax = new Pan.Ajax();
 
+    
+
+    ajax.getJson('https://api.github.com/users/arielsaldana/orgs').then(
+      (value) => {
+        console.log(value);
+      },
+      function (reason) {
+        console.error(reason);
+      }
+    );
+
     ajax.getJson('http://jsonplaceholder.typicode.com/posts/1').then(
       (value) => {
         console.log(value);
