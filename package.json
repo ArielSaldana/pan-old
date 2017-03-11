@@ -14,8 +14,8 @@
     "express" : "*"
   },
   "scripts": {
-    "build-full": "PROD_ENV=0 node node_modules/webpack/bin/webpack --watch",
-    "build-min" : "PROD_ENV=1 node node_modules/webpack/bin/webpack --watch",
+    "build-full": "node node_modules/webpack/bin/webpack --watch",
+    "build-min" : "node node_modules/webpack/bin/webpack --prod=1 --watch",
     "build": "npm run build-full | npm run build-min"
   },
   "repository": {

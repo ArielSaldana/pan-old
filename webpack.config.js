@@ -1,22 +1,21 @@
 var path = require("path");
 var webpack = require('webpack');
 
-var PROD = JSON.parse(process.env.PROD_ENV || '0');
+if (process.argv[2])
+    var PROD = true
 
 module.exports = {
     entry: {
         Pan: "./src/pan.class.js"
-	},
+    },
 
     output: {
-		path: path.join(__dirname, "builds"),
-		filename: PROD ? "[Name].min.js" : "[name].js",
+        path: path.join(__dirname, "builds"),
+        filename: PROD ? "[Name].min.js" : "[name].js",
         library: ["[name]"],
-		libraryTarget: "umd"
-	},
+        libraryTarget: "umd"
+    },
     externals: {
-        // require("jquery") is external and available
-        //  on the global var jQuery
         "P": "Pan"
     },
 
