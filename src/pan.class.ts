@@ -15,5 +15,4 @@ export { Ticker } from './tools/ticker.class';
 export { Router } from './tools/router.class';
 export { Viewport } from './tools/viewport.class';
 
-
 export { Tools } from './tools/tools.class';

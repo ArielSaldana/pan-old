@@ -17,7 +17,8 @@
   "scripts": {
     "build-full": "node_modules/.bin/webpack",
     "build-min": "node_modules/.bin/webpack --env=1",
-    "build": "npm run build-full | npm run build-min"
+    "build": "npm run build-full | npm run build-min",
+    "watch": "node_modules/.bin/webpack --watch"
   },
   "repository": {
     "type": "git",
