@@ -1,8 +1,8 @@
 {
-  "name": "pan",
-  "version": "0.0.1",
-  "description": "Pan.js\r ========",
-  "main": "webpack.config.js",
+  "name": "pan.js",
+  "version": "0.0.2",
+  "description": "Framework to help develop well structured web apps",
+  "main": "builds/Pan.min.js",
   "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -15,8 +15,8 @@
     "webpack": "^2.3.3"
   },
   "scripts": {
-    "build-full": "PROD_ENV=0 node node_modules/webpack/bin/webpack --watch",
-    "build-min": "PROD_ENV=1 node node_modules/webpack/bin/webpack --watch",
+    "build-full": "node_modules/.bin/webpack",
+    "build-min": "node_modules/.bin/webpack --env=1",
     "build": "npm run build-full | npm run build-min"
   },
   "repository": {
