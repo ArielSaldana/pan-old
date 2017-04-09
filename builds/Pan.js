@@ -2125,13 +2125,12 @@ var Component = exports.Component = function () {
                     this.props[key] = props[key];
                 }
             }
-            console.log(this.props);
             this.update();
         }
     }, {
         key: "update",
         value: function update() {
-            (0, _pandom.patch)(this.node, this.render());
+            this.node = (0, _pandom.patch)(this.node, this.render());
         }
     }, {
         key: "findRefs",

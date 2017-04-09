@@ -1,7 +1,7 @@
 // TODO : new component functionality.
 
-import { h, patch } from '../dom/pandom.ts';
-import { thunk } from '../dom/thunk.ts';
+import { h, patch } from '../dom/pandom';
+import { thunk } from '../dom/thunk';
 
 export abstract class Component {
 
@@ -64,13 +64,12 @@ export abstract class Component {
                 this.props[key] = props[key];
             }
         }
-        console.log(this.props);
         this.update()
     }
 
     
     update() {
-        patch(this.node, this.render());
+        this.node = patch(this.node, this.render());
     }
 
     findRefs(node) {

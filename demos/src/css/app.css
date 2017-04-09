@@ -4,6 +4,7 @@ div.player-app {
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 1000;
 }
 
 div.player-modal {
@@ -11,7 +12,7 @@ div.player-modal {
     height: 80px;
     width: 90%;
     max-width: 800px;
-    background: purple;
+    background: rgba(173, 173, 173, 0.1);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -25,11 +26,58 @@ div.player-modal {
     display: flex;
 }
 
-.player div.play {
+.player div.play-control {
     flex: 0 0 80px;
 }
 
-.player div {
+.player > div {
     flex : 1;
-    padding:0 20px;
+}
+
+div.progress { 
+    padding-right:30px;
+}
+
+div.play-control .play, div.play-control .pause {
+    transition: all .2s ease-in-out;
+    position:absolute;
+}
+
+div.play-control div.control-buttons {
+    width: 26px;
+    height: 26px;
+    position: relative;
+    margin: 0 auto;
+    padding: 27px;
+}
+
+.hide {
+    opacity: 0;
+}
+
+.progress {
+    position:relative;
+}
+.progress svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    /* bottom: 50%; */
+    transform: translate(-50%);
+}
+
+div.progress-holder, div.progress-full {
+    height:100%;
+}
+div.progress-full, div.progress-loader {
+    position: relative;
+}
+
+svg.progress rect {
+    -webkit-transition: width .500s; /* For Safari 3.1 to 6.0 */
+    transition: width .500s;
+}
+
+div.play-control svg {
 }
