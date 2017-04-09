@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pan.js - Demo - Ajax</title>
+    <link rel="stylesheet" href="../src/css/app.css">
+    <style>
+        body {
+            margin: 0;
+        }
+        #loading {
+            /*background: #17141F;*/
+            background: #1d1d1d;
+            width: 100vw;
+            height: 100vh;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                    justify-content: center;
+            -webkit-box-align: center;
+                -ms-flex-align: center;
+                    align-items: center;
+            -webkit-transition: all 500ms ease;
+                transition: all 500ms ease;
+            z-index: 10000;
+        }
+        .app-mount-loading-container {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        position: relative;
+        -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+        }
+        .app-mount-loading-container .loading-square {
+        position: relative;
+        }
+        .app-mount-loading-container .loading-square::before {
+        content: '';
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        /*background: #EFEAF7;*/
+        background: #888888;
+        -webkit-animation-name: app-mount-loading-square-2;
+                animation-name: app-mount-loading-square-2;
+        -webkit-animation-duration: 1.8s;
+                animation-duration: 1.8s;
+        -webkit-animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+                animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+        -webkit-animation-iteration-count: infinite;
+                animation-iteration-count: infinite;
+        -webkit-transform: translateX(32px);
+                transform: translateX(32px);
+        }
+        .app-mount-loading-container .loading-square::after {
+        content: '';
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        /*background: #7E5EB9;*/
+        background: #ffd700;
+        
+        -webkit-animation-name: app-mount-loading-square-1;
+                animation-name: app-mount-loading-square-1;
+        -webkit-animation-duration: 1.8s;
+                animation-duration: 1.8s;
+        -webkit-animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+                animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+        -webkit-animation-iteration-count: infinite;
+                animation-iteration-count: infinite;
+        }
+        .app-mount-loading-container .loading-square.loading-square-1 {
+        -webkit-transform: rotate(-90deg);
+                transform: rotate(-90deg);
+        }
+        .app-mount-loading-container .loading-square.loading-square-1::before {
+        -webkit-animation-delay: -0.45s;
+                animation-delay: -0.45s;
+        }
+        .app-mount-loading-container .loading-square.loading-square-1::after {
+        -webkit-animation-delay: -0.19286s;
+                animation-delay: -0.19286s;
+        }
+        .app-mount-loading-container .loading-square.loading-square-2 {
+        -webkit-transform: rotate(-180deg);
+                transform: rotate(-180deg);
+        }
+        .app-mount-loading-container .loading-square.loading-square-2::before {
+        -webkit-animation-delay: -0.9s;
+                animation-delay: -0.9s;
+        }
+        .app-mount-loading-container .loading-square.loading-square-2::after {
+        -webkit-animation-delay: -0.64286s;
+                animation-delay: -0.64286s;
+        }
+        .app-mount-loading-container .loading-square.loading-square-3 {
+        -webkit-transform: rotate(-270deg);
+                transform: rotate(-270deg);
+        }
+        .app-mount-loading-container .loading-square.loading-square-3::before {
+        -webkit-animation-delay: -1.35s;
+                animation-delay: -1.35s;
+        }
+        .app-mount-loading-container .loading-square.loading-square-3::after {
+        -webkit-animation-delay: -1.09286s;
+                animation-delay: -1.09286s;
+        }
+        .app-mount-loading-container .loading-square.loading-square-4 {
+        -webkit-transform: rotate(-360deg);
+                transform: rotate(-360deg);
+        }
+        .app-mount-loading-container .loading-square.loading-square-4::before {
+        -webkit-animation-delay: -1.8s;
+                animation-delay: -1.8s;
+        }
+        .app-mount-loading-container .loading-square.loading-square-4::after {
+        -webkit-animation-delay: -1.54286s;
+                animation-delay: -1.54286s;
+        }
+        .app-mount-loading-container .loading-square.loading-square-1 {
+        left: 10.66667px;
+        top: -10.66667px;
+        }
+        .app-mount-loading-container .loading-square.loading-square-2 {
+        left: -10.66667px;
+        top: -10.66667px;
+        }
+        .app-mount-loading-container .loading-square.loading-square-3 {
+        left: -10.66667px;
+        top: 10.66667px;
+        }
+        .app-mount-loading-container .loading-square.loading-square-4 {
+        left: 10.66667px;
+        top: 10.66667px;
+        }
+
+        @-webkit-keyframes app-mount-loading-square-2 {
+        0% {
+            -webkit-transform: translateX(37.12px);
+                    transform: translateX(37.12px);
+            opacity: 0;
+        }
+        9% {
+            -webkit-transform: translateX(37.12px);
+                    transform: translateX(37.12px);
+            opacity: 0;
+        }
+        32% {
+            -webkit-transform: translateX(0);
+                    transform: translateX(0);
+            opacity: .8;
+        }
+        100% {
+            -webkit-transform: translateX(0);
+                    transform: translateX(0);
+            opacity: 0;
+        }
+        }
+
+        @keyframes app-mount-loading-square-2 {
+        0% {
+            -webkit-transform: translateX(37.12px);
+                    transform: translateX(37.12px);
+            opacity: 0;
+        }
+        9% {
+            -webkit-transform: translateX(37.12px);
+                    transform: translateX(37.12px);
+            opacity: 0;
+        }
+        32% {
+            -webkit-transform: translateX(0);
+                    transform: translateX(0);
+            opacity: .8;
+        }
+        100% {
+            -webkit-transform: translateX(0);
+                    transform: translateX(0);
+            opacity: 0;
+        }
+        }
+        @-webkit-keyframes app-mount-loading-square-1 {
+        0% {
+            -webkit-transform: translateX(0);
+                    transform: translateX(0);
+            opacity: 1;
+        }
+        25% {
+            -webkit-transform: translateX(-37.12px);
+                    transform: translateX(-37.12px);
+            opacity: 1;
+        }
+        25.01% {
+            opacity: 0;
+        }
+        100% {
+            -webkit-transform: translateX(-37.12px);
+                    transform: translateX(-37.12px);
+            opacity: 0;
+        }
+        }
+        @keyframes app-mount-loading-square-1 {
+        0% {
+            -webkit-transform: translateX(0);
+                    transform: translateX(0);
+            opacity: 1;
+        }
+        25% {
+            -webkit-transform: translateX(-37.12px);
+                    transform: translateX(-37.12px);
+            opacity: 1;
+        }
+        25.01% {
+            opacity: 0;
+        }
+        100% {
+            -webkit-transform: translateX(-37.12px);
+                    transform: translateX(-37.12px);
+            opacity: 0;
+        }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+
+    <!--<div id="loading">
+        <div class="app-mount-loading-container">
+            <span class="loading-square loading-square-4"></span>
+            <span class="loading-square loading-square-3"></span>
+            <span class="loading-square loading-square-2"></span>
+            <span class="loading-square loading-square-1"></span>
+        </div>
+    </div>-->
+    <!-- Pan.js -->
+    <script src="../../builds/pan.js"></script>
+
+
+    <script>
+        class MusicPlayer extends Pan.Component {
+            beforeMount() {
+                this.props = {
+                    playing : true
+                }
+            }
+
+            onClick(instance) {
+                // console.log(this._refs.get('playbutton'));
+            }
+
+            playButton() {
+                this.setProps({
+                    playing : !this.props.playing
+                });
+            }
+
+            render() {
+                return (Pan.createElement('div#app', {cow : 'moo'}, [
+                    Pan.createElement('div.player-app', [
+                        Pan.createElement('div.player-modal', [
+                            Pan.createElement('div.player',[
+                                Pan.createElement('div.play', {ref: 'playbutton', on : {click : (e) => { this.playButton() }}}),
+                                this.props.playing ? Pan.createElement('div.progress', `${this.props.playing}`) : null
+                            ])
+                        ])
+                    ])
+                ]));
+            }
+
+            constructor() {
+                super();
+            }
+        }
+        var musicPlayer = new MusicPlayer();
+        Pan.Render(musicPlayer, document.getElementById('app'));
+
+        // window.setInterval(function() {
+        //     timer.setProps({
+        //         time: new Date().toLocaleTimeString()
+        //     })
+        // }, 1000);
+        
+    </script>
+
+    <!--<script>
+        class Timer extends Pan.Component {
+            beforeMount() {
+                this.props = {
+                    time : new Date().toLocaleTimeString()
+                }
+            }
+
+            render() {
+                return (Pan.createElement('div#app', [
+                    Pan.createElement('h3', `Time now: ${this.props.time}`)
+                ]));
+            }
+        }
+        var timer = new Timer();
+
+        Pan.Render(timer, document.getElementById('app'));
+
+        window.setInterval(function() {
+            timer.setProps({
+                time: new Date().toLocaleTimeString()
+            })
+        }, 1000);
+        
+    </script>-->
+</body>
+
+</html>

@@ -4,6 +4,11 @@
  */
 
 export { EventEmitter } from './core/event_emitter.class';
+export { Component } from './core/component.class.ts'
+
+export { patch, h } from './dom/pandom';
+export { Render } from './core/render';
+export { createElement } from './dom/dom.utils';
 
 export { Ajax } from './tools/ajax.class';
 export { Detector } from './tools/detector.class';

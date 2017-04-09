@@ -1,8 +1,13 @@
 var path = require("path");
 var webpack = require('webpack');
 
-if (process.argv[2])
-    var PROD = true
+var PROD = false;
+
+for (let arg of process.argv) {
+    if (arg == '--env') {
+        PROD = true;
+    }
+}
 
 module.exports = {
     entry: {

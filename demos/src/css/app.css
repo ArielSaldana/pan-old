@@ -1,0 +1,35 @@
+div.player-app {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+div.player-modal {
+    margin: 0 auto;
+    height: 80px;
+    width: 90%;
+    max-width: 800px;
+    background: purple;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    border-radius: 4px;
+}
+
+.player {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.player div.play {
+    flex: 0 0 80px;
+}
+
+.player div {
+    flex : 1;
+    padding:0 20px;
+}
