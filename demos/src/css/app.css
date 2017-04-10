@@ -81,3 +81,29 @@ svg.progress rect {
 
 div.play-control svg {
 }
+
+/* bg */
+
+#background-layer {
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    overflow: hidden;
+}
+
+.smart-object {
+    position: absolute;
+    -webkit-backface-visibility: "hidden";
+    -moz-backface-visibility: "hidden";
+    -ms-backface-visibility: "hidden";
+    -o-backface-visibility: "hidden";
+    -webkit-transform-style: "flat";
+    -moz-transform-style: "flat";
+    -ms-transform-style: "flat";
+    -o-transform-style: "flat";
+
+    /*height: inherit;*/
+    /*width: inherit;*/
+}
