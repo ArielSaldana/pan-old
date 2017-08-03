@@ -4,7 +4,7 @@ var webpack = require('webpack');
 var PROD = false;
 
 for (let arg of process.argv) {
-    if (arg == '--env') {
+    if (arg == '--env=1') {
         PROD = true;
     }
 }

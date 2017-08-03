@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 26);
+/******/ 	return __webpack_require__(__webpack_require__.s = 27);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -459,7 +459,9 @@ var Detector = exports.Detector = function () {
 
             var features = {
                 touch: false,
-                media_query: false
+                media_query: false,
+                motion: false,
+                orientation: false
             };
 
             var user_agent = navigator.userAgent;
@@ -572,6 +574,8 @@ var Detector = exports.Detector = function () {
             //Detect features (Not as reliable as Modernizr)
             features.touch = !!('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch);
             features.media_query = !!(window.matchMedia || window.msMatchMedia);
+            features.motion = !!window.DeviceMotionEvent;
+            features.orientation = !!window.DeviceOrientationEvent;
 
             // Set up
             this.user_agent = user_agent;
@@ -1094,6 +1098,7 @@ var Viewport = exports.Viewport = function (_EventEmitter) {
         _this.scroll.direction.y = null;
         _this.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
         _this.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        _this.aspect_ratio = _this.height / _this.width;
         _this.pixel_ratio = window.devicePixelRatio || 1;
 
         // Init
@@ -1156,6 +1161,7 @@ var Viewport = exports.Viewport = function (_EventEmitter) {
             // Set up
             this.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
             this.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            this.aspect_ratio = this.height / this.width;
 
             // Trigger
             this.trigger('resize', [this.width, this.height]);
@@ -1254,17 +1260,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.h = exports.patch = undefined;
 
-var _snabbdom = __webpack_require__(24);
+var _snabbdom = __webpack_require__(25);
 
-var _attributes = __webpack_require__(19);
+var _attributes = __webpack_require__(20);
 
-var _class = __webpack_require__(20);
+var _class = __webpack_require__(21);
 
-var _props = __webpack_require__(22);
+var _props = __webpack_require__(23);
 
-var _style = __webpack_require__(23);
+var _style = __webpack_require__(24);
 
-var _eventlisteners = __webpack_require__(21);
+var _eventlisteners = __webpack_require__(22);
 
 var _h = __webpack_require__(5);
 
@@ -2210,6 +2216,86 @@ var Component = exports.Component = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.Gyroscope = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _event_emitter = __webpack_require__(0);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @class    Gyroscope
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @author   Ariel Saldana / http://ariel.io
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var gyroscopeInstance = null;
+
+var Gyroscope = exports.Gyroscope = function (_EventEmitter) {
+    _inherits(Gyroscope, _EventEmitter);
+
+    /**
+     * Initialise 
+     * @constructor
+     */
+    function Gyroscope(options) {
+        var _ret;
+
+        _classCallCheck(this, Gyroscope);
+
+        var _this = _possibleConstructorReturn(this, (Gyroscope.__proto__ || Object.getPrototypeOf(Gyroscope)).call(this, options));
+
+        if (!gyroscopeInstance) gyroscopeInstance = _this;
+
+        _this.options = {};
+
+        if (options) Object.assign(_this.options, options);
+
+        _this.alpha = 0;
+        _this.beta = 0;
+        _this.gamma = 0;
+
+        _this.listen_to_events();
+
+        return _ret = gyroscopeInstance, _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(Gyroscope, [{
+        key: 'listen_to_events',
+        value: function listen_to_events() {
+            var _this2 = this;
+
+            var handle_motion = function handle_motion(e) {};
+
+            var handle_orientation = function handle_orientation(e) {
+                _this2.trigger('orientation', [e.alpha, e.beta, e.gamma]);
+            };
+
+            // window.addEventListener("devicemotion", this.handle_motion, false );
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener("deviceorientation", handle_orientation, false);
+            }
+
+            // window.fireEvent("deviceorientation");
+            // window.dispatchEvent(new Event('deviceorientation'));
+        }
+    }]);
+
+    return Gyroscope;
+}(_event_emitter.EventEmitter);
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.Router = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -2363,7 +2449,7 @@ var Router = exports.Router = function (_History) {
 }(_history.History);
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2401,7 +2487,7 @@ var Tools = {
 exports.Tools = Tools;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2424,7 +2510,7 @@ function Render(element, on) {
 }
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2493,7 +2579,7 @@ function createElement(sel, b, c) {
 exports.default = createElement;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2567,7 +2653,7 @@ var htmlDomApi = exports.htmlDomApi = {
 exports.default = htmlDomApi;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2633,7 +2719,7 @@ var attributesModule = exports.attributesModule = { create: updateAttrs, update:
 exports.default = attributesModule;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2668,7 +2754,7 @@ var classModule = exports.classModule = { create: updateClass, update: updateCla
 exports.default = classModule;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2775,7 +2861,7 @@ var eventListenersModule = exports.eventListenersModule = {
 exports.default = eventListenersModule;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2812,7 +2898,7 @@ var propsModule = exports.propsModule = { create: updateProps, update: updatePro
 exports.default = propsModule;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2916,7 +3002,7 @@ var styleModule = exports.styleModule = {
 exports.default = styleModule;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2936,7 +3022,7 @@ Object.defineProperty(exports, 'h', {
     }
 });
 
-var _thunk = __webpack_require__(25);
+var _thunk = __webpack_require__(26);
 
 Object.defineProperty(exports, 'thunk', {
     enumerable: true,
@@ -2954,7 +3040,7 @@ var _is = __webpack_require__(6);
 
 var is = _interopRequireWildcard(_is);
 
-var _htmldomapi = __webpack_require__(18);
+var _htmldomapi = __webpack_require__(19);
 
 var _htmldomapi2 = _interopRequireDefault(_htmldomapi);
 
@@ -3248,7 +3334,7 @@ function init(modules, domApi) {
 }
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3308,7 +3394,7 @@ var thunk = exports.thunk = function thunk(sel, key, fn, args) {
 exports.default = thunk;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3327,12 +3413,12 @@ Object.defineProperty(exports, 'EventEmitter', {
   }
 });
 
-var _componentClass = __webpack_require__(13);
+var _component = __webpack_require__(13);
 
 Object.defineProperty(exports, 'Component', {
   enumerable: true,
   get: function get() {
-    return _componentClass.Component;
+    return _component.Component;
   }
 });
 
@@ -3351,7 +3437,7 @@ Object.defineProperty(exports, 'h', {
   }
 });
 
-var _render = __webpack_require__(16);
+var _render = __webpack_require__(17);
 
 Object.defineProperty(exports, 'Render', {
   enumerable: true,
@@ -3360,7 +3446,7 @@ Object.defineProperty(exports, 'Render', {
   }
 });
 
-var _dom = __webpack_require__(17);
+var _dom = __webpack_require__(18);
 
 Object.defineProperty(exports, 'createElement', {
   enumerable: true,
@@ -3432,7 +3518,7 @@ Object.defineProperty(exports, 'Ticker', {
   }
 });
 
-var _router = __webpack_require__(14);
+var _router = __webpack_require__(15);
 
 Object.defineProperty(exports, 'Router', {
   enumerable: true,
@@ -3450,7 +3536,16 @@ Object.defineProperty(exports, 'Viewport', {
   }
 });
 
-var _tools = __webpack_require__(15);
+var _gyroscope = __webpack_require__(14);
+
+Object.defineProperty(exports, 'Gyroscope', {
+  enumerable: true,
+  get: function get() {
+    return _gyroscope.Gyroscope;
+  }
+});
+
+var _tools = __webpack_require__(16);
 
 Object.defineProperty(exports, 'Tools', {
   enumerable: true,

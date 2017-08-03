@@ -73,7 +73,9 @@ export class Detector {
 
         var features = {
             touch       : false,
-            media_query : false
+            media_query : false,
+            motion      : false,
+            orientation : false
         };
         
         var user_agent = navigator.userAgent;
@@ -219,6 +221,8 @@ export class Detector {
         //Detect features (Not as reliable as Modernizr)
         features.touch       = !!( ( 'ontouchstart' in window ) || window.DocumentTouch && document instanceof DocumentTouch );
         features.media_query = !!( window.matchMedia || window.msMatchMedia );
+        features.motion      = !!( window.DeviceMotionEvent );
+        features.orientation = !!( window.DeviceOrientationEvent );
 
         // Set up
         this.user_agent = user_agent;

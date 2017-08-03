@@ -4,7 +4,7 @@
  */
 
 export { EventEmitter } from './core/event_emitter.class';
-export { Component } from './core/component.class.ts'
+export { Component } from './core/component.class'
 
 export { patch, h } from './dom/pandom';
 export { Render } from './core/render';
@@ -19,5 +19,6 @@ export { Offline } from './tools/offline.class';
 export { Ticker } from './tools/ticker.class';
 export { Router } from './tools/router.class';
 export { Viewport } from './tools/viewport.class';
+export { Gyroscope } from './tools/gyroscope.class';
 
 export { Tools } from './tools/tools.class';

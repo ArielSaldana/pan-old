@@ -1,24 +1,92 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Title of the document</title>
+    <title>The Saldanas</title>
     <style>
-        html, body, div, span, applet, object, iframe,
-        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-        a, abbr, acronym, address, big, cite, code,
-        del, dfn, em, img, ins, kbd, q, s, samp,
-        small, strike, strong, sub, sup, tt, var,
-        b, u, i, center,
-        dl, dt, dd, ol, ul, li,
-        fieldset, form, label, legend,
-        table, caption, tbody, tfoot, thead, tr, th, td,
-        article, aside, canvas, details, embed, 
-        figure, figcaption, footer, header, hgroup, 
-        menu, nav, output, ruby, section, summary,
-        time, mark, audio, video {
+        html,
+        body,
+        div,
+        span,
+        applet,
+        object,
+        iframe,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        blockquote,
+        pre,
+        a,
+        abbr,
+        acronym,
+        address,
+        big,
+        cite,
+        code,
+        del,
+        dfn,
+        em,
+        img,
+        ins,
+        kbd,
+        q,
+        s,
+        samp,
+        small,
+        strike,
+        strong,
+        sub,
+        sup,
+        tt,
+        var,
+        b,
+        u,
+        i,
+        center,
+        dl,
+        dt,
+        dd,
+        ol,
+        ul,
+        li,
+        fieldset,
+        form,
+        label,
+        legend,
+        table,
+        caption,
+        tbody,
+        tfoot,
+        thead,
+        tr,
+        th,
+        td,
+        article,
+        aside,
+        canvas,
+        details,
+        embed,
+        figure,
+        figcaption,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        output,
+        ruby,
+        section,
+        summary,
+        time,
+        mark,
+        audio,
+        video {
             margin: 0;
             padding: 0;
             border: 0;
@@ -27,34 +95,337 @@
             vertical-align: baseline;
         }
         /* HTML5 display-role reset for older browsers */
-        article, aside, details, figcaption, figure, 
-        footer, header, hgroup, menu, nav, section {
+        
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        hgroup,
+        menu,
+        nav,
+        section {
             display: block;
         }
+        
         body {
             line-height: 1;
         }
-        ol, ul {
+        
+        ol,
+        ul {
             list-style: none;
         }
-        blockquote, q {
+        
+        blockquote,
+        q {
             quotes: none;
         }
-        blockquote:before, blockquote:after,
-        q:before, q:after {
+        
+        blockquote:before,
+        blockquote:after,
+        q:before,
+        q:after {
             content: '';
             content: none;
         }
+        
         table {
             border-collapse: collapse;
             border-spacing: 0;
         }
+        /* loading */
+        
+        #loading {
+            /*background: #17141F;*/
+            background: #1d1d1d;
+            width: 100vw;
+            height: 100vh;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-transition: all 500ms ease;
+            transition: all 500ms ease;
+            z-index: 10000;
+            position: relative;
+        }
+        
+        .app-mount-loading-container {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            position: relative;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+        
+        .app-mount-loading-container .loading-square {
+            position: relative;
+        }
+        
+        .app-mount-loading-container .loading-square::before {
+            content: '';
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            /*background: #EFEAF7;*/
+            background: #888888;
+            -webkit-animation-name: app-mount-loading-square-2;
+            animation-name: app-mount-loading-square-2;
+            -webkit-animation-duration: 1.8s;
+            animation-duration: 1.8s;
+            -webkit-animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+            animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+            -webkit-transform: translateX(32px);
+            transform: translateX(32px);
+        }
+        
+        .app-mount-loading-container .loading-square::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            /*background: #7E5EB9;*/
+            background: #ffd700;
+            -webkit-animation-name: app-mount-loading-square-1;
+            animation-name: app-mount-loading-square-1;
+            -webkit-animation-duration: 1.8s;
+            animation-duration: 1.8s;
+            -webkit-animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+            animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-1 {
+            -webkit-transform: rotate(-90deg);
+            transform: rotate(-90deg);
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-1::before {
+            -webkit-animation-delay: -0.45s;
+            animation-delay: -0.45s;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-1::after {
+            -webkit-animation-delay: -0.19286s;
+            animation-delay: -0.19286s;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-2 {
+            -webkit-transform: rotate(-180deg);
+            transform: rotate(-180deg);
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-2::before {
+            -webkit-animation-delay: -0.9s;
+            animation-delay: -0.9s;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-2::after {
+            -webkit-animation-delay: -0.64286s;
+            animation-delay: -0.64286s;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-3 {
+            -webkit-transform: rotate(-270deg);
+            transform: rotate(-270deg);
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-3::before {
+            -webkit-animation-delay: -1.35s;
+            animation-delay: -1.35s;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-3::after {
+            -webkit-animation-delay: -1.09286s;
+            animation-delay: -1.09286s;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-4 {
+            -webkit-transform: rotate(-360deg);
+            transform: rotate(-360deg);
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-4::before {
+            -webkit-animation-delay: -1.8s;
+            animation-delay: -1.8s;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-4::after {
+            -webkit-animation-delay: -1.54286s;
+            animation-delay: -1.54286s;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-1 {
+            left: 10.66667px;
+            top: -10.66667px;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-2 {
+            left: -10.66667px;
+            top: -10.66667px;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-3 {
+            left: -10.66667px;
+            top: 10.66667px;
+        }
+        
+        .app-mount-loading-container .loading-square.loading-square-4 {
+            left: 10.66667px;
+            top: 10.66667px;
+        }
+        
+        @-webkit-keyframes app-mount-loading-square-2 {
+            0% {
+                -webkit-transform: translateX(37.12px);
+                transform: translateX(37.12px);
+                opacity: 0;
+            }
+            9% {
+                -webkit-transform: translateX(37.12px);
+                transform: translateX(37.12px);
+                opacity: 0;
+            }
+            32% {
+                -webkit-transform: translateX(0);
+                transform: translateX(0);
+                opacity: .8;
+            }
+            100% {
+                -webkit-transform: translateX(0);
+                transform: translateX(0);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes app-mount-loading-square-2 {
+            0% {
+                -webkit-transform: translateX(37.12px);
+                transform: translateX(37.12px);
+                opacity: 0;
+            }
+            9% {
+                -webkit-transform: translateX(37.12px);
+                transform: translateX(37.12px);
+                opacity: 0;
+            }
+            32% {
+                -webkit-transform: translateX(0);
+                transform: translateX(0);
+                opacity: .8;
+            }
+            100% {
+                -webkit-transform: translateX(0);
+                transform: translateX(0);
+                opacity: 0;
+            }
+        }
+        
+        @-webkit-keyframes app-mount-loading-square-1 {
+            0% {
+                -webkit-transform: translateX(0);
+                transform: translateX(0);
+                opacity: 1;
+            }
+            25% {
+                -webkit-transform: translateX(-37.12px);
+                transform: translateX(-37.12px);
+                opacity: 1;
+            }
+            25.01% {
+                opacity: 0;
+            }
+            100% {
+                -webkit-transform: translateX(-37.12px);
+                transform: translateX(-37.12px);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes app-mount-loading-square-1 {
+            0% {
+                -webkit-transform: translateX(0);
+                transform: translateX(0);
+                opacity: 1;
+            }
+            25% {
+                -webkit-transform: translateX(-37.12px);
+                transform: translateX(-37.12px);
+                opacity: 1;
+            }
+            25.01% {
+                opacity: 0;
+            }
+            100% {
+                -webkit-transform: translateX(-37.12px);
+                transform: translateX(-37.12px);
+                opacity: 0;
+            }
+        }
     </style>
     <link rel="stylesheet" href="../src/css/app.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600" rel="stylesheet">
 </head>
+
 <body>
+    <div id="loading">
+        <div class="app-mount-loading-container">
+            <span class="loading-square loading-square-4"></span>
+            <span class="loading-square loading-square-3"></span>
+            <span class="loading-square loading-square-2"></span>
+            <span class="loading-square loading-square-1"></span>
+        </div>
+    </div>
     <div id="app">
         <div id="background-layer">
+        </div>
+        <div id="ui-layer">
+            <div class="content">
+                <header>
+                    <div class="menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </header>
+                <main>
+                </main>
+                <footer>
+                    <!--<span>© 2017 TheSaldanas</span>-->
+                    <div class="footer-left"><span>© 2017 TheSaldanas</span>
+
+                    </div>
+                    <div class="footer-right">
+                        <div>
+                            <div class="equalizer">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
         </div>
     </div>
     <script src="../../builds/pan.js"></script>
@@ -63,6 +434,62 @@
     <script>
         var imageDepth = new ImageDepth();
         Pan.Render(imageDepth, document.getElementById('background-layer'));
+
+
+        HTMLDocument.prototype.ready = function () {
+            return new Promise(function (resolve, reject) {
+                if (document.readyState === 'complete') {
+                    resolve(document);
+                } else {
+                    document.addEventListener('DOMContentLoaded', function () {
+                        resolve(document);
+                    });
+                }
+            });
+        }
+
+        document.ready().then(() => {
+            window.setTimeout(function () {
+                var loader = document.getElementById('loading');
+                loader.style.opacity = 0;
+                loader.style.zIndex = -100;
+            }, 1000);
+        });
+    </script>
+
+    <script>
+        function randomBetween(range) {
+            var min = range[0],
+                max = range[1];
+            if (min < 0) {
+                return min + Math.random() * (Math.abs(min) + max);
+            } else {
+                return min + Math.random() * max;
+            }
+        }
+
+        var equalizerAnimation = function (speed, barsHeight) {
+            var $equalizer = document.getElementsByClassName('equalizer')[0];
+            setInterval(function () {
+                let eqs = $equalizer.getElementsByTagName('span');
+                for (var i = 0; i < eqs.length; i++) {
+                    eqs[i].style.height = randomBetween(barsHeight[i]) + 'px';
+                };
+            }, speed);
+            $equalizer.addEventListener('click', function() {
+                $equalizer.classList.toggle('paused');
+            })
+        }
+
+        var barsHeight = [
+            [3, 5],
+            [4, 8],
+            [5, 9],
+            [4, 9],
+            [4, 7]
+        ];
+        equalizerAnimation(180, barsHeight);
     </script>
 </body>
+
 </html>

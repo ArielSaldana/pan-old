@@ -107,3 +107,127 @@ div.play-control svg {
     /*height: inherit;*/
     /*width: inherit;*/
 }
+
+
+
+/* page */
+
+html {
+    font-size:10px;
+}
+
+body {
+    width:100%;
+    height:100%;
+    color:white;
+    /*font-family: 'Open Sans', sans-serif;*/
+    font-family: 'Source Serif Pro', serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.05rem;
+}
+
+#ui-layer {
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
+#ui-layer .content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+header .menu {
+    width: 20px;
+    height:20px;
+    padding:20px;
+}
+
+header .menu span {
+    display: block;
+    background: #eee;
+    height: 2px;
+    width: 100%;
+    position: relative;
+}
+
+header .menu span:nth-child(1) {
+    top:2px;
+}
+header .menu span:nth-child(2) {
+    top:5px;
+}
+header .menu span:nth-child(3) {
+    top:8px;
+}
+
+footer {
+    position: fixed;
+    bottom:0;
+    height:60px;
+    width:100%;
+    font-size: 1.2rem;
+    display: flex;
+}
+
+footer .footer-left, footer .footer-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height:100%;
+}
+
+.footer-left {
+    padding-left:20px;
+}
+
+.footer-right {
+    margin-left: auto;
+}
+
+/* new eqlzr */
+.equalizer {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin:20px;
+  position:relative;
+  top:-4px;
+}
+
+.equalizer span {
+  background-color: #eee;
+  width: 2px;
+  height: 0px;
+  bottom: 0px;
+  display: block;
+  position: absolute;
+  -webkit-transition: height 0.2s linear;
+  transition: height 0.2s linear;
+}
+.equalizer span:nth-child(1) {
+  margin-left: 0;
+}
+.equalizer span:nth-child(2) {
+  margin-left: 4px;
+}
+.equalizer span:nth-child(3) {
+  margin-left: 8px;
+}
+.equalizer span:nth-child(4) {
+  margin-left: 12px;
+}
+.equalizer span:nth-child(5) {
+  margin-left: 16px;
+}
+.equalizer.paused {
+ 
+}
+.equalizer.paused span {
+  height: 1px !important;
+}
+

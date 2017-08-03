@@ -107,9 +107,5 @@ export class Mouse extends EventEmitter {
         }
 
         return this;
-        
-        
-        
-        
     }
 }

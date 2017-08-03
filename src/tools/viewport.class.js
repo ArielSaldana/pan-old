@@ -50,6 +50,7 @@ export class Viewport extends EventEmitter {
         this.scroll.direction.y = null;
         this.width              = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
         this.height             = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        this.aspect_ratio       = this.height / this.width;
         this.pixel_ratio        = window.devicePixelRatio || 1;
         
         // Init
@@ -107,6 +108,7 @@ export class Viewport extends EventEmitter {
         // Set up
         this.width  = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
         this.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        this.aspect_ratio = this.height / this.width;
         
         // Trigger
         this.trigger( 'resize', [ this.width, this.height ] );
