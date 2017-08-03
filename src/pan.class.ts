@@ -4,12 +4,6 @@
  */
 
 export { EventEmitter } from './core/event_emitter.class';
-export { Component } from './core/component.class'
-
-export { patch, h } from './dom/pandom';
-export { Render } from './core/render';
-export { createElement } from './dom/dom.utils';
-
 export { Ajax } from './tools/ajax.class';
 export { Detector } from './tools/detector.class';
 export { History } from './tools/history.class';
@@ -20,5 +14,4 @@ export { Ticker } from './tools/ticker.class';
 export { Router } from './tools/router.class';
 export { Viewport } from './tools/viewport.class';
 export { Gyroscope } from './tools/gyroscope.class';
-
 export { Tools } from './tools/tools.class';

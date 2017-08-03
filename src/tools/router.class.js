@@ -4,14 +4,11 @@
  * TODO:     incrimentaldom example. in router.html on change!
  */
 
-import {
-    History
-} from './history.class';
+import { History } from './history.class';
 
 let routerInstance = null;
 
 export class Router extends History {
-
     /**
      * Initialize
      * @constructor
@@ -39,6 +36,8 @@ export class Router extends History {
         this.initLinks();
         this.initRoutes();
 
+        this.emitEvent(null);
+
         return routerInstance;
     }
 
@@ -65,11 +64,9 @@ export class Router extends History {
 
     initLinks() {
         let links = document.querySelectorAll('[pan-link]');
-
         for (var link of links) {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-
                 this.route(e.srcElement.pathname);
             })
         }

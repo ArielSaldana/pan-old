@@ -1,6 +1,6 @@
 {
   "name": "pan.js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Framework to help develop well structured web apps",
   "main": "builds/Pan.min.js",
   "dependencies": {},

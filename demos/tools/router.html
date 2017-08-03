@@ -97,8 +97,11 @@
         });
 
         router.on('change', (one, routerObj) => {
-            routerObj.component.patch();
-            routerObj.component.updateData({age : 22});
+            console.log('hi');
+            if (routerObj.component) {
+                routerObj.component.patch();
+                routerObj.component.updateData({age : 22});
+            }
         })
     </script>
 </body>
