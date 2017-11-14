@@ -3,7 +3,9 @@
   "version": "0.0.2",
   "description": "Framework to help develop well structured web apps",
   "main": "builds/Pan.min.js",
-  "dependencies": {},
+  "dependencies": {
+    "rxjs": "^5.5.2"
+  },
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
@@ -18,7 +20,8 @@
     "build-full": "node_modules/.bin/webpack",
     "build-min": "node_modules/.bin/webpack --env=1",
     "build": "npm run build-full | npm run build-min",
-    "watch": "node_modules/.bin/webpack --watch"
+    "watch": "node_modules/.bin/webpack --watch",
+    "serve": "node server/express.server.js"
   },
   "repository": {
     "type": "git",

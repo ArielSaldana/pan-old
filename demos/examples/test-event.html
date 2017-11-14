@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Saldanas</title>
+    <link rel="stylesheet" href="../src/css/app.css">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600" rel="stylesheet"> -->
+</head>
+
+<body>
+    <div id="app">
+   
+    </div>
+    <script src="../../builds/pan.js"></script>
+    <script>
+
+        var timer = function(name) {
+            var start = new Date();
+            return {
+                stop: function() {
+                    var end  = new Date();
+                    var time = end.getTime() - start.getTime();
+                    console.log('Timer:', name, 'finished in', time, 'ms');
+                }
+            }
+        };
+
+        var t = timer('Some label');
+
+        var ev1 = new Pan.EventEmitter2();
+
+        ev1.on('data', function(bar, baz) {
+            console.log(bar, baz);
+        // some code...
+        });
+
+        for(let i = 0; i < 1000; i++) {
+            // ev1.emit('data', 'wtf');
+            ev1.emit('data', ['var 1 for bar', 'var 2 for baz']);
+        }
+
+        // var ev = new Pan.RXEventEmitter();
+
+        // ev.on('data', (data) => {
+        //     console.log('data: ' + data);
+        // });
+
+        // ev.on('data', (data) => {
+        //     console.log('data: ' + data);
+        // });
+
+        // for(let i = 0; i < 1000; i++) {
+        //     ev.emit('data', {
+        //         test: true
+        //     });
+        // }
+
+        t.stop();
+
+
+
+
+
+
+ 
+    </script>
+
+</body>
+
+</html>

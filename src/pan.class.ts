@@ -4,11 +4,8 @@
  */
 
 export { EventEmitter } from './core/event_emitter.class';
-export { Component } from './core/component.class'
-
-export { patch, h } from './dom/pandom';
-export { Render } from './core/render';
-export { createElement } from './dom/dom.utils';
+export { EventEmitter2 } from './core/event-emitter';
+export { RXEventEmitter } from './core/rx-event-emitter.class';
 
 export { Ajax } from './tools/ajax.class';
 export { Detector } from './tools/detector.class';
