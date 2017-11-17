@@ -33,6 +33,7 @@ Simply include the JS files in your HTML and start using it. P.js is still in de
     * [Viewport](#viewport)
 * [Todo](#todo)
 * [Changelog](#changelog)
+* Rewrite this in typescript.
 
 
 ## Compatibility
