@@ -5,11 +5,11 @@
   "main": "builds/Pan.min.js",
   "dependencies": {},
   "devDependencies": {
-    "webpack": "^1.14.0",
-    "babel-core": "^6.21.0",
-    "babel-loader": "^6.2.10",
-    "babel-preset-es2015": "^6.18.0",
-    "express": "*"
+    "express": "*",
+    "ts-loader": "^4.3.0",
+    "typescript": "^2.8.3",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.3"
   },
   "scripts": {
     "build-full": "node node_modules/webpack/bin/webpack --watch",
