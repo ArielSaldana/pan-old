@@ -1,3 +1,5 @@
-// import { EventEmitter } from "./core/event-emitter";
+import { EventEmitter } from "./core/event-emitter";
 
-export * from "./core/event-emitter";
+export let Pan = {
+    EventEmitter: EventEmitter
+};
