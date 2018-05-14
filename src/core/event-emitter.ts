@@ -25,6 +25,10 @@ export class EventEmitter {
     emit(identifer: string, ... args: any[]) {
         let callbacks = this.map[identifer];
 
+        if (callbacks === undefined || callbacks === null) {
+            return;
+        }
+
         for (const callback of callbacks) {
             callback(... args);
         }

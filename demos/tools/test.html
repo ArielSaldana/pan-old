@@ -14,16 +14,24 @@
   <!-- Pan.js -->
   <script src="../../dist/pan.js"></script>
   <script>
-  const e = Pan.EventEmitter.Instance;
-  e.on('test', (message, height) => {
-    console.log("worked with message:", message);
-  });
 
-  e.on('test', (message, height) => {
-    console.log(message, height);
-  });
+    const viewport = Pan.Viewport.Instance;
+    viewport.on('resize', function(viewportData) {
+      console.log(viewportData);
+    });
 
-  e.emit('test', 569, 600);
+    viewport.emitUpdate();
+
+  // const e = Pan.EventEmitter.Instance;
+  // e.on('test', (message, height) => {
+  //   console.log("worked with message:", message);
+  // });
+
+  // e.on('test', (message, height) => {
+  //   console.log(message, height);
+  // });
+
+  // e.emit('test', 569, 600);
   </script>
 </body>
 
