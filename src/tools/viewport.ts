@@ -1,43 +1,19 @@
 import { EventEmitter } from "../core/event-emitter";
-
-class ViewportModel {
-    width: number;
-    height: number;
-    devicePixelRatio: number;
-    aspectRatio: number;
-
-    constructor(width?: number, height?: number, devicePixelRatio?: number, aspectRatio?: number) {
-        this.width = width || 0;
-        this.height = height || 0;
-        this.devicePixelRatio = devicePixelRatio || 0;
-        this.aspectRatio = aspectRatio || 0;
-    }
-
-    setWidth(width: number) {
-        this.width = width;
-    }
-
-    setHeight(height: number) {
-        this.height = height;
-    }
-
-    setDevicePixelRatio(devicePixelRatio: number) {
-        this.devicePixelRatio = devicePixelRatio;
-    }
-
-    setAspectRatio(aspectRatio: number) {
-        this.aspectRatio = aspectRatio;
-    }
-}
+import { ViewportModel } from "../models/ViewportModel"
 
 export class Viewport extends EventEmitter {
     private static _viewportInstance: Viewport;
-    private viewportModel : ViewportModel;
+    protected viewportModel : ViewportModel;
 
     protected constructor() {
         super();
 
-        this.viewportModel = new ViewportModel();
+        this.viewportModel = {
+            aspectRatio: 0,
+            devicePixelRatio:0,
+            height: 0,
+            width: 0,
+        };
 
         this.initEvents();
         this.resizeCallback();

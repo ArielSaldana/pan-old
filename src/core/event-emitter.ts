@@ -13,7 +13,7 @@ export class EventEmitter {
         return this._instance || (this._instance = new this());
     }
 
-    on(identifier: string, callback: Function) {
+    protected on(identifier: string, callback: Function) {
         let key = this.map[identifier];
 
         if (key === undefined || key === null) {
@@ -22,7 +22,7 @@ export class EventEmitter {
         this.map[identifier].push(callback);
     }
 
-    emit(identifer: string, ... args: any[]) {
+    protected emit(identifer: string, ... args: any[]) {
         let callbacks = this.map[identifer];
 
         if (callbacks === undefined || callbacks === null) {

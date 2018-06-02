@@ -6,11 +6,26 @@
   <title>Pan.js - Demo - Ajax</title>
   <link rel="stylesheet" href="../src/css/style.css">
   <style>
+    .box1 {
+      width: 500px; height: 400px; background-color: red;
+    }
+
+    .box2 {
+      position: absolute;
+      top:70%;
+      right: 30%;
+      width: 500px; height: 400px; background-color: blueviolet;
+    }
 
   </style>
 </head>
 
 <body>
+
+  <div class="box1"></div>
+  <div class="box2"></div>
+
+
   <!-- Pan.js -->
   <script src="../../dist/pan.js"></script>
   <script>
@@ -21,6 +36,17 @@
     });
 
     viewport.emitUpdate();
+
+    const mouse = Pan.Mouse.Instance;
+
+    mouse.on('move', function(data) {
+      // if (data.element === document.getElementsByClassName("box1")[0]) {
+      //   console.log("RED BOX");
+      // } else if (data.element === document.getElementsByClassName("box2")[0]) {
+      //   console.log("PURPLE BOX");
+      // }
+      console.log(data);
+    });
 
   // const e = Pan.EventEmitter.Instance;
   // e.on('test', (message, height) => {
