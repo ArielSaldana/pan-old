@@ -15,6 +15,7 @@ export class Viewport extends EventEmitter {
             width: 0,
         };
 
+        this.internalEvent();
         this.initEvents();
         this.resizeCallback();
     }
@@ -23,8 +24,11 @@ export class Viewport extends EventEmitter {
         return this._viewportInstance || (this._viewportInstance = new this());
     }
 
-    initEvents() {
+    internalEvent() {
         window.addEventListener('resize', (e) => {this.resizeCallback(e)});
+    }
+
+    initEvents() {
     }
 
     resizeCallback(e?: any) {
@@ -38,5 +42,13 @@ export class Viewport extends EventEmitter {
 
     public emitUpdate() {
         this.resizeCallback();
+    }
+
+    public getWidth() {
+        return this.viewportModel.width;
+    }
+
+    public getHeight() {
+        return this.viewportModel.height;
     }
 }

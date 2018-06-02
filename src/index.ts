@@ -1,9 +1,11 @@
-import { EventEmitter } from "./core/event-emitter";
-import { Viewport } from "./tools/Viewport";
-import { Mouse } from "./tools/Mouse";
+import { EventEmitter } from "./Pan/core/event-emitter";
+import { Viewport } from "./Pan/tools/Viewport";
+import { Mouse } from "./Pan/tools/Mouse";
+import { Scroll } from "./Pan/tools/Scroll";
 
 export let Pan = {
     EventEmitter: EventEmitter,
     Viewport: Viewport,
-    Mouse: Mouse
+    Mouse: Mouse,
+    Scroll: Scroll
 };

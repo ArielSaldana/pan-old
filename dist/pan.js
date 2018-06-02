@@ -77,7 +77,34 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
+/* 0 */,
+/* 1 */,
+/* 2 */,
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Pan", function() { return Pan; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Pan_core_event_emitter__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pan_tools_Viewport__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Pan_tools_Mouse__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Pan_tools_Scroll__ = __webpack_require__(8);
+
+
+
+
+var Pan = {
+    EventEmitter: __WEBPACK_IMPORTED_MODULE_0__Pan_core_event_emitter__["a" /* EventEmitter */],
+    Viewport: __WEBPACK_IMPORTED_MODULE_1__Pan_tools_Viewport__["a" /* Viewport */],
+    Mouse: __WEBPACK_IMPORTED_MODULE_2__Pan_tools_Mouse__["a" /* Mouse */],
+    Scroll: __WEBPACK_IMPORTED_MODULE_3__Pan_tools_Scroll__["a" /* Scroll */]
+};
+
+
+/***/ }),
+/* 4 */,
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -123,12 +150,12 @@ var EventEmitter = /** @class */ (function () {
 
 
 /***/ }),
-/* 1 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Viewport; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_event_emitter__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_event_emitter__ = __webpack_require__(5);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -150,6 +177,7 @@ var Viewport = /** @class */ (function (_super) {
             height: 0,
             width: 0,
         };
+        _this.internalEvent();
         _this.initEvents();
         _this.resizeCallback();
         return _this;
@@ -161,9 +189,11 @@ var Viewport = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Viewport.prototype.initEvents = function () {
+    Viewport.prototype.internalEvent = function () {
         var _this = this;
         window.addEventListener('resize', function (e) { _this.resizeCallback(e); });
+    };
+    Viewport.prototype.initEvents = function () {
     };
     Viewport.prototype.resizeCallback = function (e) {
         this.viewportModel.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -175,18 +205,25 @@ var Viewport = /** @class */ (function (_super) {
     Viewport.prototype.emitUpdate = function () {
         this.resizeCallback();
     };
+    Viewport.prototype.getWidth = function () {
+        return this.viewportModel.width;
+    };
+    Viewport.prototype.getHeight = function () {
+        return this.viewportModel.height;
+    };
     return Viewport;
 }(__WEBPACK_IMPORTED_MODULE_0__core_event_emitter__["a" /* EventEmitter */]));
 
 
 
 /***/ }),
-/* 2 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Mouse; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Viewport__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_event_emitter__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Viewport__ = __webpack_require__(6);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -198,10 +235,12 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 
+
 var Mouse = /** @class */ (function (_super) {
     __extends(Mouse, _super);
     function Mouse() {
         var _this = _super.call(this) || this;
+        _this.viewport = __WEBPACK_IMPORTED_MODULE_1__Viewport__["a" /* Viewport */].Instance;
         _this.mouseModel = {
             position: {
                 page: { x: 0, y: 0, ratio: { x: 0, y: 0 } },
@@ -237,8 +276,8 @@ var Mouse = /** @class */ (function (_super) {
         this.mouseModel.position.page.y = ev.pageY;
         this.mouseModel.position.viewport.x = ev.clientX;
         this.mouseModel.position.viewport.y = ev.clientY;
-        this.mouseModel.position.viewport.ratio.x = ev.clientX / this.viewportModel.width;
-        this.mouseModel.position.viewport.ratio.y = ev.clientY / this.viewportModel.height;
+        this.mouseModel.position.viewport.ratio.x = ev.clientX / this.viewport.getWidth();
+        this.mouseModel.position.viewport.ratio.y = ev.clientY / this.viewport.getHeight();
         this.mouseModel.element = ev.target;
         this.mouseModel.delta.x = ev.movementX;
         this.mouseModel.delta.y = ev.movementY;
@@ -258,28 +297,74 @@ var Mouse = /** @class */ (function (_super) {
         this.emit('move', this.mouseModel);
     };
     return Mouse;
-}(__WEBPACK_IMPORTED_MODULE_0__Viewport__["a" /* Viewport */]));
+}(__WEBPACK_IMPORTED_MODULE_0__core_event_emitter__["a" /* EventEmitter */]));
 
 
 
 /***/ }),
-/* 3 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Pan", function() { return Pan; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_event_emitter__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tools_Viewport__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tools_Mouse__ = __webpack_require__(2);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Scroll; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Viewport__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__core_event_emitter__ = __webpack_require__(5);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 
 
+var Scroll = /** @class */ (function (_super) {
+    __extends(Scroll, _super);
+    function Scroll() {
+        var _this = _super.call(this) || this;
+        _this.viewport = __WEBPACK_IMPORTED_MODULE_0__Viewport__["a" /* Viewport */].Instance;
+        _this.scrollModel = {
+            position: { x: window.scrollX, y: window.scrollY },
+            delta: { x: 0, y: 0 }
+        };
+        _this.initEvents();
+        return _this;
+    }
+    Object.defineProperty(Scroll, "Instance", {
+        get: function () {
+            return this._scrollInstace || (this._scrollInstace = new this());
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Scroll.prototype.initEvents = function () {
+        window.addEventListener("scroll", this.scrollEvent.bind(this));
+        window.addEventListener("wheel", this.wheelScrollEvent.bind(this));
+    };
+    Scroll.prototype.scrollEvent = function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var xdiff = this.scrollModel.position.x - window.scrollX;
+        var ydiff = window.scrollY - this.scrollModel.position.y;
+        this.scrollModel.position.x = window.scrollX;
+        this.scrollModel.position.y = window.scrollY;
+        this.scrollModel.delta.x = xdiff;
+        this.scrollModel.delta.y = ydiff;
+        this.emit('scroll', this.scrollModel);
+    };
+    Scroll.prototype.wheelScrollEvent = function (ev) {
+        this.scrollModel.position.x = window.scrollX;
+        this.scrollModel.position.y = window.scrollY;
+        this.scrollModel.delta.x = ev.deltaX;
+        this.scrollModel.delta.y = ev.deltaY;
+        this.emit('wheel', this.scrollModel);
+    };
+    return Scroll;
+}(__WEBPACK_IMPORTED_MODULE_1__core_event_emitter__["a" /* EventEmitter */]));
 
-var Pan = {
-    EventEmitter: __WEBPACK_IMPORTED_MODULE_0__core_event_emitter__["a" /* EventEmitter */],
-    Viewport: __WEBPACK_IMPORTED_MODULE_1__tools_Viewport__["a" /* Viewport */],
-    Mouse: __WEBPACK_IMPORTED_MODULE_2__tools_Mouse__["a" /* Mouse */]
-};
 
 
 /***/ })

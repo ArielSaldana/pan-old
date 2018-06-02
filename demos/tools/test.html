@@ -6,32 +6,87 @@
   <title>Pan.js - Demo - Ajax</title>
   <link rel="stylesheet" href="../src/css/style.css">
   <style>
+    * {
+      margin: 0;
+    }
+
+    html,
+    body {
+      height: 99%;
+      border: 1px solid red;
+      overflow: hidden;
+    }
+
+    #scrollbox {
+
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    #scroll-content {
+      transform: translate3d(0px, 0px, -1px);
+    }
+
+    .scroll {
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+      padding-right: 17px;
+      box-sizing: content-box;
+    }
+
     .box1 {
-      width: 500px; height: 400px; background-color: red;
+      width: 500px;
+      height: 400px;
+      background-color: red;
+      margin-bottom: 20px;
     }
 
     .box2 {
       position: absolute;
-      top:70%;
+      top: 70%;
       right: 30%;
-      width: 500px; height: 400px; background-color: blueviolet;
+      width: 500px;
+      height: 400px;
+      background-color: blueviolet;
     }
-
   </style>
 </head>
 
 <body>
+  <div id="scrollbox">
+    <div id="scroll-content">
 
-  <div class="box1"></div>
-  <div class="box2"></div>
+      <div class="box1"></div>
+      <div class="box2"></div>
+      <div class="box1"></div>
+      <div class="box2"></div>
+      <div class="box1"></div>
+      <div class="box2"></div>
+      <div class="box1"></div>
+      <div class="box2"></div>
+      <div class="box1"></div>
+      <div class="box2"></div>
+      <div class="box1"></div>
+      <div class="box2"></div>
+      <div class="box1"></div>
+      <div class="box2"></div>
+      <div class="box1"></div>
+      <div class="box2"></div>
+    </div>
+
+  </div>
 
 
   <!-- Pan.js -->
   <script src="../../dist/pan.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenLite.min.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
   <script>
 
     const viewport = Pan.Viewport.Instance;
-    viewport.on('resize', function(viewportData) {
+    viewport.on('resize', function (viewportData) {
       console.log(viewportData);
     });
 
@@ -39,25 +94,21 @@
 
     const mouse = Pan.Mouse.Instance;
 
-    mouse.on('move', function(data) {
-      // if (data.element === document.getElementsByClassName("box1")[0]) {
-      //   console.log("RED BOX");
-      // } else if (data.element === document.getElementsByClassName("box2")[0]) {
-      //   console.log("PURPLE BOX");
-      // }
-      console.log(data);
+    const scroll = Pan.Scroll.Instance;
+
+    let scrollWrapper = document.getElementById("scroll-content");
+
+    let yPos = 0;
+    let tween;
+
+    scroll.on('wheel', function (data) {
+      yPos += data.delta.y * -1;
+
+      if (yPos > 0) yPos = 0;
+
+      TweenLite.to(scrollWrapper, 3, { x:0, y: yPos, z: 0.1, ease: Power4.easeOut});
     });
 
-  // const e = Pan.EventEmitter.Instance;
-  // e.on('test', (message, height) => {
-  //   console.log("worked with message:", message);
-  // });
-
-  // e.on('test', (message, height) => {
-  //   console.log(message, height);
-  // });
-
-  // e.emit('test', 569, 600);
   </script>
 </body>
 

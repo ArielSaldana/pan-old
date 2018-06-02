@@ -2,12 +2,15 @@ import { EventEmitter } from "../core/event-emitter";
 import { MouseModel } from "../models/MouseModel";
 import { Viewport } from "./Viewport";
 
-export class Mouse extends Viewport {
+export class Mouse extends EventEmitter {
     private static _mouseInstance: Mouse;
+    private viewport: Viewport;
     private mouseModel: MouseModel;
 
     protected constructor() {
         super();
+        this.viewport = Viewport.Instance;
+
         this.mouseModel = {
             position: {
                 page: {x: 0, y: 0, ratio: {x: 0, y:0}},
@@ -44,8 +47,8 @@ export class Mouse extends Viewport {
         this.mouseModel.position.page.y = ev.pageY;
         this.mouseModel.position.viewport.x = ev.clientX;
         this.mouseModel.position.viewport.y = ev.clientY;
-        this.mouseModel.position.viewport.ratio.x = ev.clientX / this.viewportModel.width;
-        this.mouseModel.position.viewport.ratio.y = ev.clientY / this.viewportModel.height;
+        this.mouseModel.position.viewport.ratio.x = ev.clientX / this.viewport.getWidth();
+        this.mouseModel.position.viewport.ratio.y = ev.clientY / this.viewport.getHeight();
 
         this.mouseModel.element = ev.target;
         this.mouseModel.delta.x = ev.movementX;
