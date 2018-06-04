@@ -73,38 +73,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
-/* 1 */,
-/* 2 */,
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Pan", function() { return Pan; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Pan_core_event_emitter__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pan_tools_Viewport__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Pan_tools_Mouse__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Pan_tools_Scroll__ = __webpack_require__(8);
-
-
-
-
-var Pan = {
-    EventEmitter: __WEBPACK_IMPORTED_MODULE_0__Pan_core_event_emitter__["a" /* EventEmitter */],
-    Viewport: __WEBPACK_IMPORTED_MODULE_1__Pan_tools_Viewport__["a" /* Viewport */],
-    Mouse: __WEBPACK_IMPORTED_MODULE_2__Pan_tools_Mouse__["a" /* Mouse */],
-    Scroll: __WEBPACK_IMPORTED_MODULE_3__Pan_tools_Scroll__["a" /* Scroll */]
-};
-
-
-/***/ }),
-/* 4 */,
-/* 5 */
+/* 0 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -150,12 +123,12 @@ var EventEmitter = /** @class */ (function () {
 
 
 /***/ }),
-/* 6 */
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Viewport; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_event_emitter__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_event_emitter__ = __webpack_require__(0);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -217,13 +190,13 @@ var Viewport = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 7 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Mouse; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_event_emitter__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Viewport__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_event_emitter__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Viewport__ = __webpack_require__(1);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -302,13 +275,13 @@ var Mouse = /** @class */ (function (_super) {
 
 
 /***/ }),
-/* 8 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Scroll; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Viewport__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__core_event_emitter__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Viewport__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__core_event_emitter__ = __webpack_require__(0);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -365,6 +338,29 @@ var Scroll = /** @class */ (function (_super) {
     return Scroll;
 }(__WEBPACK_IMPORTED_MODULE_1__core_event_emitter__["a" /* EventEmitter */]));
 
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Pan", function() { return Pan; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Pan_core_event_emitter__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Pan_tools_Viewport__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Pan_tools_Mouse__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Pan_tools_Scroll__ = __webpack_require__(3);
+
+
+
+
+var Pan = {
+    EventEmitter: __WEBPACK_IMPORTED_MODULE_0__Pan_core_event_emitter__["a" /* EventEmitter */],
+    Viewport: __WEBPACK_IMPORTED_MODULE_1__Pan_tools_Viewport__["a" /* Viewport */],
+    Mouse: __WEBPACK_IMPORTED_MODULE_2__Pan_tools_Mouse__["a" /* Mouse */],
+    Scroll: __WEBPACK_IMPORTED_MODULE_3__Pan_tools_Scroll__["a" /* Scroll */]
+};
 
 
 /***/ })

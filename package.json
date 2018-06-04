@@ -5,7 +5,9 @@
   "main": "builds/Pan.min.js",
   "dependencies": {},
   "devDependencies": {
+    "@types/gsap": "^1.19.2",
     "express": "*",
+    "gsap": "^2.0.1",
     "ts-loader": "^4.3.0",
     "typescript": "^2.8.3",
     "webpack": "^4.8.3",

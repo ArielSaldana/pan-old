@@ -13,7 +13,7 @@ export class EventEmitter {
         return this._instance || (this._instance = new this());
     }
 
-    protected on(identifier: string, callback: Function) {
+    on(identifier: string, callback: Function) {
         let key = this.map[identifier];
 
         if (key === undefined || key === null) {
